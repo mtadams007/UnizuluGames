@@ -7,8 +7,8 @@ const board = (props) => {
   return (
     <div className="Board">
       <div className="board-row">
-        <Square click={() => this.makeMoveHandler} />
-        <Square />
+        <Square click={() => this.makeMoveHandler()} />
+        <Square click={() => this.makeMoveHandler()}/>
         <Square />
       </div>
       <div className="board-row">
