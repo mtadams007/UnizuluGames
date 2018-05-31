@@ -51,9 +51,9 @@ class App extends Component {
     let xCoord = parseInt(parsedArray[0]);
     let yCoord = parseInt(parsedArray[1]);
     //Looking for horizontal victories
-    if(keys.includes(`${xCoord}a${(yCoord%3)+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3}`)){
+    if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
 
-      if(this.state.squares[`${xCoord}a${(yCoord%3)+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
+      if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
         console.log("victory!")
         this.state.gameOver = true;
         return true
@@ -62,8 +62,8 @@ class App extends Component {
       }
     }
     // Checks vertical victories
-    if(keys.includes(`${(xCoord%3)+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3}a${yCoord}`)){
-      if(this.state.squares[`${(xCoord%3)+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
+    if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
+      if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
         console.log("victory!")
         this.state.gameOver = true;
         return true
@@ -115,7 +115,7 @@ class App extends Component {
       ];
       // for loop to create columns
       for(let i=1; i<=num;i++){
-        let value = this.state.squares[j+'a'+i] || '' ;
+        let value = this.state.squares[j+'a'+i] || '.' ;
         sqrs.push(
           // puts in our square with the id of its coordinates and a click handler that allows us to play
           <Square id={`${j}a${i}`} value={value} click={(e) => this.makeMoveHandler(e, `${j}a${i}`)}/>);
