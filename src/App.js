@@ -42,6 +42,7 @@ class App extends Component {
   }
 
   // function to check victories
+
   winChecker = (upOrAcross) => {
     let keys = (Object.keys(this.state.squares));
     let key = keys.slice(-1)[0];
@@ -87,6 +88,43 @@ class App extends Component {
   }
   console.log('boooo')
 }
+
+  easyDiagonalWinChecker = () => {
+    let keys = (Object.keys(this.state.squares));
+    let key = keys.slice(-1)[0];
+    let winningSymbol = (this.state.squares[key])
+    let test = String(key)
+    let parsedArray = test.split('a');
+    let xCoord = parseInt(parsedArray[0]);
+    let yCoord = parseInt(parsedArray[1]);
+    let i = 1;
+    let firstCoord;
+    let secondCoord;
+
+    if (xCoord === yCoord && this.state.squares[`${1}a${1}`] === winningSymbol) {
+      while (i<6) {
+        if (this.state.squares[`${i}a${i}`] === winningSymbol) {
+          i++;
+        } else {
+          console.log('out')
+          break;
+        }
+      } // end of while loop
+
+  }  else if (xCoord === yCoord){ //end of xcoord===ycoord statement
+    while (i<6) {
+      if (this.state.squares[`${i+1}a${i+1}`] === winningSymbol) {
+        i++;
+      } else {
+        console.log('out')
+        break;
+      }
+    } // end of while loop
+  }
+  if(i === 6) {
+  console.log('WIN')
+}//
+  } // end of easyDiagonalWinChecker function
 
 
   isTttWin = () => {
@@ -206,7 +244,7 @@ class App extends Component {
         </div>
       <div className="content">
         {declaration}
-        {this.winChecker('down')}
+        {this.easyDiagonalWinChecker()}
         {this.renderSq(6)}
       </div>
 
