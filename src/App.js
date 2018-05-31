@@ -15,8 +15,7 @@ class App extends Component {
 // puts a mark down when you click
   makeMoveHandler = (event, id) => {
 
-    if (!this.state.gameOver) {
-    // console.log(id)
+  if (!this.state.gameOver) {
     // Checks whether the move has already been put in the state.squares hash
     if(this.state.squares[id]){
       console.log('filled');
@@ -24,17 +23,17 @@ class App extends Component {
       // checks whether or not it is Xs turn
       if(this.state.isX === true){
       // assigns a new object and manipulates it
-      const squares = {
-        ...this.state.squares, [id]: 'X'
-      }
-      this.setState({squares: squares, isX: false})
-    } else {
+        const squares = {
+          ...this.state.squares, [id]: 'X'
+        }
+        this.setState({squares: squares, isX: false})
+      } else {
       const squares = {
         ...this.state.squares, [id]: 'O'
-    }
+      }
 
     this.setState({squares: squares, isX: true})
-  }
+      }
     }
   }
 
@@ -173,43 +172,30 @@ class App extends Component {
     } else {
       console.log('boo')
     }
-    // END OF IS isTttWin FUNCTION
-  }
-
-  isOrderChaosWin = () => {
-    let keys = (Object.keys(this.state.squares));
-    let key = keys.slice(-1)[0];
-    let winningSymbol = (this.state.squares[key])
-    let test = String(key)
-    let parsedArray = test.split('a');
-    let xCoord = parseInt(parsedArray[0]);
-    let yCoord = parseInt(parsedArray[1]);
 
   }
 
 
 // creates a board. the num you input is a num x num board
-  renderSq = (num) => {
 
+  renderSq = (num) => {
       // creates an empty row array that will be put down
-      let rows = [
-      ];
+      let rows = [];
     // for loop to create rows
     for(let j=1; j<=num; j++){
-      let sqrs = [
-      ];
+      let sqrs = [];
       // for loop to create columns
       for(let i=1; i<=num;i++){
         let value = this.state.squares[j+'a'+i] || '.' ;
         sqrs.push(
           // puts in our square with the id of its coordinates and a click handler that allows us to play
           <Square id={`${j}a${i}`} value={value} click={(e) => this.makeMoveHandler(e, `${j}a${i}`)}/>);
-        }
+      }
         // We push the rows into the arraw and then display them
         rows.push(<div className="board-row">{sqrs}</div>)
-      }
-      return rows;
     }
+      return rows;
+  }
 
 
 
@@ -219,33 +205,32 @@ class App extends Component {
     let symbol = null;
     let winSymbol = null;
     let declaration = null;
-  if (this.state.isX) {
-    symbol = 'X'
-    winSymbol = 'O'
-  } else {
-    symbol = 'O'
-    winSymbol = 'X'
-  }
-  if (this.state.whichGame==="TicTacToe"){
-  if(this.isTttWin()) {
-    declaration= (<h1>{winSymbol} Wins!</h1>)
-  } else {
-    declaration = (<h1>{symbol}'s Turn</h1>)
-  }
-} else if (this.state.whichGame==="OrderChaos"){
-  declaration = <h1>Working on Order and Chaos</h1>
-};
+    if (this.state.isX) {
+      symbol = 'X'
+      winSymbol = 'O'
+    } else {
+      symbol = 'O'
+      winSymbol = 'X'
+    }
+    if (this.state.whichGame==="TicTacToe"){
+      if(this.isTttWin()) {
+        declaration= (<h1>{winSymbol} Wins!</h1>)
+      } else {
+        declaration = (<h1>{symbol}'s Turn</h1>)
+      }
+    } else if (this.state.whichGame==="OrderChaos"){
+        declaration = <h1>Working on Order and Chaos</h1>
+      };
     return (
       <div className="App">
         <div className="logo">
-        <img src="UnizuluLogo.jpg" className='logo'></img>
+          <img src="UnizuluLogo.jpg" className='logo'></img>
         </div>
-      <div className="content">
-        {declaration}
-        {this.easyDiagonalWinChecker()}
-        {this.renderSq(6)}
-      </div>
-
+        <div className="content">
+          {declaration}
+          {this.easyDiagonalWinChecker()}
+          {this.renderSq(6)}
+        </div>
       </div>
     );
   }
