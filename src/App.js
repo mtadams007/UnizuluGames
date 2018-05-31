@@ -123,6 +123,39 @@ class App extends Component {
     }//
   } // end of easyDiagonalWinChecker function
 
+  mediumDiagonalWinChecker = () => {
+    let keys = (Object.keys(this.state.squares));
+    let key = keys.slice(-1)[0];
+    let winningSymbol = (this.state.squares[key])
+    let test = String(key)
+    let parsedArray = test.split('a');
+    let xCoord = parseInt(parsedArray[0]);
+    let yCoord = parseInt(parsedArray[1]);
+    let i = 1;
+    let firstCoord;
+    let secondCoord;
+    if (xCoord + yCoord === 6) {
+      while (i<6) {
+        if(this.state.squares[`${i}a${6-i}`] === winningSymbol) {
+          i++;
+        } else {
+          break;
+        }
+      }
+    } else if (xCoord + yCoord === 8) {
+      while (i<6) {
+        if(this.state.squares[`${i+1}a${7-i}`] === winningSymbol) {
+          i++;
+        } else {
+          break;
+        }
+      }
+    }
+    if (i === 6) {
+      console.log('WINNING');
+    }
+
+  }//end of mediumDiagonalWinChecker
 
   isTttWin = () => {
     // console.log(coordinate);
@@ -228,7 +261,7 @@ class App extends Component {
         </div>
         <div className="content">
           {declaration}
-          {this.easyDiagonalWinChecker()}
+          {this.mediumDiagonalWinChecker()}
           {this.renderSq(6)}
         </div>
       </div>
