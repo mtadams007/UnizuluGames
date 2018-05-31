@@ -4,7 +4,7 @@ import './Square.css';
 
 const square = (props) => {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button id={props.id} className="square" onClick={props.click}>
       {props.value}
     </button>
   );
