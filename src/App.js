@@ -42,7 +42,7 @@ class App extends Component {
   }
 
   // function to check victories
-  winChecker = (xAdder, yAdder) => {
+  winChecker = (upOrAcross) => {
     let keys = (Object.keys(this.state.squares));
     let key = keys.slice(-1)[0];
     let winningSymbol = (this.state.squares[key])
@@ -51,21 +51,36 @@ class App extends Component {
     let xCoord = parseInt(parsedArray[0]);
     let yCoord = parseInt(parsedArray[1]);
     let i = 1;
+    let firstCoord;
+    let secondCoord;
 
     while (i<6) {
-      // console.log(this.state.squares[`${(xCoord + xAdder*i)%6+1}a${(yCoord + yAdder*i)%6+1}`])
-      console.log(this.state.squares[(`${xCoord}a${(yCoord + yAdder*i)%6+1}`)])
-      // console.log(`${xCoord}a${(yCoord + yAdder*i)%6+1}`)
-
-      if(this.state.squares[`${xCoord}a${i}`] === winningSymbol) {
+      if(upOrAcross === 'across'){
+        firstCoord = xCoord;
+        secondCoord = i;
+      } else {
+        firstCoord = i;
+        secondCoord = yCoord;
+      }
+      if(this.state.squares[`${firstCoord}a${1}`] === winningSymbol || this.state.squares[`${1}a${secondCoord}`] === winningSymbol){
+      if(this.state.squares[`${firstCoord}a${secondCoord}`] === winningSymbol) {
         // i++;
         console.log(i)
       } else {
         console.log(i)
         break;
       }
+} else {
+  if(this.state.squares[`${firstCoord}a${secondCoord+1}`] === winningSymbol || this.state.squares[`${firstCoord+1}a${secondCoord}`] === winningSymbol)  {
+    // i++;
+    console.log(i)
+} else {
+  break;
+}
+}
       i++;
     }
+
     if (i === 6) {
     console.log('winner winner');
     return true;
@@ -191,7 +206,7 @@ class App extends Component {
         </div>
       <div className="content">
         {declaration}
-        {this.winChecker()}
+        {this.winChecker('down')}
         {this.renderSq(6)}
       </div>
 
