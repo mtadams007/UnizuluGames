@@ -142,7 +142,7 @@ class App extends Component {
           break;
         }
       }
-    } else if (xCoord + yCoord === 8) {
+    }  else if (xCoord + yCoord === 8) {
       while (i<6) {
         if(this.state.squares[`${i+1}a${7-i}`] === winningSymbol) {
           i++;
@@ -150,6 +150,24 @@ class App extends Component {
           break;
         }
       }
+    } else if (xCoord + yCoord === 7) {
+        if(this.state.squares[`${1}a${6}`] === winningSymbol) {
+          while (i<6) {
+            if(this.state.squares[`${i}a${7-i}`] === winningSymbol){
+              i++;
+            } else {
+              break;
+            }
+          }
+        } else if (this.state.squares[`${6}a${1}`] === winningSymbol) {
+          while (i<6) {
+            if(this.state.squares[`${7-i}a${i}`] === winningSymbol){
+              i++;
+            } else {
+              break;
+            }
+          }
+        }
     }
     if (i === 6) {
       console.log('WINNING');
