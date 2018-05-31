@@ -41,6 +41,39 @@ class App extends Component {
     // console.log({this.state.squares});
   }
 
+  // function to check victories
+  winChecker = (xAdder, yAdder) => {
+    let keys = (Object.keys(this.state.squares));
+    let key = keys.slice(-1)[0];
+    let winningSymbol = (this.state.squares[key])
+    let test = String(key)
+    let parsedArray = test.split('a');
+    let xCoord = parseInt(parsedArray[0]);
+    let yCoord = parseInt(parsedArray[1]);
+    let i = 1;
+
+    while (i<6) {
+      // console.log(this.state.squares[`${(xCoord + xAdder*i)%6+1}a${(yCoord + yAdder*i)%6+1}`])
+      console.log(this.state.squares[(`${xCoord}a${(yCoord + yAdder*i)%6+1}`)])
+      // console.log(`${xCoord}a${(yCoord + yAdder*i)%6+1}`)
+
+      if(this.state.squares[`${xCoord}a${i}`] === winningSymbol) {
+        // i++;
+        console.log(i)
+      } else {
+        console.log(i)
+        break;
+      }
+      i++;
+    }
+    if (i === 6) {
+    console.log('winner winner');
+    return true;
+  }
+  console.log('boooo')
+}
+
+
   isTttWin = () => {
     // console.log(coordinate);
     let keys = (Object.keys(this.state.squares));
@@ -158,6 +191,7 @@ class App extends Component {
         </div>
       <div className="content">
         {declaration}
+        {this.winChecker()}
         {this.renderSq(6)}
       </div>
 
