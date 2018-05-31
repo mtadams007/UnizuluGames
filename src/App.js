@@ -64,30 +64,30 @@ class App extends Component {
         secondCoord = yCoord;
       }
       if(this.state.squares[`${firstCoord}a${1}`] === winningSymbol || this.state.squares[`${1}a${secondCoord}`] === winningSymbol){
-      if(this.state.squares[`${firstCoord}a${secondCoord}`] === winningSymbol) {
+        if(this.state.squares[`${firstCoord}a${secondCoord}`] === winningSymbol) {
         // i++;
-        console.log(i)
-      } else {
+          console.log(i)
+        } else {
         console.log(i)
         break;
-      }
-} else {
-  if(this.state.squares[`${firstCoord}a${secondCoord+1}`] === winningSymbol || this.state.squares[`${firstCoord+1}a${secondCoord}`] === winningSymbol)  {
-    // i++;
-    console.log(i)
-} else {
-  break;
-}
-}
-      i++;
-    }
+        }
+      } else {
+          if(this.state.squares[`${firstCoord}a${secondCoord+1}`] === winningSymbol || this.state.squares[`${firstCoord+1}a${secondCoord}`] === winningSymbol) {
 
-    if (i === 6) {
-    console.log('winner winner');
-    return true;
-  }
-  console.log('boooo')
-}
+            console.log(i)
+          } else {
+            break;
+          }
+        }
+        i++;
+      }
+
+      if (i === 6) {
+        console.log('winner winner');
+        return true;
+      }
+      console.log('boooo')
+    }
 
   easyDiagonalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
@@ -98,8 +98,6 @@ class App extends Component {
     let xCoord = parseInt(parsedArray[0]);
     let yCoord = parseInt(parsedArray[1]);
     let i = 1;
-    let firstCoord;
-    let secondCoord;
 
     if (xCoord === yCoord && this.state.squares[`${1}a${1}`] === winningSymbol) {
       while (i<6) {
@@ -111,19 +109,19 @@ class App extends Component {
         }
       } // end of while loop
 
-  }  else if (xCoord === yCoord){ //end of xcoord===ycoord statement
-    while (i<6) {
-      if (this.state.squares[`${i+1}a${i+1}`] === winningSymbol) {
+    }  else if (xCoord === yCoord){ //end of xcoord===ycoord statement
+        while (i<6) {
+          if (this.state.squares[`${i+1}a${i+1}`] === winningSymbol) {
         i++;
-      } else {
+          } else {
         console.log('out')
         break;
+          }
+        } // end of while loop
       }
-    } // end of while loop
-  }
-  if(i === 6) {
-  console.log('WIN')
-}//
+    if(i === 6) {
+      console.log('WIN')
+    }//
   } // end of easyDiagonalWinChecker function
 
 
