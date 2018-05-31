@@ -119,7 +119,6 @@ class App extends Component {
         sqrs.push(
           // puts in our square with the id of its coordinates and a click handler that allows us to play
           <Square id={`${j}a${i}`} value={value} click={(e) => this.makeMoveHandler(e, `${j}a${i}`)}/>);
-          this.isTttWin();
         }
         // We push the rows into the arraw and then display them
         rows.push(<div className="board-row">{sqrs}</div>)
@@ -150,8 +149,13 @@ class App extends Component {
   }
     return (
       <div className="App">
+        <div className="logo">
+        <img src="UnizuluLogo.jpg" className='logo'></img>
+        </div>
+      <div className="content">
         {declaration}
         {this.renderSq(3)}
+      </div>
 
       </div>
     );
