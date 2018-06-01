@@ -29,12 +29,11 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [id]: 'X'
           }
-          this.setState({squares: squares, isX: false})
+          this.setState({squares: squares, isX: false, orderTurn: !this.state.orderTurn})
         } else {
           const squares = {
             ...this.state.squares, [id]: 'O'
           }
-
           this.setState({squares: squares, isX: true, orderTurn: !this.state.orderTurn})
         }
       }
@@ -380,6 +379,7 @@ class App extends Component {
         } else {
         declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
       }
+
     };
     return (
       <div className="App">
@@ -389,8 +389,8 @@ class App extends Component {
         <div className="content">
           {declaration}
           {this.renderSq(6)}
-          <button onClick={this.toggleSymbolX}>X</button>
-          <button onClick={this.toggleSymbolO}>O</button>
+          <button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
+          <button className="symbolButton" onClick={this.toggleSymbolO}>O</button>
         </div>
       </div>
     );
