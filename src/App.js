@@ -12,32 +12,32 @@ class App extends Component {
     whichGame: 'OrderChaos'
   }
 
-// puts a mark down when you click
+  // puts a mark down when you click
+
+
   makeMoveHandler = (event, id) => {
 
-  if (!this.state.gameOver) {
+    if (!this.state.gameOver) {
     // Checks whether the move has already been put in the state.squares hash
-    if(this.state.squares[id]){
-      console.log('filled');
-    } else {
-      // checks whether or not it is Xs turn
-      if(this.state.isX === true){
-      // assigns a new object and manipulates it
-        const squares = {
-          ...this.state.squares, [id]: 'X'
-        }
-        this.setState({squares: squares, isX: false})
+      if(this.state.squares[id]){
+        console.log('filled');
       } else {
-      const squares = {
-        ...this.state.squares, [id]: 'O'
-      }
+        // checks whether or not it is Xs turn
+        if(this.state.isX === true){
+        // assigns a new object and manipulates it
+          const squares = {
+            ...this.state.squares, [id]: 'X'
+          }
+          this.setState({squares: squares, isX: false})
+        } else {
+          const squares = {
+            ...this.state.squares, [id]: 'O'
+          }
 
-    this.setState({squares: squares, isX: true})
+          this.setState({squares: squares, isX: true})
+        }
       }
     }
-  }
-
-    // console.log({this.state.squares});
   }
 
   // function to check victories
@@ -209,7 +209,6 @@ class App extends Component {
 
 
   isTttWin = () => {
-    // console.log(coordinate);
     let keys = (Object.keys(this.state.squares));
     let key = keys.slice(-1)[0];
     let winningSymbol = (this.state.squares[key])
@@ -312,7 +311,7 @@ class App extends Component {
         </div>
         <div className="content">
           {declaration}
-          {this.hardDiagonalWinChecker()}
+          {this.mediumDiagonalWinChecker()}
           {this.renderSq(6)}
         </div>
       </div>
