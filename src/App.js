@@ -9,7 +9,7 @@ class App extends Component {
     },
     isX: true,
     gameOver: false,
-    whichGame: 'OrderChaos',
+    whichGame: '',
     // whichGame: 'TicTacToe',
     orderTurn: true
   }
@@ -40,6 +40,15 @@ class App extends Component {
     }
   }
 
+  chooseTicTacToe = () => {
+    console.log(this.state.whichGame)
+    this.setState({whichGame: 'TicTacToe'})
+  }
+
+  chooseOrderChaos = () => {
+    console.log(this.state.whichGame)
+    this.setState({whichGame: 'OrderChaos'})
+  }
 
   toggleSymbolX = () => {
     this.setState({isX: true})
@@ -351,6 +360,7 @@ class App extends Component {
     let symbol = null;
     let winSymbol = null;
     let declaration = null;
+    let gameNumber = 0;
     if (this.state.isX) {
       symbol = 'X'
       winSymbol = 'O'
@@ -359,12 +369,14 @@ class App extends Component {
       winSymbol = 'X'
     }
     if (this.state.whichGame==="TicTacToe"){
+      gameNumber = 3;
       if(this.isTttWin()) {
         declaration= (<h1>{winSymbol} Wins!</h1>)
       } else {
         declaration = (<h1>{symbol}'s Turn</h1>)
       }
     } else if (this.state.whichGame==="OrderChaos"){
+        gameNumber = 6;
         let player;
         if (this.state.orderTurn) {
           player = "Order"
@@ -388,9 +400,11 @@ class App extends Component {
         </div>
         <div className="content">
           {declaration}
-          {this.renderSq(6)}
+          {this.renderSq(gameNumber)}
           <button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
           <button className="symbolButton" onClick={this.toggleSymbolO}>O</button>
+          <button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
+          <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button>
         </div>
       </div>
     );
