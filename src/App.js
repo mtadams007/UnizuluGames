@@ -9,9 +9,10 @@ class App extends Component {
     },
     isX: true,
     gameOver: false,
-    whichGame: 'OrderChaos',
+    whichGame: '',
     // whichGame: 'TicTacToe',
-    orderTurn: true
+    orderTurn: true,
+    language: 'eng',
   }
 
   // puts a mark down when you click
@@ -40,6 +41,19 @@ class App extends Component {
     }
   }
 
+  goHomeScreen = () => {
+    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true, language: 'eng'})
+  }
+
+  chooseTicTacToe = () => {
+    console.log(this.state.whichGame)
+    this.setState({whichGame: 'TicTacToe'})
+  }
+
+  chooseOrderChaos = () => {
+    console.log(this.state.whichGame)
+    this.setState({whichGame: 'OrderChaos'})
+  }
 
   toggleSymbolX = () => {
     this.setState({isX: true})
@@ -47,6 +61,14 @@ class App extends Component {
 
   toggleSymbolO = () => {
     this.setState({isX: false})
+  }
+
+  toggleLanguage = () => {
+    if (this.state.language === 'eng') {
+      this.setState({language: 'zulu'})
+    } else {
+      this.setState({language: 'eng'})
+    }
   }
 
   // Order and Chaos win checkers
@@ -66,16 +88,12 @@ class App extends Component {
     let i = 1;
     while (i<6) {
       if(this.state.squares[`${xCoord}a${1}`] === winningSymbol){
-        if(this.state.squares[`${xCoord}a${i}`] === winningSymbol) {
-          console.log(i)
-        } else {
-            break;
+        if(this.state.squares[`${xCoord}a${i}`] != winningSymbol) {
+          break;
         }
       } else if (this.state.squares[`${xCoord}a${2}`] === winningSymbol) {
-          if(this.state.squares[`${xCoord}a${i+1}`] === winningSymbol) {
-            console.log(i)
-          } else {
-              break;
+          if(this.state.squares[`${xCoord}a${i+1}`] != winningSymbol) {
+            break;
           }
         } else {
             break;
@@ -84,11 +102,8 @@ class App extends Component {
       }
 
       if (i === 6) {
-        console.log('winner w');
-        // this.state.gameOver = true;
         return true;
       }
-      console.log('boooo')
     }
 
   verticalWinChecker = () => {
@@ -106,15 +121,12 @@ class App extends Component {
     let i = 1;
     while (i<6) {
       if(this.state.squares[`${1}a${yCoord}`] === winningSymbol){
-        if(this.state.squares[`${i}a${yCoord}`] === winningSymbol) {
-          console.log(i)
-        } else {
-            break;
+        if(this.state.squares[`${i}a${yCoord}`] != winningSymbol) {
+          break;
         }
       } else if (this.state.squares[`${2}a${yCoord}`] === winningSymbol) {
-          if(this.state.squares[`${i+1}a${yCoord}`] === winningSymbol) {
-            console.log(i)
-          } else {
+          if(this.state.squares[`${i+1}a${yCoord}`] != winningSymbol) {
+
               break;
           }
         } else {
@@ -122,13 +134,9 @@ class App extends Component {
         }
         i++;
       }
-
       if (i === 6) {
-        console.log('winner w');
-        // this.state.gameOver = true;
         return true;
       }
-      console.log('boooo')
     }
 
   easyDiagonalWinChecker = () => {
@@ -146,7 +154,6 @@ class App extends Component {
         if (this.state.squares[`${i}a${i}`] === winningSymbol) {
           i++;
         } else {
-          console.log('out')
           break;
         }
       } // end of while loop
@@ -156,14 +163,11 @@ class App extends Component {
           if (this.state.squares[`${i+1}a${i+1}`] === winningSymbol) {
         i++;
           } else {
-        console.log('out')
         break;
           }
         } // end of while loop
       }
     if(i === 6) {
-      console.log('WIN')
-      // this.state.gameOver = true;
       return true;
     }//
   } // end of easyDiagonalWinChecker function
@@ -213,8 +217,6 @@ class App extends Component {
         }
     }
     if (i === 6) {
-      console.log('WINNING');
-      // this.state.gameOver = true;
       return true;
     }
 
@@ -247,8 +249,6 @@ class App extends Component {
       }
     }
     if (i === 6) {
-      console.log('win?')
-      // this.state.gameOver = true;
       return true;
     }
   }
@@ -287,37 +287,25 @@ class App extends Component {
       //Looking for horizontal victories
       if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
         if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
-          console.log("victory!")
           this.setState({gameOver: true})
-        } else {
-          console.log('no dice')
         }
       }
       // Checks vertical victories
       if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
         if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
-          console.log("victory!")
           this.setState({gameOver: true})
-        } else {
-          console.log('no dice')
         }
       }
       if (xCoord === yCoord) {
         if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
-          console.log("victory!")
           this.setState({gameOver: true})
-        } else {
-          console.log('no dice')
         }
       }
       if (xCoord+yCoord === 4){
         if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
            this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
-           console.log("victory!");
            this.setState({gameOver: true})
         }
-      } else {
-        console.log('boo')
       }
     }
     if (this.state.gameOver === true){
@@ -351,6 +339,13 @@ class App extends Component {
     let symbol = null;
     let winSymbol = null;
     let declaration = null;
+    let rules = null;
+    let languageButton = null;
+    // dynamically changes size of board
+    let gameNumber = 0;
+    let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
+    <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button></div>;
+    // Decides if X or O is moving
     if (this.state.isX) {
       symbol = 'X'
       winSymbol = 'O'
@@ -358,13 +353,35 @@ class App extends Component {
       symbol = 'O'
       winSymbol = 'X'
     }
+
+    // Checks whether we're playing Tic Tac Toe
     if (this.state.whichGame==="TicTacToe"){
+      buttonArray = null;
+      gameNumber = 3;
+      if (this.state.language === 'eng') {
+        rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> The players take turns putting either an "X" or "O" where they like.  The winner is the first to get three of their symbol in a row either horizontally, vertically or diagonally. </p></div>
+        languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button>
+      } else {
+        rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p></div>
+        languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>English</button>
+      }
       if(this.isTttWin()) {
         declaration= (<h1>{winSymbol} Wins!</h1>)
       } else {
         declaration = (<h1>{symbol}'s Turn</h1>)
       }
+      // Checks if we're playing order and chaos
     } else if (this.state.whichGame==="OrderChaos"){
+        buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
+        <button className="symbolButton" onClick={this.toggleSymbolO}>O</button></div>
+        gameNumber = 6;
+        if (this.state.language === 'eng') {
+          rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph"> One player plays as Order and the other plays as Chaos.  Order wins if they get five "X"s or "O"s in a row, and Chaos wins if they prevent Order from getting five in a row.  Each player can put either an "X" or an "O" on their respective turns.  They can switch between the two whenever they like. </p></div>
+          languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button>
+        } else {
+          rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph">Umdlalo u order and Chaos  udlalwa ebhodini eliphindaphindeke ngokwesithupha ngokwesithupha njengoba kuveziwe esithombeni ngezansi. Umdlali wokuqala udlala engu Order umdlali wesibili udlala engu Chaos. U Order uwina uma ekwaze ukulandelanisa o X noma o O abayisihlanu ebhodini besekuthi u Chaos uwina uma ekwaze ukuvimba u Order ukuthi alandelanise o X noma o O abayisihlanu. Umdlali emunye angadlala ngo X noma ngo O. bangashintsha shintsha phakathi kokubili ngokuthanda kwabo. </p></div>
+          languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>English</button>
+        }
         let player;
         if (this.state.orderTurn) {
           player = "Order"
@@ -382,17 +399,26 @@ class App extends Component {
 
     };
     return (
+
       <div className="App">
-        <div className="logo">
-          <img src="UnizuluLogo.jpg" className='logo' alt='Unizulu Logo'></img>
+        <div className="grid">
+        <div className="header">
+            <img src="UnizuluLogo.png" className='logo' alt='Unizulu Logo'></img>
+            <button className="homeButton" onClick={this.goHomeScreen}>Go home</button>
         </div>
-        <div className="content">
+          <div></div>
+          <div className="content">
           {declaration}
-          {this.renderSq(6)}
-          <button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
-          <button className="symbolButton" onClick={this.toggleSymbolO}>O</button>
+          {this.renderSq(gameNumber)}
+          {buttonArray}
         </div>
-      </div>
+          <div className="rules">
+            {rules}
+            {languageButton}
+          </div>
+        </div>
+
+        </div>
     );
   }
 }
