@@ -12,32 +12,32 @@ class App extends Component {
     whichGame: 'OrderChaos'
   }
 
-// puts a mark down when you click
+  // puts a mark down when you click
+
+
   makeMoveHandler = (event, id) => {
 
-  if (!this.state.gameOver) {
+    if (!this.state.gameOver) {
     // Checks whether the move has already been put in the state.squares hash
-    if(this.state.squares[id]){
-      console.log('filled');
-    } else {
-      // checks whether or not it is Xs turn
-      if(this.state.isX === true){
-      // assigns a new object and manipulates it
-        const squares = {
-          ...this.state.squares, [id]: 'X'
-        }
-        this.setState({squares: squares, isX: false})
+      if(this.state.squares[id]){
+        console.log('filled');
       } else {
-      const squares = {
-        ...this.state.squares, [id]: 'O'
-      }
+        // checks whether or not it is Xs turn
+        if(this.state.isX === true){
+        // assigns a new object and manipulates it
+          const squares = {
+            ...this.state.squares, [id]: 'X'
+          }
+          this.setState({squares: squares, isX: false})
+        } else {
+          const squares = {
+            ...this.state.squares, [id]: 'O'
+          }
 
-    this.setState({squares: squares, isX: true})
+          this.setState({squares: squares, isX: true})
+        }
       }
     }
-  }
-
-    // console.log({this.state.squares});
   }
 
   // function to check victories
@@ -48,8 +48,8 @@ class App extends Component {
     let winningSymbol = (this.state.squares[key])
     let test = String(key)
     let parsedArray = test.split('a');
-    let xCoord = parseInt(parsedArray[0]);
-    let yCoord = parseInt(parsedArray[1]);
+    let xCoord = parseInt(parsedArray[0], 10);
+    let yCoord = parseInt(parsedArray[1], 10);
     let i = 1;
     let firstCoord;
     let secondCoord;
@@ -83,7 +83,7 @@ class App extends Component {
 
       if (i === 6) {
         console.log('winner winner');
-        return true;
+        this.state.gameOver = true;
       }
       console.log('boooo')
     }
@@ -94,8 +94,8 @@ class App extends Component {
     let winningSymbol = (this.state.squares[key])
     let test = String(key)
     let parsedArray = test.split('a');
-    let xCoord = parseInt(parsedArray[0]);
-    let yCoord = parseInt(parsedArray[1]);
+    let xCoord = parseInt(parsedArray[0], 10);
+    let yCoord = parseInt(parsedArray[1], 10);
     let i = 1;
 
     if (xCoord === yCoord && this.state.squares[`${1}a${1}`] === winningSymbol) {
@@ -120,6 +120,7 @@ class App extends Component {
       }
     if(i === 6) {
       console.log('WIN')
+      this.state.gameOver = true;
     }//
   } // end of easyDiagonalWinChecker function
 
@@ -129,11 +130,9 @@ class App extends Component {
     let winningSymbol = (this.state.squares[key])
     let test = String(key)
     let parsedArray = test.split('a');
-    let xCoord = parseInt(parsedArray[0]);
-    let yCoord = parseInt(parsedArray[1]);
+    let xCoord = parseInt(parsedArray[0], 10);
+    let yCoord = parseInt(parsedArray[1], 10);
     let i = 1;
-    let firstCoord;
-    let secondCoord;
     if (xCoord + yCoord === 6) {
       while (i<6) {
         if(this.state.squares[`${i}a${6-i}`] === winningSymbol) {
@@ -142,7 +141,7 @@ class App extends Component {
           break;
         }
       }
-    } else if (xCoord + yCoord === 8) {
+    }  else if (xCoord + yCoord === 8) {
       while (i<6) {
         if(this.state.squares[`${i+1}a${7-i}`] === winningSymbol) {
           i++;
@@ -150,22 +149,73 @@ class App extends Component {
           break;
         }
       }
+    } else if (xCoord + yCoord === 7) {
+        if(this.state.squares[`${1}a${6}`] === winningSymbol) {
+          while (i<6) {
+            if(this.state.squares[`${i}a${7-i}`] === winningSymbol){
+              i++;
+            } else {
+              break;
+            }
+          }
+        } else if (this.state.squares[`${6}a${1}`] === winningSymbol) {
+          while (i<6) {
+            if(this.state.squares[`${7-i}a${i}`] === winningSymbol){
+              i++;
+            } else {
+              break;
+            }
+          }
+        }
     }
     if (i === 6) {
       console.log('WINNING');
+      this.state.gameOver = true;
     }
 
   }//end of mediumDiagonalWinChecker
 
-  isTttWin = () => {
-    // console.log(coordinate);
+  hardDiagonalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
     let key = keys.slice(-1)[0];
     let winningSymbol = (this.state.squares[key])
     let test = String(key)
     let parsedArray = test.split('a');
-    let xCoord = parseInt(parsedArray[0]);
-    let yCoord = parseInt(parsedArray[1]);
+    let xCoord = parseInt(parsedArray[0], 10);
+    let yCoord = parseInt(parsedArray[1], 10);
+    let i = 1;
+    if (xCoord > yCoord && xCoord - yCoord === 1) {
+      while (i<6) {
+        if (this.state.squares[`${i+1}a${i}`] === winningSymbol) {
+          i++;
+        } else {
+          break;
+        }
+      }
+    } else if (yCoord > xCoord && yCoord - xCoord === 1) {
+      while (i<6) {
+        if (this.state.squares[`${i}a${i+1}`] === winningSymbol) {
+          i++;
+        } else {
+          break;
+        }
+      }
+    }
+    if (i === 6) {
+      console.log('win?')
+      this.state.gameOver = true;
+    }
+  }
+
+
+  isTttWin = () => {
+    let keys = (Object.keys(this.state.squares));
+    let key = keys.slice(-1)[0];
+    let winningSymbol = (this.state.squares[key])
+    let test = String(key)
+    let parsedArray = test.split('a');
+    let xCoord = parseInt(parsedArray[0], 10);
+    let yCoord = parseInt(parsedArray[1], 10);
     //Looking for horizontal victories
     if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
       if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
