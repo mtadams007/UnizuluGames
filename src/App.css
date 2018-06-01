@@ -1,11 +1,17 @@
 .logo {
   float: left;
   height: 100px;
-  position: absolute;
+  margin: 25px;
+
 }
 
 .content {
   text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
 }
 
 .symbolButton {
@@ -14,3 +20,12 @@
   padding: 20px;
   cursor: pointer;
 }
+
+.rules {
+  margin: 25px;
+  float: left
+}
+
+/* div {
+  border: 1px solid green;
+} */

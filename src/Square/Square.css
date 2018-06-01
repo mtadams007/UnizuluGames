@@ -3,4 +3,18 @@
   width:75px;
   border: 1px solid black;
   margin: 0;
+  font-size: 20px;
+  color: transparent;
+}
+
+.X {
+  color: red;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.O {
+  color: blue;
+  font-size: 20px;
+  font-weight: bold;
 }
