@@ -7,3 +7,10 @@
 .content {
   text-align: center;
 }
+
+.symbolButton {
+  border: 1px solid blue;
+  margin: 50px;
+  padding: 20px;
+  cursor: pointer;
+}
