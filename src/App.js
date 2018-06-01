@@ -16,7 +16,6 @@ class App extends Component {
 
   // puts a mark down when you click
 
-
   makeMoveHandler = (event, id) => {
 
     if (!this.state.gameOver) {
@@ -42,7 +41,16 @@ class App extends Component {
     }
   }
 
-  // function to check victories
+
+  toggleSymbolX = () => {
+    this.setState({isX: true})
+  }
+
+  toggleSymbolO = () => {
+    this.setState({isX: false})
+  }
+
+  // Order and Chaos win checkers
 
   horizontalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
@@ -84,7 +92,6 @@ class App extends Component {
       console.log('boooo')
     }
 
-
   verticalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
     let key = keys.slice(-1)[0];
@@ -124,8 +131,6 @@ class App extends Component {
       }
       console.log('boooo')
     }
-
-  //end of vertical win checker
 
   easyDiagonalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
@@ -269,6 +274,7 @@ class App extends Component {
     }
   }
 
+  // Tic Tac Toe win checker
 
   isTttWin = () => {
     let keys = (Object.keys(this.state.squares));
@@ -322,6 +328,7 @@ class App extends Component {
 
 
 // creates a board. the num you input is a num x num board
+
   renderSq = (num) => {
       // creates an empty row array that will be put down
       let rows = [];
@@ -372,18 +379,18 @@ class App extends Component {
           declaration = <h1> Chaos Wins! </h1>
         } else {
         declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
-        !this.state.orderTurn
       }
     };
     return (
       <div className="App">
         <div className="logo">
-          <img src="UnizuluLogo.jpg" className='logo'></img>
+          <img src="UnizuluLogo.jpg" className='logo' alt='Unizulu Logo'></img>
         </div>
         <div className="content">
           {declaration}
           {this.renderSq(6)}
-
+          <button onClick={this.toggleSymbolX}>X</button>
+          <button onClick={this.toggleSymbolO}>O</button>
         </div>
       </div>
     );
