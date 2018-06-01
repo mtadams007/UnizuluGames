@@ -362,7 +362,7 @@ class App extends Component {
         rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> The players take turns putting either an "X" or "O" where they like.  The winner is the first to get three of their symbol in a row either horizontally, vertically or diagonally. </p></div>
         languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button>
       } else {
-        rules = <p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p>
+        rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p></div>
         languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>English</button>
       }
       if(this.isTttWin()) {
@@ -379,7 +379,7 @@ class App extends Component {
           rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph"> One player plays as Order and the other plays as Chaos.  Order wins if they get five "X"s or "O"s in a row, and Chaos wins if they prevent Order from getting five in a row.  Each player can put either an "X" or an "O" on their respective turns.  They can switch between the two whenever they like. </p></div>
           languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button>
         } else {
-          rules = <p className="rulesParagraph">Umdlalo u order and Chaos  udlalwa ebhodini eliphindaphindeke ngokwesithupha ngokwesithupha njengoba kuveziwe esithombeni ngezansi. Umdlali wokuqala udlala engu Order umdlali wesibili udlala engu Chaos. U Order uwina uma ekwaze ukulandelanisa o X noma o O abayisihlanu ebhodini besekuthi u Chaos uwina uma ekwaze ukuvimba u Order ukuthi alandelanise o X noma o O abayisihlanu. Umdlali emunye angadlala ngo X noma ngo O. bangashintsha shintsha phakathi kokubili ngokuthanda kwabo. </p>
+          rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph">Umdlalo u order and Chaos  udlalwa ebhodini eliphindaphindeke ngokwesithupha ngokwesithupha njengoba kuveziwe esithombeni ngezansi. Umdlali wokuqala udlala engu Order umdlali wesibili udlala engu Chaos. U Order uwina uma ekwaze ukulandelanisa o X noma o O abayisihlanu ebhodini besekuthi u Chaos uwina uma ekwaze ukuvimba u Order ukuthi alandelanise o X noma o O abayisihlanu. Umdlali emunye angadlala ngo X noma ngo O. bangashintsha shintsha phakathi kokubili ngokuthanda kwabo. </p></div>
           languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>English</button>
         }
         let player;
@@ -399,12 +399,14 @@ class App extends Component {
 
     };
     return (
-      <div className="App">
 
+      <div className="App">
         <div className="grid">
-          <div className="logo">
-            <img src="UnizuluLogo.jpg" className='logo' alt='Unizulu Logo'></img>
-          </div>
+        <div className="header">
+            <img src="UnizuluLogo.png" className='logo' alt='Unizulu Logo'></img>
+            <button className="homeButton" onClick={this.goHomeScreen}>Go home</button>
+        </div>
+          <div></div>
           <div className="content">
           {declaration}
           {this.renderSq(gameNumber)}
@@ -416,12 +418,7 @@ class App extends Component {
           </div>
         </div>
 
-
-
-          <button className="symbolButton" onClick={this.goHomeScreen}>Go home</button>
         </div>
-
-
     );
   }
 }
