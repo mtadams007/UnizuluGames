@@ -9,7 +9,9 @@ class App extends Component {
     },
     isX: true,
     gameOver: false,
-    whichGame: 'OrderChaos'
+    whichGame: 'OrderChaos',
+    // whichGame: 'TicTacToe',
+    orderTurn: true
   }
 
   // puts a mark down when you click
@@ -34,7 +36,7 @@ class App extends Component {
             ...this.state.squares, [id]: 'O'
           }
 
-          this.setState({squares: squares, isX: true})
+          this.setState({squares: squares, isX: true, orderTurn: !this.state.orderTurn})
         }
       }
     }
@@ -42,51 +44,88 @@ class App extends Component {
 
   // function to check victories
 
-  winChecker = (upOrAcross) => {
+  horizontalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
     let key = keys.slice(-1)[0];
-    let winningSymbol = (this.state.squares[key])
+    let winningSymbol;
+    if (key != null) {
+      winningSymbol = (this.state.squares[key])
+    } else {
+      winningSymbol = ('Empty spot, need something here so that there is no error')
+    }
     let test = String(key)
     let parsedArray = test.split('a');
     let xCoord = parseInt(parsedArray[0], 10);
-    let yCoord = parseInt(parsedArray[1], 10);
     let i = 1;
-    let firstCoord;
-    let secondCoord;
-
     while (i<6) {
-      if(upOrAcross === 'across'){
-        firstCoord = xCoord;
-        secondCoord = i;
-      } else {
-        firstCoord = i;
-        secondCoord = yCoord;
-      }
-      if(this.state.squares[`${firstCoord}a${1}`] === winningSymbol || this.state.squares[`${1}a${secondCoord}`] === winningSymbol){
-        if(this.state.squares[`${firstCoord}a${secondCoord}`] === winningSymbol) {
-        // i++;
+      if(this.state.squares[`${xCoord}a${1}`] === winningSymbol){
+        if(this.state.squares[`${xCoord}a${i}`] === winningSymbol) {
           console.log(i)
         } else {
-        console.log(i)
-        break;
+            break;
         }
-      } else {
-          if(this.state.squares[`${firstCoord}a${secondCoord+1}`] === winningSymbol || this.state.squares[`${firstCoord+1}a${secondCoord}`] === winningSymbol) {
-
+      } else if (this.state.squares[`${xCoord}a${2}`] === winningSymbol) {
+          if(this.state.squares[`${xCoord}a${i+1}`] === winningSymbol) {
             console.log(i)
           } else {
-            break;
+              break;
           }
+        } else {
+            break;
         }
         i++;
       }
 
       if (i === 6) {
-        console.log('winner winner');
-        this.state.gameOver = true;
+        console.log('winner w');
+        // this.state.gameOver = true;
+        return true;
       }
       console.log('boooo')
     }
+
+
+  verticalWinChecker = () => {
+    let keys = (Object.keys(this.state.squares));
+    let key = keys.slice(-1)[0];
+    let winningSymbol;
+    if (key != null) {
+      winningSymbol = (this.state.squares[key])
+    } else {
+      winningSymbol = ('Empty spot, need something here so that there is no error')
+    }
+    let test = String(key)
+    let parsedArray = test.split('a');
+    let yCoord = parseInt(parsedArray[1], 10);
+    let i = 1;
+    while (i<6) {
+      if(this.state.squares[`${1}a${yCoord}`] === winningSymbol){
+        if(this.state.squares[`${i}a${yCoord}`] === winningSymbol) {
+          console.log(i)
+        } else {
+            break;
+        }
+      } else if (this.state.squares[`${2}a${yCoord}`] === winningSymbol) {
+          if(this.state.squares[`${i+1}a${yCoord}`] === winningSymbol) {
+            console.log(i)
+          } else {
+              break;
+          }
+        } else {
+            break;
+        }
+        i++;
+      }
+
+      if (i === 6) {
+        console.log('winner w');
+        // this.state.gameOver = true;
+        return true;
+      }
+      console.log('boooo')
+    }
+
+  //end of vertical win checker
 
   easyDiagonalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
@@ -120,7 +159,8 @@ class App extends Component {
       }
     if(i === 6) {
       console.log('WIN')
-      this.state.gameOver = true;
+      // this.state.gameOver = true;
+      return true;
     }//
   } // end of easyDiagonalWinChecker function
 
@@ -170,7 +210,8 @@ class App extends Component {
     }
     if (i === 6) {
       console.log('WINNING');
-      this.state.gameOver = true;
+      // this.state.gameOver = true;
+      return true;
     }
 
   }//end of mediumDiagonalWinChecker
@@ -203,7 +244,28 @@ class App extends Component {
     }
     if (i === 6) {
       console.log('win?')
-      this.state.gameOver = true;
+      // this.state.gameOver = true;
+      return true;
+    }
+  }
+
+  isOrderChaosWin = () => {
+    if (this.state.gameOver === false) {
+      if (this.easyDiagonalWinChecker()) {
+        this.setState({gameOver: true})
+      } else if (this.mediumDiagonalWinChecker()){
+        this.setState({gameOver: true})
+      } else if (this.hardDiagonalWinChecker()){
+        this.setState({gameOver: true})
+      } else if (this.horizontalWinChecker()){
+        this.setState({gameOver: true})
+      } else if (this.verticalWinChecker()){
+        this.setState({gameOver: true})
+      }
+    }
+
+    if (this.state.gameOver === true) {
+      return true;
     }
   }
 
@@ -216,51 +278,50 @@ class App extends Component {
     let parsedArray = test.split('a');
     let xCoord = parseInt(parsedArray[0], 10);
     let yCoord = parseInt(parsedArray[1], 10);
-    //Looking for horizontal victories
-    if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
-      if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
-        console.log("victory!")
-        this.state.gameOver = true;
-        return true
-      } else {
-        console.log('no dice')
-      }
-    }
-    // Checks vertical victories
-    if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
-      if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
-        console.log("victory!")
-        this.state.gameOver = true;
-        return true
-      } else {
-        console.log('no dice')
-      }
-    }
-    if (xCoord === yCoord) {
-        if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
+    if (this.state.gameOver === false){
+      //Looking for horizontal victories
+      if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
+        if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
           console.log("victory!")
-          this.state.gameOver = true;
-          return true;
+          this.setState({gameOver: true})
         } else {
           console.log('no dice')
         }
-    }
-    if (xCoord+yCoord === 4){
-      if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
-         this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
-         console.log("victory!");
-         this.state.gameOver = true;
-         return true;
       }
-    } else {
-      console.log('boo')
+      // Checks vertical victories
+      if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
+        if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
+          console.log("victory!")
+          this.setState({gameOver: true})
+        } else {
+          console.log('no dice')
+        }
+      }
+      if (xCoord === yCoord) {
+        if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
+          console.log("victory!")
+          this.setState({gameOver: true})
+        } else {
+          console.log('no dice')
+        }
+      }
+      if (xCoord+yCoord === 4){
+        if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
+           this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
+           console.log("victory!");
+           this.setState({gameOver: true})
+        }
+      } else {
+        console.log('boo')
+      }
     }
-
+    if (this.state.gameOver === true){
+      return true;
+    }
   }
 
 
 // creates a board. the num you input is a num x num board
-
   renderSq = (num) => {
       // creates an empty row array that will be put down
       let rows = [];
@@ -280,10 +341,6 @@ class App extends Component {
       return rows;
   }
 
-
-
-
-
   render() {
     let symbol = null;
     let winSymbol = null;
@@ -302,8 +359,22 @@ class App extends Component {
         declaration = (<h1>{symbol}'s Turn</h1>)
       }
     } else if (this.state.whichGame==="OrderChaos"){
-        declaration = <h1>Working on Order and Chaos</h1>
-      };
+        let player;
+        if (this.state.orderTurn) {
+          player = "Order"
+        } else {
+          player = 'Chaos'
+        }
+        let keys = (Object.keys(this.state.squares))
+        if (this.isOrderChaosWin()) {
+          declaration = <h1> Order Wins! </h1>
+        } else if (keys.length === 36) {
+          declaration = <h1> Chaos Wins! </h1>
+        } else {
+        declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
+        !this.state.orderTurn
+      }
+    };
     return (
       <div className="App">
         <div className="logo">
@@ -311,8 +382,8 @@ class App extends Component {
         </div>
         <div className="content">
           {declaration}
-          {this.mediumDiagonalWinChecker()}
           {this.renderSq(6)}
+
         </div>
       </div>
     );
