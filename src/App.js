@@ -42,7 +42,11 @@ class App extends Component {
   }
 
   goHomeScreen = () => {
-    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true, language: 'eng'})
+    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true})
+  }
+
+  resetGame = () => {
+    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true})
   }
 
   chooseTicTacToe = () => {
@@ -360,13 +364,16 @@ class App extends Component {
       gameNumber = 3;
       if (this.state.language === 'eng') {
         rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> The players take turns putting either an "X" or "O" where they like.  The winner is the first to get three of their symbol in a row either horizontally, vertically or diagonally. </p></div>
-        languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button>
+        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
       } else {
         rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p></div>
-        languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>English</button>
+        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
       }
       if(this.isTttWin()) {
         declaration= (<h1>{winSymbol} Wins!</h1>)
+      } else if(Object.keys(this.state.squares).length === 9) {
+        declaration = (<h1>Tie game</h1>)
+
       } else {
         declaration = (<h1>{symbol}'s Turn</h1>)
       }
@@ -377,10 +384,10 @@ class App extends Component {
         gameNumber = 6;
         if (this.state.language === 'eng') {
           rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph"> One player plays as Order and the other plays as Chaos.  Order wins if they get five "X"s or "O"s in a row, and Chaos wins if they prevent Order from getting five in a row.  Each player can put either an "X" or an "O" on their respective turns.  They can switch between the two whenever they like. </p></div>
-          languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button>
+          languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>IsiZulu</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
         } else {
           rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph">Umdlalo u order and Chaos  udlalwa ebhodini eliphindaphindeke ngokwesithupha ngokwesithupha njengoba kuveziwe esithombeni ngezansi. Umdlali wokuqala udlala engu Order umdlali wesibili udlala engu Chaos. U Order uwina uma ekwaze ukulandelanisa o X noma o O abayisihlanu ebhodini besekuthi u Chaos uwina uma ekwaze ukuvimba u Order ukuthi alandelanise o X noma o O abayisihlanu. Umdlali emunye angadlala ngo X noma ngo O. bangashintsha shintsha phakathi kokubili ngokuthanda kwabo. </p></div>
-          languageButton = <button className="symbolButton" onClick={this.toggleLanguage}>English</button>
+          languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
         }
         let player;
         if (this.state.orderTurn) {
