@@ -363,6 +363,7 @@ class App extends Component {
 
   removeNimStones = (event, id, startIndex, row, endIndex) => {
     if (!this.state.gameOver) {
+
     // Checks whether the move has already been put in the state.squares hash
       // good so far
       const pebbles = {
@@ -371,7 +372,7 @@ class App extends Component {
       for (let i = startIndex; i <= endIndex; i++) {
         pebbles[`${row}n${i}`] = 'disappear';
       }
-      console.log(id)
+
       this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
     }
   }
