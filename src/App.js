@@ -387,6 +387,12 @@ class App extends Component {
     }
   }
 
+  isNimWin = () => {
+    const length = (Object.keys(this.state.pebbles)).length;
+    if (length === this.state.nimWinNumber) {
+      return true;
+    }
+  }
 
   render() {
     let symbol = null;
@@ -394,6 +400,7 @@ class App extends Component {
     let declaration = null;
     let rules = null;
     let languageButton = null;
+    let nimArray = 0;
     // dynamically changes size of board
     let gameNumber = 0;
     let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
@@ -454,7 +461,19 @@ class App extends Component {
       }
 
     } else if (this.state.whichGame === 'Nim') {
-
+      buttonArray = null;
+      nimArray = [3,4,5];
+      let player;
+      if (this.state.orderTurn) {
+        player = "Player 1"
+      } else {
+        player = 'Player 2'
+      }
+      if (this.isNimWin()) {
+        declaration = <h1>{player} wins!</h1>
+      } else {
+      declaration = <h1>{player}'s Turn</h1>
+      }
     };
     return (
 
@@ -466,8 +485,8 @@ class App extends Component {
         </div>
           <div></div>
           <div className="content">
-            {this.buildNim([3,4,5,3])}
           {declaration}
+          {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
           {buttonArray}
         </div>
