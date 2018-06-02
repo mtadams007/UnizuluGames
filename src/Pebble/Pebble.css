@@ -27,3 +27,7 @@
   color: transparent;
   background-color: green;
 }
+
+.disappear {
+  display: none;
+}

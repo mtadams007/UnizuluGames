@@ -17,7 +17,35 @@ class App extends Component {
     language: 'eng',
   }
 
-  // puts a mark down when you click
+  // Basic navigation
+
+  goHomeScreen = () => {
+    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true, pebbles:{}})
+  }
+
+  resetGame = () => {
+    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true})
+  }
+
+  chooseTicTacToe = () => {
+    console.log(this.state.whichGame)
+    this.setState({whichGame: 'TicTacToe'})
+  }
+
+  chooseOrderChaos = () => {
+    console.log(this.state.whichGame)
+    this.setState({whichGame: 'OrderChaos'})
+  }
+
+  toggleLanguage = () => {
+    if (this.state.language === 'eng') {
+      this.setState({language: 'zulu'})
+    } else {
+      this.setState({language: 'eng'})
+    }
+  }
+
+  // puts a mark down when you click for tic tac toe or order and chaos
 
   makeMoveHandler = (event, id) => {
 
@@ -43,37 +71,43 @@ class App extends Component {
     }
   }
 
-  goHomeScreen = () => {
-    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true})
-  }
+  // Tic Tac Toe win checker
 
-  resetGame = () => {
-    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true})
-  }
-
-  chooseTicTacToe = () => {
-    console.log(this.state.whichGame)
-    this.setState({whichGame: 'TicTacToe'})
-  }
-
-  chooseOrderChaos = () => {
-    console.log(this.state.whichGame)
-    this.setState({whichGame: 'OrderChaos'})
-  }
-
-  toggleSymbolX = () => {
-    this.setState({isX: true})
-  }
-
-  toggleSymbolO = () => {
-    this.setState({isX: false})
-  }
-
-  toggleLanguage = () => {
-    if (this.state.language === 'eng') {
-      this.setState({language: 'zulu'})
-    } else {
-      this.setState({language: 'eng'})
+  isTttWin = () => {
+    let keys = (Object.keys(this.state.squares));
+    let key = keys.slice(-1)[0];
+    let winningSymbol = (this.state.squares[key])
+    let test = String(key)
+    let parsedArray = test.split('a');
+    let xCoord = parseInt(parsedArray[0], 10);
+    let yCoord = parseInt(parsedArray[1], 10);
+    if (this.state.gameOver === false){
+      //Looking for horizontal victories
+      if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
+        if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
+          this.setState({gameOver: true})
+        }
+      }
+      // Checks vertical victories
+      if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
+        if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
+          this.setState({gameOver: true})
+        }
+      }
+      if (xCoord === yCoord) {
+        if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
+          this.setState({gameOver: true})
+        }
+      }
+      if (xCoord+yCoord === 4){
+        if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
+           this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
+           this.setState({gameOver: true})
+        }
+      }
+    }
+    if (this.state.gameOver === true){
+      return true;
     }
   }
 
@@ -171,12 +205,12 @@ class App extends Component {
           } else {
         break;
           }
-        } // end of while loop
+        }
       }
     if(i === 6) {
       return true;
-    }//
-  } // end of easyDiagonalWinChecker function
+    }
+  }
 
   mediumDiagonalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
@@ -226,7 +260,7 @@ class App extends Component {
       return true;
     }
 
-  }//end of mediumDiagonalWinChecker
+  }
 
   hardDiagonalWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
@@ -279,44 +313,14 @@ class App extends Component {
     }
   }
 
-  // Tic Tac Toe win checker
+  // Toggling symbols in order and chaos
 
-  isTttWin = () => {
-    let keys = (Object.keys(this.state.squares));
-    let key = keys.slice(-1)[0];
-    let winningSymbol = (this.state.squares[key])
-    let test = String(key)
-    let parsedArray = test.split('a');
-    let xCoord = parseInt(parsedArray[0], 10);
-    let yCoord = parseInt(parsedArray[1], 10);
-    if (this.state.gameOver === false){
-      //Looking for horizontal victories
-      if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
-        if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
-          this.setState({gameOver: true})
-        }
-      }
-      // Checks vertical victories
-      if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
-        if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
-          this.setState({gameOver: true})
-        }
-      }
-      if (xCoord === yCoord) {
-        if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
-          this.setState({gameOver: true})
-        }
-      }
-      if (xCoord+yCoord === 4){
-        if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
-           this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
-           this.setState({gameOver: true})
-        }
-      }
-    }
-    if (this.state.gameOver === true){
-      return true;
-    }
+  toggleSymbolX = () => {
+    this.setState({isX: true})
+  }
+
+  toggleSymbolO = () => {
+    this.setState({isX: false})
   }
 
 // creates a board. the num you input is a num x num board
@@ -340,20 +344,36 @@ class App extends Component {
       return rows;
   }
 
+  // building Nim board
+
   buildNim = (numArray) => {
     let rows = [];
     for (let j = 1; j < 4; j++) {
       let pebbles = [];
-      console.log('build me')
       for (let i = 1; i<=numArray[j-1]; i++) {
-        let value = this.state.pebbles['r'+j+'n'+i]
+        let value = this.state.pebbles[j+'n'+i] || '' ;
         pebbles.push(
-          <Pebble id={`${j}n${i}`} myClass={`r${j}`} />
+          <Pebble id={`${j}n${i}`} value={value} myClass={`r${j} ${value}`} click={(e) => this.removeNimStones(e, `${j}n${i}`)} />
         );
       }
       rows.push(<div className="board-row">{pebbles}</div>)
     }
     return rows;
+  }
+
+  removeNimStones = (event, id) => {
+    if (!this.state.gameOver) {
+    // Checks whether the move has already been put in the state.squares hash
+      if(this.state.pebbles[id]){
+        console.log('filled');
+      } else {
+        // good so far
+        const pebbles = {
+          ...this.state.pebbles, [id]: 'disappear'
+        }
+        this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
+      }
+    }
   }
 
   render() {
