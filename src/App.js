@@ -11,7 +11,7 @@ class App extends Component {
     },
     isX: true,
     gameOver: false,
-    whichGame: 'Nim',
+    whichGame: '',
     // whichGame: 'TicTacToe',
     orderTurn: true,
     language: 'eng',
@@ -25,12 +25,16 @@ class App extends Component {
   }
 
   resetGame = () => {
-    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true})
+    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}})
   }
 
   chooseTicTacToe = () => {
     console.log(this.state.whichGame)
     this.setState({whichGame: 'TicTacToe'})
+  }
+
+  chooseNim = () => {
+    this.setState({whichGame: 'Nim'})
   }
 
   chooseOrderChaos = () => {
@@ -400,11 +404,11 @@ class App extends Component {
     let declaration = null;
     let rules = null;
     let languageButton = null;
-    let nimArray = 0;
+    let nimArray = [0];
     // dynamically changes size of board
     let gameNumber = 0;
     let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
-    <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button></div>;
+    <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button><button className="symbolButton" onClick={this.chooseNim}>Nim</button></div>;
     // Decides if X or O is moving
     if (this.state.isX) {
       symbol = 'X'
@@ -464,6 +468,13 @@ class App extends Component {
       buttonArray = null;
       nimArray = [3,4,5];
       let player;
+      if (this.state.language === 'eng') {
+        rules = <div><h3>Nim:</h3><p className="rulesParagraph"> Nim is played with a set of 12 counters.  You place them in three groups as pictured:   Each player takes turns removing as many counters as they like from one group.  They can take as many as they like provided they all come from the same group.  The player who takes the last counter loses.  The game can be adjusted by adding more or less counters to each pile or adding more piles. </p></div>
+        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+      } else {
+        rules = <div><h3>Nim:</h3><p className="rulesParagraph"> UNim udlalwa ngezinkomo ezingu12. Zibekwa zibe ngamaqoqo amathathu, njengasesithombeni. Umdlali, ngethuba lakhe, angathatha nom izinkomo ezingaki, kodwa eqoqweni elilodwa. Umdlali othatha inkomo yokugcina uyena ohlulwayo. Lomdlalo ungashintshwa ngokwenza amaqoqo abe maningi, noma ngokwenza izinkomo zibe ningi noma ncane ngeqoqo ngalinye. </p></div>
+        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+      }
       if (this.state.orderTurn) {
         player = "Player 1"
       } else {
