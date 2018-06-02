@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import Square from './Square/Square'
-// import Board from './Board/Board'
+import Pebble from './Pebble/Pebble'
 import './App.css';
 
 class App extends Component {
   state = {
     squares: {
     },
+    pebbles: {
+    },
     isX: true,
     gameOver: false,
-    whichGame: '',
+    whichGame: 'Nim',
     // whichGame: 'TicTacToe',
     orderTurn: true,
     language: 'eng',
@@ -317,7 +319,6 @@ class App extends Component {
     }
   }
 
-
 // creates a board. the num you input is a num x num board
 
   renderSq = (num) => {
@@ -337,6 +338,22 @@ class App extends Component {
         rows.push(<div className="board-row">{sqrs}</div>)
     }
       return rows;
+  }
+
+  buildNim = (numArray) => {
+    let rows = [];
+    for (let j = 1; j < 4; j++) {
+      let pebbles = [];
+      console.log('build me')
+      for (let i = 1; i<=numArray[j-1]; i++) {
+        let value = this.state.pebbles['r'+j+'n'+i]
+        pebbles.push(
+          <Pebble id={`${j}n${i}`} myClass={`r${j}`} />
+        );
+      }
+      rows.push(<div className="board-row">{pebbles}</div>)
+    }
+    return rows;
   }
 
   render() {
@@ -404,6 +421,8 @@ class App extends Component {
         declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
       }
 
+    } else if (this.state.whichGame === 'Nim') {
+
     };
     return (
 
@@ -415,6 +434,7 @@ class App extends Component {
         </div>
           <div></div>
           <div className="content">
+            {this.buildNim([3,4,5])}
           {declaration}
           {this.renderSq(gameNumber)}
           {buttonArray}
