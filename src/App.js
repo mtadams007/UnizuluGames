@@ -339,7 +339,7 @@ class App extends Component {
           <Square id={`${j}a${i}`} value={value} click={(e) => this.makeMoveHandler(e, `${j}a${i}`)}/>);
       }
         // We push the rows into the arraw and then display them
-        rows.push(<div className="board-row">{sqrs}</div>)
+        rows.push(<div>{sqrs}</div>)
     }
       return rows;
   }
@@ -353,7 +353,7 @@ class App extends Component {
       for (let i = 1; i<=numArray[j-1]; i++) {
         let value = this.state.pebbles[j+'n'+i] || '' ;
         pebbles.push(
-          <Pebble id={`${j}n${i}`} value={value} myClass={`r${j} ${value}`} click={(e) => this.removeNimStones(e, `${j}n${i}`)} />
+          <Pebble id={`${j}n${i}`} value={value} myClass={`r${j} ${value}`} click={(e) => this.removeNimStones(e, `${j}n${i}`, i, j, numArray[j-1])} />
         );
       }
       rows.push(<div className="board-row">{pebbles}</div>)
@@ -361,20 +361,21 @@ class App extends Component {
     return rows;
   }
 
-  removeNimStones = (event, id) => {
+  removeNimStones = (event, id, startIndex, row, endIndex) => {
     if (!this.state.gameOver) {
     // Checks whether the move has already been put in the state.squares hash
-      if(this.state.pebbles[id]){
-        console.log('filled');
-      } else {
-        // good so far
-        const pebbles = {
-          ...this.state.pebbles, [id]: 'disappear'
-        }
-        this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
+      // good so far
+      const pebbles = {
+        ...this.state.pebbles
       }
+      for (let i = startIndex; i <= endIndex; i++) {
+        pebbles[`${row}n${i}`] = 'disappear';
+      }
+      console.log(id)
+      this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
     }
   }
+
 
   render() {
     let symbol = null;

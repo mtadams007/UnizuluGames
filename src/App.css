@@ -41,6 +41,10 @@
   margin: 25px;
   float: left
 }
+
+.board-row {
+  text-align: left;
+}
 /*
 div {
   border: 1px solid green;
