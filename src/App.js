@@ -15,6 +15,7 @@ class App extends Component {
     // whichGame: 'TicTacToe',
     orderTurn: true,
     language: 'eng',
+    nimWinNumber: 12,
   }
 
   // Basic navigation
@@ -347,17 +348,26 @@ class App extends Component {
   // building Nim board
 
   buildNim = (numArray) => {
+    const length = numArray.length
+    const sum = numArray.reduce((acc, val) => {
+      return acc + val;
+    });
+    if (this.state.nimWinNumber != sum){
+      this.setState({nimWinNumber: sum})
+    }
+    console.log(sum)
     let rows = [];
-    for (let j = 1; j < 4; j++) {
-      let pebbles = [];
+    for (let j = 1; j < length+1; j++) {
+      let pebbles = [<Pebble myClass={`keepSpacing pebble`} />];
       for (let i = 1; i<=numArray[j-1]; i++) {
         let value = this.state.pebbles[j+'n'+i] || '' ;
         pebbles.push(
-          <Pebble id={`${j}n${i}`} value={value} myClass={`r${j} ${value}`} click={(e) => this.removeNimStones(e, `${j}n${i}`, i, j, numArray[j-1])} />
+          <Pebble id={`${j}n${i}`} value={value} myClass={`r${j} ${value} pebble`} click={(e) => this.removeNimStones(e, `${j}n${i}`, i, j, numArray[j-1])} />
         );
       }
       rows.push(<div className="board-row">{pebbles}</div>)
     }
+
     return rows;
   }
 
@@ -456,7 +466,7 @@ class App extends Component {
         </div>
           <div></div>
           <div className="content">
-            {this.buildNim([3,4,5])}
+            {this.buildNim([3,4,5,3])}
           {declaration}
           {this.renderSq(gameNumber)}
           {buttonArray}
