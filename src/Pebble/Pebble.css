@@ -1,30 +1,25 @@
-.r1 {
+.pebble {
   height: 75px;
   width:75px;
   border-radius: 50%;
   margin: 5px;
-  font-size: 40px;
-  color: transparent;
+  background-color: yellow;
+}
+
+.keepSpacing {
+  background-color: transparent;
+  border: none;
+}
+
+.r1 {
   background-color: blue;
 }
 
 .r2 {
-  height: 75px;
-  width:75px;
-  border-radius: 50%;
-  margin: 5px;
-  font-size: 40px;
-  color: transparent;
   background-color: red;
 }
 
 .r3 {
-  height: 75px;
-  width:75px;
-  border-radius: 50%;
-  margin: 5px;
-  font-size: 40px;
-  color: transparent;
   background-color: green;
 }
 

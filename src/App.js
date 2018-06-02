@@ -11,10 +11,11 @@ class App extends Component {
     },
     isX: true,
     gameOver: false,
-    whichGame: 'Nim',
+    whichGame: '',
     // whichGame: 'TicTacToe',
     orderTurn: true,
     language: 'eng',
+    nimWinNumber: 12,
   }
 
   // Basic navigation
@@ -24,12 +25,16 @@ class App extends Component {
   }
 
   resetGame = () => {
-    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true})
+    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}})
   }
 
   chooseTicTacToe = () => {
     console.log(this.state.whichGame)
     this.setState({whichGame: 'TicTacToe'})
+  }
+
+  chooseNim = () => {
+    this.setState({whichGame: 'Nim'})
   }
 
   chooseOrderChaos = () => {
@@ -339,7 +344,7 @@ class App extends Component {
           <Square id={`${j}a${i}`} value={value} click={(e) => this.makeMoveHandler(e, `${j}a${i}`)}/>);
       }
         // We push the rows into the arraw and then display them
-        rows.push(<div className="board-row">{sqrs}</div>)
+        rows.push(<div>{sqrs}</div>)
     }
       return rows;
   }
@@ -347,32 +352,49 @@ class App extends Component {
   // building Nim board
 
   buildNim = (numArray) => {
+    const length = numArray.length
+    const sum = numArray.reduce((acc, val) => {
+      return acc + val;
+    });
+    if (this.state.nimWinNumber != sum){
+      this.setState({nimWinNumber: sum})
+    }
+    console.log(sum)
     let rows = [];
-    for (let j = 1; j < 4; j++) {
-      let pebbles = [];
+    for (let j = 1; j < length+1; j++) {
+      let pebbles = [<Pebble myClass={`keepSpacing pebble`} />];
       for (let i = 1; i<=numArray[j-1]; i++) {
         let value = this.state.pebbles[j+'n'+i] || '' ;
         pebbles.push(
-          <Pebble id={`${j}n${i}`} value={value} myClass={`r${j} ${value}`} click={(e) => this.removeNimStones(e, `${j}n${i}`)} />
+          <Pebble id={`${j}n${i}`} value={value} myClass={`r${j} ${value} pebble`} click={(e) => this.removeNimStones(e, `${j}n${i}`, i, j, numArray[j-1])} />
         );
       }
       rows.push(<div className="board-row">{pebbles}</div>)
     }
+
     return rows;
   }
 
-  removeNimStones = (event, id) => {
+  removeNimStones = (event, id, startIndex, row, endIndex) => {
     if (!this.state.gameOver) {
+
     // Checks whether the move has already been put in the state.squares hash
-      if(this.state.pebbles[id]){
-        console.log('filled');
-      } else {
-        // good so far
-        const pebbles = {
-          ...this.state.pebbles, [id]: 'disappear'
-        }
-        this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
+      // good so far
+      const pebbles = {
+        ...this.state.pebbles
       }
+      for (let i = startIndex; i <= endIndex; i++) {
+        pebbles[`${row}n${i}`] = 'disappear';
+      }
+
+      this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
+    }
+  }
+
+  isNimWin = () => {
+    const length = (Object.keys(this.state.pebbles)).length;
+    if (length === this.state.nimWinNumber) {
+      return true;
     }
   }
 
@@ -382,10 +404,11 @@ class App extends Component {
     let declaration = null;
     let rules = null;
     let languageButton = null;
+    let nimArray = [0];
     // dynamically changes size of board
     let gameNumber = 0;
     let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
-    <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button></div>;
+    <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button><button className="symbolButton" onClick={this.chooseNim}>Nim</button></div>;
     // Decides if X or O is moving
     if (this.state.isX) {
       symbol = 'X'
@@ -442,7 +465,26 @@ class App extends Component {
       }
 
     } else if (this.state.whichGame === 'Nim') {
-
+      buttonArray = null;
+      nimArray = [3,4,5];
+      let player;
+      if (this.state.language === 'eng') {
+        rules = <div><h3>Nim:</h3><p className="rulesParagraph"> Nim is played with a set of 12 counters.  You place them in three groups as pictured:   Each player takes turns removing as many counters as they like from one group.  They can take as many as they like provided they all come from the same group.  The player who takes the last counter loses.  The game can be adjusted by adding more or less counters to each pile or adding more piles. </p></div>
+        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+      } else {
+        rules = <div><h3>Nim:</h3><p className="rulesParagraph"> UNim udlalwa ngezinkomo ezingu12. Zibekwa zibe ngamaqoqo amathathu, njengasesithombeni. Umdlali, ngethuba lakhe, angathatha nom izinkomo ezingaki, kodwa eqoqweni elilodwa. Umdlali othatha inkomo yokugcina uyena ohlulwayo. Lomdlalo ungashintshwa ngokwenza amaqoqo abe maningi, noma ngokwenza izinkomo zibe ningi noma ncane ngeqoqo ngalinye. </p></div>
+        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+      }
+      if (this.state.orderTurn) {
+        player = "Player 1"
+      } else {
+        player = 'Player 2'
+      }
+      if (this.isNimWin()) {
+        declaration = <h1>{player} wins!</h1>
+      } else {
+      declaration = <h1>{player}'s Turn</h1>
+      }
     };
     return (
 
@@ -454,8 +496,8 @@ class App extends Component {
         </div>
           <div></div>
           <div className="content">
-            {this.buildNim([3,4,5])}
           {declaration}
+          {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
           {buttonArray}
         </div>
