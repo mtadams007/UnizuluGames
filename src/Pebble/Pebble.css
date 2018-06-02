@@ -1,0 +1,33 @@
+.r1 {
+  height: 75px;
+  width:75px;
+  border-radius: 50%;
+  margin: 5px;
+  font-size: 40px;
+  color: transparent;
+  background-color: blue;
+}
+
+.r2 {
+  height: 75px;
+  width:75px;
+  border-radius: 50%;
+  margin: 5px;
+  font-size: 40px;
+  color: transparent;
+  background-color: red;
+}
+
+.r3 {
+  height: 75px;
+  width:75px;
+  border-radius: 50%;
+  margin: 5px;
+  font-size: 40px;
+  color: transparent;
+  background-color: green;
+}
+
+.disappear {
+  display: none;
+}
