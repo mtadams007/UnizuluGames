@@ -25,7 +25,15 @@ class App extends Component {
   }
 
   resetGame = () => {
+    let elements = document.getElementsByClassName("win");
+    let length = elements.length
+    let i = 0;
+    while (i<length){
+      elements[0].classList.remove("win");
+      i++;
+    }
     this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}})
+    return true;
   }
 
   chooseTicTacToe = () => {
@@ -90,23 +98,47 @@ class App extends Component {
       //Looking for horizontal victories
       if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
         if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
+          let element1 = document.getElementById(`${xCoord}a${(yCoord+1)%3}`);
+          let element2 = document.getElementById(`${xCoord}a${(yCoord+2)%3}`);
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add("win");
+          element2.classList.add("win");
+          element3.classList.add("win");
           this.setState({gameOver: true})
         }
       }
       // Checks vertical victories
       if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
         if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
+          let element1 = document.getElementById(`${(xCoord+1)%3}a${yCoord}`);
+          let element2 = document.getElementById(`${(xCoord+2)%3}a${yCoord}`);
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add("win");
+          element2.classList.add("win");
+          element3.classList.add("win");
           this.setState({gameOver: true})
         }
       }
       if (xCoord === yCoord) {
         if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
+          let element1 = document.getElementById(`${(xCoord%3)+1}a${(yCoord%3)+1}`);
+          let element2 = document.getElementById(`${(xCoord%3)+2}a${(yCoord%3)+2}`);
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add("win");
+          element2.classList.add("win");
+          element3.classList.add("win");
           this.setState({gameOver: true})
         }
       }
       if (xCoord+yCoord === 4){
         if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
            this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
+           let element1 = document.getElementById(`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`);
+           let element2 = document.getElementById(`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`);
+           let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+           element1.classList.add("win");
+           element2.classList.add("win");
+           element3.classList.add("win");
            this.setState({gameOver: true})
         }
       }
@@ -147,6 +179,22 @@ class App extends Component {
       }
 
       if (i === 6) {
+        // trying to highlight wins
+        if(this.state.squares[`${xCoord}a${1}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${xCoord}a${k}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${xCoord}a${k+1}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
         return true;
       }
     }
@@ -180,6 +228,22 @@ class App extends Component {
         i++;
       }
       if (i === 6) {
+        // trying to highlight wins
+        if(this.state.squares[`${1}a${yCoord}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k}a${yCoord}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k+1}a${yCoord}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
         return true;
       }
     }
@@ -212,9 +276,25 @@ class App extends Component {
           }
         }
       }
-    if(i === 6) {
-      return true;
-    }
+      if (i === 6) {
+        // trying to highlight wins
+        if(this.state.squares[`${1}a${1}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k}a${k}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k+1}a${k+1}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
+        return true;
+      }
   }
 
   mediumDiagonalWinChecker = () => {
@@ -262,9 +342,40 @@ class App extends Component {
         }
     }
     if (i === 6) {
+      // trying to highlight wins
+      if (xCoord + yCoord === 7) {
+        if(this.state.squares[`${1}a${6}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k}a${7-k}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${7-k}a${k}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
+      } else if (xCoord + yCoord === 6) {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k}a${6-k}`);
+          element.classList.add("win");
+          k++;
+        }
+      } else {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k+1}a${7-k}`);
+          element.classList.add("win");
+          k++;
+        }
+      }
       return true;
     }
-
   }
 
   hardDiagonalWinChecker = () => {
@@ -294,6 +405,22 @@ class App extends Component {
       }
     }
     if (i === 6) {
+      // trying to highlight wins
+      if (xCoord > yCoord) {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k+1}a${k}`);
+          element.classList.add("win");
+          k++;
+        }
+      } else {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k}a${k+1}`);
+          element.classList.add("win");
+          k++;
+        }
+      }
       return true;
     }
   }
@@ -332,7 +459,7 @@ class App extends Component {
 
   renderSq = (num) => {
       // creates an empty row array that will be put down
-      let rows = [];
+    let rows = [];
     // for loop to create rows
     for(let j=1; j<=num; j++){
       let sqrs = [];
