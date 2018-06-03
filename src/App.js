@@ -235,8 +235,14 @@ class App extends Component {
       // column.push(arrayToCheck);
       i++;
     }
-    arrayToCheck.push(this.ticTacToeDiagonalCheckerOne(keys))
-    this.ticTacToeDiagonalCheckerTwo(keys)
+    let option = this.ticTacToeDiagonalCheckerOne(keys)
+    let option2 = this.ticTacToeDiagonalCheckerTwo(keys)
+    if (option) {
+      arrayToCheck.push(option)
+    }
+    if (option2) {
+      arrayToCheck.push(option2)
+    }
     return arrayToCheck;
   }
 
@@ -248,9 +254,23 @@ class App extends Component {
       let key2 = String(valueArray[1]);
       let key1Parsed = key1.split('a');
       let key2Parsed = key2.split('a');
-      let firstCoord = parseInt(key1Parsed[0], 10);
-      let secondCoord = parseInt(key2Parsed[1], 10);
-      let winningCoord = 6-(firstCoord+secondCoord);
+      let firstYCoord = parseInt(key1Parsed[1], 10);
+      let secondYCoord = parseInt(key2Parsed[1], 10);
+      let winningYCoord = 6-(firstYCoord+secondYCoord);
+      let firstXCoord = parseInt(key1Parsed[0], 10);
+      let secondXCoord = parseInt(key2Parsed[0], 10);
+      let winningXCoord = 6-(firstXCoord+secondXCoord);
+      let move = '';
+      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")){
+        move = `${winningXCoord}a${winningYCoord}`
+        return move;
+      } else {
+        let squares = {
+          ...this.state.squares, [`${winningXCoord}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
+        }
+        this.setState({squares: squares})
+        return ("VICTORY")
+      }
     }
   }
 
