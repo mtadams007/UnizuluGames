@@ -149,13 +149,38 @@ class App extends Component {
     }
   }
 
+  // Checks horizontal and vertical spots whether there is a victory
+
+  ticTacToeFilterMe = (directionNumber, numberOfRow, arrayToFilter, gameNumber) => {
+    const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
+    if (valueArray.length === gameNumber && this.state.squares.valueArray[0]===this.state.squares.valueArray[1]) {
+      return valueArray
+    }
+  }
+
+  ticTacToeHorizontalAndVerticalChecker = () => {
+    let keys = (Object.keys(this.state.squares));
+    let arrayToCheck = [];
+    // let length = keys.length;
+    let i=1;
+    while (i<4) {
+      const row = this.ticTacToeFilterMe(0,i,keys,2);
+      const column = this.ticTacToeFilterMe(2,i,keys,2);
+      if (row) {
+        arrayToCheck.push(row);
+      }
+      if (column) {
+        arrayToCheck.push(column);
+      }
+      // column.push(arrayToCheck);
+      i++;
+    }
+    return arrayToCheck;
+  }
 
   ticTacToeAi = () => {
-    let keys = (Object.keys(this.state.squares));
-    keys.sort()
-    console.log(keys)
-
-
+    const arrayToCheck = this.ticTacToeHorizontalAndVerticalChecker();
+    console.log(arrayToCheck);
   }
   // Order and Chaos win checkers
 
