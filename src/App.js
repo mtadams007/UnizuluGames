@@ -218,7 +218,7 @@ class App extends Component {
     }
   }
 
-  ticTacToeHorizontalAndVerticalChecker = () => {
+  ticTacToeWinChecker = () => {
     let keys = (Object.keys(this.state.squares));
     let arrayToCheck = [];
     // let length = keys.length;
@@ -248,7 +248,7 @@ class App extends Component {
 
   ticTacToeDiagonalCheckerTwo = (arrayToFilter) => {
     const valueArray = arrayToFilter.filter(key => parseInt(key[0], 10) + parseInt(key[2],10)===4)
-    console.log(`new diagonal checker = ${valueArray}`)
+
     if (valueArray.length === 2 && this.state.squares[valueArray[0]]===this.state.squares[valueArray[1]]){
       let key1 = String(valueArray[0]);
       let key2 = String(valueArray[1]);
@@ -279,16 +279,42 @@ class App extends Component {
   ticTacToeAi = () => {
     const symbol = (this.state.isX ? "X" : "O")
     let isX = this.state.isX;
-    const dangerArray = this.ticTacToeHorizontalAndVerticalChecker();
+    const dangerArray = this.ticTacToeWinChecker();
     let victoryCheck = dangerArray.filter(win => win === "VICTORY")
     if (victoryCheck.length != 0) {
       return;
     }
-    const squares = {
-      ...this.state.squares, [`${dangerArray[0]}`]: `${this.state.isX ? "X" : "O"}`
-    }
-    this.setState({squares: squares, isX: !isX})
+    if (dangerArray.length != 0) {
+      const squares = {
+        ...this.state.squares, [`${dangerArray[0]}`]: `${this.state.isX ? "X" : "O"}`
+      }
+      this.setState({squares: squares, isX: !isX})
+    } else {
+      let options = [];
+      let keys = (Object.keys(this.state.squares));
+      for(let j = 1; j<4; j++) {
+        for (let i = 1; i<4; i++) {
+          options.push(`${j}a${i}`);
+        }
+      }
+      let length = keys.length;
+      for (let k=0; k<9; k++) {
+        for (let m=0; m<keys.length; m++){
+          if (keys[k] === options[m]){
+            options.splice(m,1);
+          }
+        }
+      }
+      let randomSelector = 9 - length;
 
+      console.log(options)
+      let number = Math.floor((Math.random())*randomSelector);
+      const squares = {
+        ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
+      }
+      this.setState({squares: squares, isX: !isX})
+      return;
+    }
   }
 
   // Order and Chaos win checkers
@@ -629,7 +655,7 @@ class App extends Component {
     if (this.state.nimWinNumber != sum){
       this.setState({nimWinNumber: sum})
     }
-    console.log(sum)
+
     let rows = [];
     for (let j = 1; j < length+1; j++) {
       let pebbles = [<Pebble myClass={`keepSpacing pebble`} />];
