@@ -25,7 +25,15 @@ class App extends Component {
   }
 
   resetGame = () => {
+    let elements = document.getElementsByClassName("win");
+    let length = elements.length
+    let i = 0;
+    while (i<length){
+      elements[0].classList.remove("win");
+      i++;
+    }
     this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}})
+    return true;
   }
 
   chooseTicTacToe = () => {
@@ -171,6 +179,22 @@ class App extends Component {
       }
 
       if (i === 6) {
+        // trying to highlight wins
+        if(this.state.squares[`${xCoord}a${1}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${xCoord}a${k}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${xCoord}a${k+1}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
         return true;
       }
     }
@@ -204,6 +228,22 @@ class App extends Component {
         i++;
       }
       if (i === 6) {
+        // trying to highlight wins
+        if(this.state.squares[`${1}a${yCoord}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k}a${yCoord}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k+1}a${yCoord}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
         return true;
       }
     }
