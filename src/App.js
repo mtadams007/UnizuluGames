@@ -278,6 +278,8 @@ class App extends Component {
 
   ticTacToeAi = () => {
     const symbol = (this.state.isX ? "X" : "O")
+    let options =[];
+    console.log(options)
     let isX = this.state.isX;
     const dangerArray = this.ticTacToeWinChecker();
     let victoryCheck = dangerArray.filter(win => win === "VICTORY")
@@ -290,7 +292,7 @@ class App extends Component {
       }
       this.setState({squares: squares, isX: !isX})
     } else {
-      let options = [];
+
       let keys = (Object.keys(this.state.squares));
       for(let j = 1; j<4; j++) {
         for (let i = 1; i<4; i++) {
@@ -298,10 +300,13 @@ class App extends Component {
         }
       }
       let length = keys.length;
-      for (let k=0; k<9; k++) {
+      //k is the array number for options
+      let k = 1;
+      while (k<9) {
+      //m is the array number for keys length
         for (let m=0; m<keys.length; m++){
-          if (keys[k] === options[m]){
-            options.splice(m,1);
+          if (keys[m] === options[k]){
+            options.splice(k,1);
           }
         }
       }
