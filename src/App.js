@@ -90,23 +90,47 @@ class App extends Component {
       //Looking for horizontal victories
       if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
         if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
+          let element1 = document.getElementById(`${xCoord}a${(yCoord+1)%3}`);
+          let element2 = document.getElementById(`${xCoord}a${(yCoord+2)%3}`);
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add("win");
+          element2.classList.add("win");
+          element3.classList.add("win");
           this.setState({gameOver: true})
         }
       }
       // Checks vertical victories
       if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
         if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
+          let element1 = document.getElementById(`${(xCoord+1)%3}a${yCoord}`);
+          let element2 = document.getElementById(`${(xCoord+2)%3}a${yCoord}`);
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add("win");
+          element2.classList.add("win");
+          element3.classList.add("win");
           this.setState({gameOver: true})
         }
       }
       if (xCoord === yCoord) {
         if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
+          let element1 = document.getElementById(`${(xCoord%3)+1}a${(yCoord%3)+1}`);
+          let element2 = document.getElementById(`${(xCoord%3)+2}a${(yCoord%3)+2}`);
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add("win");
+          element2.classList.add("win");
+          element3.classList.add("win");
           this.setState({gameOver: true})
         }
       }
       if (xCoord+yCoord === 4){
         if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
            this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
+           let element1 = document.getElementById(`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`);
+           let element2 = document.getElementById(`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`);
+           let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+           element1.classList.add("win");
+           element2.classList.add("win");
+           element3.classList.add("win");
            this.setState({gameOver: true})
         }
       }
@@ -332,7 +356,7 @@ class App extends Component {
 
   renderSq = (num) => {
       // creates an empty row array that will be put down
-      let rows = [];
+    let rows = [];
     // for loop to create rows
     for(let j=1; j<=num; j++){
       let sqrs = [];
