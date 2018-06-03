@@ -99,9 +99,9 @@ class App extends Component {
       //Looking for horizontal victories
       if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
         if(this.state.squares[`${xCoord}a${(yCoord+1)%3+1}`]===this.state.squares[`${xCoord}a${(yCoord+2)%3+1}`] && this.state.squares[`${xCoord}a${(yCoord%3)+1}`] === winningSymbol){
-          let element1 = document.getElementById(`${xCoord}a${(yCoord+1)%3}`);
-          let element2 = document.getElementById(`${xCoord}a${(yCoord+2)%3}`);
-          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          let element1 = document.getElementById(`${xCoord}a${(yCoord+1)%3+1}`);
+          let element2 = document.getElementById(`${xCoord}a${(yCoord+2)%3+1}`);
+          let element3 = document.getElementById(`${xCoord}a${yCoord%3+1}`);
           element1.classList.add("win");
           element2.classList.add("win");
           element3.classList.add("win");
@@ -111,9 +111,9 @@ class App extends Component {
       // Checks vertical victories
       if(keys.includes(`${(xCoord+1)%3+1}a${yCoord}`) && keys.includes(`${(xCoord+2)%3+1}a${yCoord}`)){
         if(this.state.squares[`${(xCoord+1)%3+1}a${yCoord}`]===this.state.squares[`${(xCoord+2)%3+1}a${yCoord}`] && this.state.squares[`${(xCoord%3)+1}a${yCoord}`] === winningSymbol){
-          let element1 = document.getElementById(`${(xCoord+1)%3}a${yCoord}`);
-          let element2 = document.getElementById(`${(xCoord+2)%3}a${yCoord}`);
-          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          let element1 = document.getElementById(`${(xCoord+1)%3+1}a${yCoord}`);
+          let element2 = document.getElementById(`${(xCoord+2)%3+1}a${yCoord}`);
+          let element3 = document.getElementById(`${(xCoord%3)+1}a${yCoord}`);
           element1.classList.add("win");
           element2.classList.add("win");
           element3.classList.add("win");
@@ -149,12 +149,42 @@ class App extends Component {
     }
   }
 
-  // Checks horizontal and vertical spots whether there is a victory
+  // Checks horizontal and vertical spots whether there are two similar pieces in a row
 
   ticTacToeFilterMe = (directionNumber, numberOfRow, arrayToFilter, gameNumber) => {
     const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
-    if (valueArray.length === gameNumber && this.state.squares.valueArray[0]===this.state.squares.valueArray[1]) {
-      return valueArray
+    if (valueArray.length === gameNumber && this.state.squares[valueArray[0]]===this.state.squares[valueArray[1]]) {
+      // Confusing use of ternary here, but if the two in a row are NOT the current player's turn, it gets pushed to the danger array, otherwise computer will win here.
+      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")) {
+        return valueArray;
+        // if directionNumber is 0, then we make the horizontal victory
+      } else if (directionNumber === 0) {
+        let key1 = String(valueArray[0]);
+        let key2 = String(valueArray[1]);
+        let key1Parsed = key1.split('a');
+        let key2Parsed = key2.split('a');
+        let firstYCoord = parseInt(key1Parsed[1], 10);
+        let secondYCoord = parseInt(key2Parsed[1], 10);
+        let winningYCoord = 6-(firstYCoord+secondYCoord);
+        const squares = {
+          ...this.state.squares, [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
+        }
+        this.setState({squares: squares})
+    } else {
+      let key1 = String(valueArray[0]);
+      let key2 = String(valueArray[1]);
+      let key1Parsed = key1.split('a');
+      let key2Parsed = key2.split('a');
+      let firstXCoord = parseInt(key1Parsed[0], 10);
+      let secondXCoord = parseInt(key2Parsed[0], 10);
+      let winningXCoord = 6-(firstXCoord+secondXCoord);
+
+      const squares = {
+        ...this.state.squares, [`${winningXCoord}a${numberOfRow}`]: `${this.state.isX ? "X" : "O"}`
+      }
+      this.setState({squares: squares})
+    }
+
     }
   }
 
@@ -178,9 +208,20 @@ class App extends Component {
     return arrayToCheck;
   }
 
+  // AI is purposefully not supposed to be unbeatable, but challenging. It trys to win first, then prevent the other player from winning, and finally goes randomly if neither of the first two
+
   ticTacToeAi = () => {
-    const arrayToCheck = this.ticTacToeHorizontalAndVerticalChecker();
-    console.log(arrayToCheck);
+    const symbol = (this.state.isX ? "X" : "O")
+    const dangerArray = this.ticTacToeHorizontalAndVerticalChecker();
+    let length = dangerArray.length;
+    // if (length === 1) {
+    //   let checkMe = dangerArray[0];
+    //   let firstCoord = String(checkMe[0]).split('a');
+    //   let firstXCoord = parseInt(first)
+    //   let secondCoord = String(checkMe[1]).split('a');
+    //   let firstXCoord = first
+    // }
+
   }
   // Order and Chaos win checkers
 
