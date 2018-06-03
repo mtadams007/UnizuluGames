@@ -276,9 +276,25 @@ class App extends Component {
           }
         }
       }
-    if(i === 6) {
-      return true;
-    }
+      if (i === 6) {
+        // trying to highlight wins
+        if(this.state.squares[`${1}a${1}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k}a${k}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k+1}a${k+1}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
+        return true;
+      }
   }
 
   mediumDiagonalWinChecker = () => {
@@ -326,9 +342,40 @@ class App extends Component {
         }
     }
     if (i === 6) {
+      // trying to highlight wins
+      if (xCoord + yCoord === 7) {
+        if(this.state.squares[`${1}a${6}`] === winningSymbol){
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${k}a${7-k}`);
+            element.classList.add("win");
+            k++;
+          }
+        } else {
+          let k = 1;
+          while (k<6) {
+            let element = document.getElementById(`${7-k}a${k}`);
+            element.classList.add("win");
+            k++;
+          }
+        }
+      } else if (xCoord + yCoord === 6) {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k}a${6-k}`);
+          element.classList.add("win");
+          k++;
+        }
+      } else {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k+1}a${7-k}`);
+          element.classList.add("win");
+          k++;
+        }
+      }
       return true;
     }
-
   }
 
   hardDiagonalWinChecker = () => {
@@ -358,6 +405,22 @@ class App extends Component {
       }
     }
     if (i === 6) {
+      // trying to highlight wins
+      if (xCoord > yCoord) {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k+1}a${k}`);
+          element.classList.add("win");
+          k++;
+        }
+      } else {
+        let k = 1;
+        while (k<6) {
+          let element = document.getElementById(`${k}a${k+1}`);
+          element.classList.add("win");
+          k++;
+        }
+      }
       return true;
     }
   }
