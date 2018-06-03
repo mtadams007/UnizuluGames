@@ -154,35 +154,42 @@ class App extends Component {
   ticTacToeFilterMe = (directionNumber, numberOfRow, arrayToFilter, gameNumber) => {
     const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
     if (valueArray.length === gameNumber && this.state.squares[valueArray[0]]===this.state.squares[valueArray[1]]) {
-      // Confusing use of ternary here, but if the two in a row are NOT the current player's turn, it gets pushed to the danger array, otherwise computer will win here.
-      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")) {
-        return valueArray;
-        // if directionNumber is 0, then we make the horizontal victory
-      } else if (directionNumber === 0) {
-        let key1 = String(valueArray[0]);
-        let key2 = String(valueArray[1]);
-        let key1Parsed = key1.split('a');
-        let key2Parsed = key2.split('a');
-        let firstYCoord = parseInt(key1Parsed[1], 10);
-        let secondYCoord = parseInt(key2Parsed[1], 10);
-        let winningYCoord = 6-(firstYCoord+secondYCoord);
-        const squares = {
-          ...this.state.squares, [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
-        }
-        this.setState({squares: squares})
-    } else {
       let key1 = String(valueArray[0]);
       let key2 = String(valueArray[1]);
       let key1Parsed = key1.split('a');
       let key2Parsed = key2.split('a');
+      let firstYCoord = parseInt(key1Parsed[1], 10);
+      let secondYCoord = parseInt(key2Parsed[1], 10);
+      let winningYCoord = 6-(firstYCoord+secondYCoord);
       let firstXCoord = parseInt(key1Parsed[0], 10);
       let secondXCoord = parseInt(key2Parsed[0], 10);
       let winningXCoord = 6-(firstXCoord+secondXCoord);
+      let move = '';
+      // Confusing use of ternary here, but if the two in a row are NOT the current player's turn, it gets pushed to the danger array, otherwise computer will win here.
+      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")) {
+      console.log('in danger array spot')
 
-      const squares = {
+        if (directionNumber === 0) {
+          move =`${numberOfRow}a${winningYCoord}`
+        } else {
+          move = `${winningXCoord}a${numberOfRow}`;
+        }
+        return move;
+        // if directionNumber is 0, then we make the horizontal victory
+      } else if (directionNumber === 0) {
+      console.log('not in danger zone')
+      console.log(`${numberOfRow}a${winningYCoord}`)
+        let squares = {
+          ...this.state.squares, [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
+        }
+        this.setState({squares: squares})
+        return ("VICTORY")
+    } else {
+      let squares = {
         ...this.state.squares, [`${winningXCoord}a${numberOfRow}`]: `${this.state.isX ? "X" : "O"}`
       }
       this.setState({squares: squares})
+      return ("VICTORY")
     }
 
     }
@@ -212,17 +219,20 @@ class App extends Component {
 
   ticTacToeAi = () => {
     const symbol = (this.state.isX ? "X" : "O")
+    let isX = this.state.isX;
     const dangerArray = this.ticTacToeHorizontalAndVerticalChecker();
-    let length = dangerArray.length;
-    // if (length === 1) {
-    //   let checkMe = dangerArray[0];
-    //   let firstCoord = String(checkMe[0]).split('a');
-    //   let firstXCoord = parseInt(first)
-    //   let secondCoord = String(checkMe[1]).split('a');
-    //   let firstXCoord = first
-    // }
+    console.log(dangerArray);
+    let victoryCheck = dangerArray.filter(win => win === "VICTORY")
+    if (victoryCheck.length != 0) {
+      return;
+    }
+    const squares = {
+      ...this.state.squares, [`${dangerArray[0]}`]: `${this.state.isX ? "X" : "O"}`
+    }
+    this.setState({squares: squares, isX: !isX})
 
   }
+
   // Order and Chaos win checkers
 
   horizontalWinChecker = () => {
