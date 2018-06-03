@@ -16,6 +16,7 @@ class App extends Component {
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
+    isComputerPlayer: false,
   }
 
   // Basic navigation
@@ -148,6 +149,14 @@ class App extends Component {
     }
   }
 
+
+  ticTacToeAi = () => {
+    let keys = (Object.keys(this.state.squares));
+    keys.sort()
+    console.log(keys)
+
+
+  }
   // Order and Chaos win checkers
 
   horizontalWinChecker = () => {
@@ -624,6 +633,7 @@ class App extends Component {
           <div></div>
           <div className="content">
           {declaration}
+          <button className="symbolButton" onClick={this.ticTacToeAi}>Computer Test</button>
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
           {buttonArray}
