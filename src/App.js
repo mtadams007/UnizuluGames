@@ -178,7 +178,6 @@ class App extends Component {
         // if directionNumber is 0, then we make the horizontal victory
       } else if (directionNumber === 0) {
       console.log('not in danger zone')
-      console.log(`${numberOfRow}a${winningYCoord}`)
         let squares = {
           ...this.state.squares, [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
@@ -192,6 +191,30 @@ class App extends Component {
       return ("VICTORY")
     }
 
+    }
+  }
+
+  ticTacToeDiagonalCheckerOne = (arrayToFilter) => {
+    const valueArray = arrayToFilter.filter(key => key[0] === key[2])
+    if (valueArray.length === 2 && this.state.squares[valueArray[0]]===this.state.squares[valueArray[1]]){
+      let key1 = String(valueArray[0]);
+      let key2 = String(valueArray[1]);
+      let key1Parsed = key1.split('a');
+      let key2Parsed = key2.split('a');
+      let firstCoord = parseInt(key1Parsed[0], 10);
+      let secondCoord = parseInt(key2Parsed[1], 10);
+      let winningCoord = 6-(firstCoord+secondCoord);
+      let move = '';
+      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")){
+        move = `${winningCoord}a${winningCoord}`
+        return move;
+      } else {
+        let squares = {
+          ...this.state.squares, [`${winningCoord}a${winningCoord}`]: `${this.state.isX ? "X" : "O"}`
+        }
+        this.setState({squares: squares})
+        return ("VICTORY")
+      }
     }
   }
 
@@ -212,7 +235,23 @@ class App extends Component {
       // column.push(arrayToCheck);
       i++;
     }
+    arrayToCheck.push(this.ticTacToeDiagonalCheckerOne(keys))
+    this.ticTacToeDiagonalCheckerTwo(keys)
     return arrayToCheck;
+  }
+
+  ticTacToeDiagonalCheckerTwo = (arrayToFilter) => {
+    const valueArray = arrayToFilter.filter(key => parseInt(key[0], 10) + parseInt(key[2],10)===4)
+    console.log(`new diagonal checker = ${valueArray}`)
+    if (valueArray.length === 2 && this.state.squares[valueArray[0]]===this.state.squares[valueArray[1]]){
+      let key1 = String(valueArray[0]);
+      let key2 = String(valueArray[1]);
+      let key1Parsed = key1.split('a');
+      let key2Parsed = key2.split('a');
+      let firstCoord = parseInt(key1Parsed[0], 10);
+      let secondCoord = parseInt(key2Parsed[1], 10);
+      let winningCoord = 6-(firstCoord+secondCoord);
+    }
   }
 
   // AI is purposefully not supposed to be unbeatable, but challenging. It trys to win first, then prevent the other player from winning, and finally goes randomly if neither of the first two
@@ -221,7 +260,6 @@ class App extends Component {
     const symbol = (this.state.isX ? "X" : "O")
     let isX = this.state.isX;
     const dangerArray = this.ticTacToeHorizontalAndVerticalChecker();
-    console.log(dangerArray);
     let victoryCheck = dangerArray.filter(win => win === "VICTORY")
     if (victoryCheck.length != 0) {
       return;
