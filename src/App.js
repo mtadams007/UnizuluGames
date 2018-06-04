@@ -775,16 +775,72 @@ class App extends Component {
           i++;
         }
         if (str === 'XXX') {
-        let moves = blockingMove.split('.')
-        console.log(`${moves[1]}.O`)
-        return `${moves[1]}.O`
-      } else if (str === 'OOO') {
-        let moves = blockingMove.split('.')
-        return `${moves[1]}.X`
+          let moves = blockingMove.split('.')
+          return `${moves[1]}.O`
+        } else if (str === 'OOO') {
+          let moves = blockingMove.split('.')
+          return `${moves[1]}.X`
       }
     }
   }
 
+  orderChaosMediumDiagonalAiChecker = () => {
+    let sum = 8
+    let arrayToFilter = Object.keys(this.state.squares)
+    // are the x coordinate and y coordinate the same
+    const valueArray = arrayToFilter.filter(key => parseInt(key[0], 10) + parseInt(key[2],10)===sum)
+    console.log(valueArray)
+    let arrayLength = valueArray.length;
+    if (sum === 6 && arrayLength === 4) {
+      let str = ''
+      let blockingMove = ''
+      let i = 1;
+      while (i<6) {
+        if (this.state.squares[`${6-i}a${i}`]) {
+          str += (this.state.squares[`${6-i}a${i}`])
+        } else {
+          blockingMove += `${6-i}a${i}`
+        }
+        i++;
+      }
+      if (str === ('XXXX')) {
+        const squares = {
+          ...this.state.squares, [blockingMove]: 'O'
+        }
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+    } else if (str === ('OOOO')) {
+        const squares = {
+          ...this.state.squares, [blockingMove]: 'X'
+        }
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+      }
+    } else if (sum === 8 && arrayLength === 4) {
+      let str = ''
+      let blockingMove = ''
+      let i = 1;
+      while (i<6) {
+        if (this.state.squares[`${7-i}a${i+1}`]) {
+          str += (this.state.squares[`${7-i}a${i+1}`])
+        } else {
+          blockingMove += `${7-i}a${i+1}`
+        }
+        i++;
+      }
+      if (str === ('XXXX')) {
+        const squares = {
+          ...this.state.squares, [blockingMove]: 'O'
+        }
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+    } else if (str === ('OOOO')) {
+        const squares = {
+          ...this.state.squares, [blockingMove]: 'X'
+        }
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+      }
+    }
+
+
+  }
   // Order and Chaos win checkers
 
   horizontalWinChecker = () => {
@@ -1274,7 +1330,7 @@ class App extends Component {
           <div></div>
           <div className="content">
           {declaration}
-          <button className="symbolButton" onClick={this.orderChaosEasyDiagonalAiChecker}>Computer Test</button>
+          <button className="symbolButton" onClick={this.orderChaosMediumDiagonalAiChecker}>Computer Test</button>
 
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
