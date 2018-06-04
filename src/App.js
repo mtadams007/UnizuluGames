@@ -301,12 +301,13 @@ class App extends Component {
       }
       let length = keys.length;
       //k is the array number for options
-      let k = 1;
-      while (k<9) {
+
+      for (let k = 0; k<keys.length; k++) {
       //m is the array number for keys length
-        for (let m=0; m<keys.length; m++){
-          if (keys[m] === options[k]){
-            options.splice(k,1);
+        for (let m=0; m<9; m++){
+          if (keys[k] === options[m]){
+            options.splice(m,1);
+            break;
           }
         }
       }
