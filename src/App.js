@@ -420,8 +420,7 @@ class App extends Component {
             return "STOP"
           }
         }
-        console.log(blockingMove)
-        console.log(str)
+
         // vertical check
       } else if (directionNumber === 2) {
         while (i<7) {
@@ -501,12 +500,12 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [moves[1]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
           }
         } else if (str === ('OOOO')) {
           const moves = blockingMove.split('.')
@@ -526,25 +525,21 @@ class App extends Component {
         } else if (str === ('XXXO')) {
           const moves = blockingMove.split('.')
           if (moves[1] != `${numberOfRow}a6`) {
-            console.log(`${moves[1]}.O`)
             return `${moves[1]}.O`
           }
         } else if (str === ('OOOX')) {
           const moves = blockingMove.split('.')
           if (moves[1] != `${numberOfRow}a6`) {
-            console.log(`${moves[1]}.X`)
             return `${moves[1]}.X`
           }
         } else if (str === ('OXXX')) {
           const moves = blockingMove.split('.')
           if (moves[0] != `${numberOfRow}a1`) {
-            console.log(`${moves[0]}.O`)
             return `${moves[0]}.O`
           }
         } else if (str === ('XOOO')) {
           const moves = blockingMove.split('.')
           if (moves[0] != `${numberOfRow}a1`) {
-            console.log(`${moves[0]}.X`)
             return `${moves[0]}.X`
           }
         }
@@ -628,7 +623,6 @@ class App extends Component {
         }
         if (str === 'XXX') {
           let moves = blockingMove.split('.')
-          console.log(`${moves[1]}.O`)
           return `${moves[1]}.O`
         } else if (str === 'OOO') {
           let moves = blockingMove.split('.')
@@ -817,7 +811,6 @@ class App extends Component {
   orderChaosMediumDiagonalAiChecker = (arrayToFilter, sum) => {
     // are the x coordinate and y coordinate the same
     const valueArray = arrayToFilter.filter(key => parseInt(key[0], 10) + parseInt(key[2],10)===sum)
-    console.log(valueArray)
     let arrayLength = valueArray.length;
     if (sum === 6 && arrayLength === 4) {
       let str = ''
@@ -1130,10 +1123,11 @@ class App extends Component {
   }
 
   orderChaosAi = () => {
+    let keys = (Object.keys(this.state.squares));
+    console.log(keys)
     if (this.state.isComputerTurn && !this.state.gameOver) {
       console.log('computer turn')
       let options =[];
-      console.log(options)
       //returns danger array from places we might need to block
       const dangerArray = this.orderChaosAiMoveChecker();
       // if we already moved, then don't worry about moving again
@@ -1145,6 +1139,7 @@ class App extends Component {
       if (dangerArrayLength != 0) {
         let randomMove = dangerArray[Math.floor(Math.random()*dangerArrayLength)]
         let blockHere = randomMove.split('.')
+        console.log('setting a key')
         const squares = {
           ...this.state.squares, [`${blockHere[0]}`]: `${blockHere[1]}`
         }
@@ -1152,16 +1147,17 @@ class App extends Component {
 
       } else {
 
-        let keys = (Object.keys(this.state.squares));
+
         for(let j = 1; j<7; j++) {
           for (let i = 1; i<7; i++) {
             options.push(`${j}a${i}`);
           }
         }
         let length = keys.length;
+
         //k is the array number for options
 
-        for (let k = 0; k<keys.length; k++) {
+        for (let k = 0; k<length; k++) {
         //m is the array number for keys length
           for (let m=0; m<36; m++){
             if (keys[k] === options[m]){
