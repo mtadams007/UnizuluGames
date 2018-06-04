@@ -16,7 +16,7 @@ class App extends Component {
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
-    isComputerPlayer: true,
+    isComputerPlayer: false,
     isComputerTurn: false,
   }
 
@@ -39,7 +39,7 @@ class App extends Component {
       elements[0].classList.remove("win");
       i++;
     }
-    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}})
+    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}, isComputerTurn: false})
     return true;
   }
 
@@ -170,7 +170,9 @@ class App extends Component {
   // Checks horizontal and vertical spots whether there are two similar pieces in a row
 
   ticTacToeFilterMe = (directionNumber, numberOfRow, arrayToFilter, gameNumber) => {
+    // filtering either the row or column, directionNumber is 0 for horiontal, so the key calls the xCoordinate, otherwise 2 for vertical
     const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
+    // gameNumber is how long a row we're checking for. In this case it is 2
     if (valueArray.length === gameNumber && this.state.squares[valueArray[0]]===this.state.squares[valueArray[1]]) {
       let key1 = String(valueArray[0]);
       let key2 = String(valueArray[1]);
@@ -178,6 +180,7 @@ class App extends Component {
       let key2Parsed = key2.split('a');
       let firstYCoord = parseInt(key1Parsed[1], 10);
       let secondYCoord = parseInt(key2Parsed[1], 10);
+      //the winning coordinate is the difference between double the list minus the last two added two together
       let winningYCoord = 6-(firstYCoord+secondYCoord);
       let firstXCoord = parseInt(key1Parsed[0], 10);
       let secondXCoord = parseInt(key2Parsed[0], 10);
@@ -342,6 +345,77 @@ class App extends Component {
         // return;
       }
     }
+  }
+
+  orderChaosHorizontalVerticalChecker = () => {
+    // the valueArray is checking how many keys are in a row
+    let directionNumber = 0
+    let numberOfRow = 1
+    let arrayToFilter = Object.keys(this.state.squares)
+    const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
+    let arrayLength = valueArray.length;
+    // checking if the length is equal to 5, then we need to check if there are 4 of a kind in a row and need to block
+    if (arrayLength === 5) {
+      let blockingMove = ''
+      let str = ''
+      let i = 1;
+        // checks if we're checking horizontal or not
+        if (directionNumber === 0) {
+        while (i<7) {
+          if (this.state.squares[`${numberOfRow}a${i}`]) {
+            str += (this.state.squares[`${numberOfRow}a${i}`])
+          } else {
+            blockingMove = `${numberOfRow}a${i}`
+          }
+          i++;
+        }
+        if (str.includes('XXXXX')) {
+          const squares = {
+            ...this.state.squares, [blockingMove]: 'O'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        } else if (str.includes('OOOOO')) {
+          const squares = {
+            ...this.state.squares, [blockingMove]: 'X'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        } else if (str === ('XXXXO')) {
+          if (blockingMove != `${numberOfRow}a6`) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'O'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+          }
+        } else if (str === ('OOOOX')) {
+          if (blockingMove != `${numberOfRow}a6`) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'X'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+          }
+        } else if (str === ('OXXXX')) {
+          if (blockingMove != `${numberOfRow}a1`) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'O'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+          }
+        } else if (str === ('XOOOO')) {
+          if (blockingMove != `${numberOfRow}a1`) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'X'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+          }
+        }
+        console.log(blockingMove)
+        console.log(str)
+        // vertical check
+      } else {
+
+      }
+    }
+
   }
 
   // Order and Chaos win checkers
@@ -833,7 +907,7 @@ class App extends Component {
           <div></div>
           <div className="content">
           {declaration}
-          <button className="symbolButton" onClick={this.ticTacToeAi}>Computer Test</button>
+          <button className="symbolButton" onClick={this.orderChaosHorizontalVerticalChecker}>Computer Test</button>
 
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
