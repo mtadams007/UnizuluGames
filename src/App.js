@@ -349,7 +349,7 @@ class App extends Component {
 
   orderChaosHorizontalVerticalChecker = () => {
     // the valueArray is checking how many keys are in a row
-    let directionNumber = 0
+    let directionNumber = 2
     let numberOfRow = 1
     let arrayToFilter = Object.keys(this.state.squares)
     const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
@@ -411,9 +411,58 @@ class App extends Component {
         console.log(blockingMove)
         console.log(str)
         // vertical check
-      } else {
-
-      }
+      } else if (directionNumber === 2) {
+          while (i<7) {
+            if (this.state.squares[`${i}a${numberOfRow}`]) {
+              str += (this.state.squares[`${i}a${numberOfRow}`])
+            } else {
+              blockingMove = `${i}a${numberOfRow}`
+            }
+            i++;
+          }
+          if (str.includes('XXXXX')) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'O'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+          } else if (str.includes('OOOOO')) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'X'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+          } else if (str === ('XXXXO')) {
+            if (blockingMove != `6a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+            }
+          } else if (str === ('OOOOX')) {
+            if (blockingMove != `6a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+            }
+          } else if (str === ('OXXXX')) {
+            if (blockingMove != `1a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+            }
+          } else if (str === ('XOOOO')) {
+            if (blockingMove != `1a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+            }
+          }
+          console.log(blockingMove)
+          console.log(str)
+          // vertical check
+        }
     }
 
   }
