@@ -507,7 +507,28 @@ class App extends Component {
           }
         } else if (str === ('XXXO')) {
           const moves = blockingMove.split('.')
-
+          if (moves[1] != `${numberOfRow}a6`) {
+            console.log(`${moves[1]}.O`)
+            return `${moves[1]}.O`
+          }
+        } else if (str === ('OOOX')) {
+          const moves = blockingMove.split('.')
+          if (moves[1] != `${numberOfRow}a6`) {
+            console.log(`${moves[1]}.X`)
+            return `${moves[1]}.X`
+          }
+        } else if (str === ('OXXX')) {
+          const moves = blockingMove.split('.')
+          if (moves[0] != `${numberOfRow}a1`) {
+            console.log(`${moves[0]}.O`)
+            return `${moves[0]}.O`
+          }
+        } else if (str === ('XOOO')) {
+          const moves = blockingMove.split('.')
+          if (moves[0] != `${numberOfRow}a1`) {
+            console.log(`${moves[0]}.X`)
+            return `${moves[0]}.X`
+          }
         }
       }
     }
