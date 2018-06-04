@@ -760,6 +760,28 @@ class App extends Component {
           return `${moves[0]}.X`
         }
       }
+    } else if (arrayLength === 3) {
+      let blockingMove = ''
+      let str = ''
+      let i = 1;
+      // checking horizontal threats
+
+        while (i<7) {
+          if (this.state.squares[`${i}a${i}`]) {
+            str += (this.state.squares[`${i}a${i}`])
+          } else {
+            blockingMove += `${i}a${i}.`
+          }
+          i++;
+        }
+        if (str === 'XXX') {
+        let moves = blockingMove.split('.')
+        console.log(`${moves[1]}.O`)
+        return `${moves[1]}.O`
+      } else if (str === 'OOO') {
+        let moves = blockingMove.split('.')
+        return `${moves[1]}.X`
+      }
     }
   }
 
