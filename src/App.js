@@ -20,8 +20,10 @@ class App extends Component {
     isComputerTurn: false,
   }
 
-  componentDidUpdate = (prevState, prev) => {
-
+  componentDidUpdate = (prevProps, prevState, snapshot) => {
+    if (!this.state.gameOver) {
+      window.setTimeout(this.ticTacToeAi, 300)
+    }
   }
   // Basic navigation
 
@@ -96,14 +98,14 @@ class App extends Component {
 
   // Tic Tac Toe win checker
 
-  isTttWin = () => {
-    let keys = (Object.keys(this.state.squares));
-    let key = keys.slice(-1)[0];
+  isTttWin = (keys, key) => {
+    console.log(`function:`,key)
     let winningSymbol = (this.state.squares[key])
     let test = String(key)
     let parsedArray = test.split('a');
     let xCoord = parseInt(parsedArray[0], 10);
     let yCoord = parseInt(parsedArray[1], 10);
+    let answer = false;
     if (this.state.gameOver === false){
       //Looking for horizontal victories
       if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
@@ -115,6 +117,7 @@ class App extends Component {
           element2.classList.add("win");
           element3.classList.add("win");
           this.setState({gameOver: true})
+          answer = true
         }
       }
       // Checks vertical victories
@@ -127,6 +130,7 @@ class App extends Component {
           element2.classList.add("win");
           element3.classList.add("win");
           this.setState({gameOver: true})
+          answer = true
         }
       }
       if (xCoord === yCoord) {
@@ -138,6 +142,7 @@ class App extends Component {
           element2.classList.add("win");
           element3.classList.add("win");
           this.setState({gameOver: true})
+          answer = true
         }
       }
       if (xCoord+yCoord === 4){
@@ -150,10 +155,15 @@ class App extends Component {
            element2.classList.add("win");
            element3.classList.add("win");
            this.setState({gameOver: true})
+           answer = true
+        } else if (keys.length === 9) {
+          this.setState({gameOver: true})
+          return false;
         }
       }
     }
-    if (this.state.gameOver === true){
+    if (answer === true) {
+      console.log(answer)
       return true;
     }
   }
@@ -330,7 +340,7 @@ class App extends Component {
           ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
         }
         this.setState({squares: squares, isX: !isX, isComputerTurn: false})
-        return;
+        // return;
       }
     }
   }
@@ -732,6 +742,7 @@ class App extends Component {
       winSymbol = 'X'
     }
 
+
     // Checks whether we're playing Tic Tac Toe
     if (this.state.whichGame==="TicTacToe"){
       buttonArray = null;
@@ -743,16 +754,17 @@ class App extends Component {
         rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p></div>
         languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
       }
-      if(this.isTttWin()) {
-        console.log('We won!')
+      let keys = (Object.keys(this.state.squares));
+      let key = keys.slice(-1)[0];
+
+      if(this.isTttWin(keys, key)) {
         declaration= (<h1>{winSymbol} Wins!</h1>)
       } else if(Object.keys(this.state.squares).length === 9) {
         declaration = (<h1>Tie game</h1>)
-
       } else {
         declaration = (<h1>{symbol}'s Turn</h1>)
-        window.setTimeout(this.ticTacToeAi, 300);
       }
+
       // Checks if we're playing order and chaos
     } else if (this.state.whichGame==="OrderChaos"){
         buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
@@ -777,7 +789,7 @@ class App extends Component {
         } else if (keys.length === 36) {
           declaration = <h1> Chaos Wins! </h1>
         } else {
-        declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
+          declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
       }
 
     } else if (this.state.whichGame === 'Nim') {
