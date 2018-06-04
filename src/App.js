@@ -21,7 +21,7 @@ class App extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState, snapshot) => {
-    if (!this.state.gameOver) {
+    if (!this.state.gameOver && Object.keys(this.state.squares).length != 9) {
       window.setTimeout(this.ticTacToeAi, 300)
     }
   }
@@ -98,8 +98,10 @@ class App extends Component {
 
   // Tic Tac Toe win checker
 
-  isTttWin = (keys, key) => {
-    console.log(`function:`,key)
+  isTttWin = () => {
+
+    let keys = (Object.keys(this.state.squares));
+    let key = keys.slice(-1)[0];
     let winningSymbol = (this.state.squares[key])
     let test = String(key)
     let parsedArray = test.split('a');
@@ -156,9 +158,6 @@ class App extends Component {
            element3.classList.add("win");
            this.setState({gameOver: true})
            answer = true
-        } else if (keys.length === 9) {
-          this.setState({gameOver: true})
-          return false;
         }
       }
     }
@@ -731,6 +730,9 @@ class App extends Component {
     let nimArray = [0];
     // dynamically changes size of board
     let gameNumber = 0;
+    let keys = Object.keys(this.state.squares)
+    console.log(keys.length)
+
     let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
     <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button><button className="symbolButton" onClick={this.chooseNim}>Nim</button></div>;
     // Decides if X or O is moving
@@ -754,15 +756,21 @@ class App extends Component {
         rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p></div>
         languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
       }
-      let keys = (Object.keys(this.state.squares));
-      let key = keys.slice(-1)[0];
-
-      if(this.isTttWin(keys, key)) {
-        declaration= (<h1>{winSymbol} Wins!</h1>)
-      } else if(Object.keys(this.state.squares).length === 9) {
-        declaration = (<h1>Tie game</h1>)
-      } else {
+      if(!this.isTttWin()) {
         declaration = (<h1>{symbol}'s Turn</h1>)
+      } else if (keys.length === 9) {
+        console.log('hello')
+        this.setState({gameOver: true})
+      }
+      if (this.state.gameOver) {
+        console.log('heyr')
+        if(this.isTttWin) {
+          console.log('hey im alive')
+          declaration= (<h1>{winSymbol} Wins!</h1>)
+        } else {
+          console.log('im here')
+          declaration = (<h1>Tie game</h1>)
+        }
       }
 
       // Checks if we're playing order and chaos
