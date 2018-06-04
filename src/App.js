@@ -16,15 +16,16 @@ class App extends Component {
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
-    isComputerPlayer: false,
+    isComputerPlayer: true,
     isComputerTurn: false,
   }
 
-  componentDidUpdate = (prevProps, prevState, snapshot) => {
-    if (!this.state.gameOver && Object.keys(this.state.squares).length != 9) {
-      window.setTimeout(this.ticTacToeAi, 300)
-    }
-  }
+  // componentDidUpdate = (prevProps, prevState, snapshot) => {
+    // if (!this.state.gameOver && Object.keys(this.state.squares).length != 9) {
+    //   window.setTimeout(this.ticTacToeAi, 300)
+    // }
+  // }
+
   // Basic navigation
 
   goHomeScreen = () => {
@@ -353,11 +354,8 @@ class App extends Component {
 
   // Order and Chaos Checkers
 
-  orderChaosHorizontalVerticalChecker = () => {
+  orderChaosHorizontalVerticalChecker = (directionNumber, numberOfRow, arrayToFilter) => {
     // the valueArray is checking how many keys are in a row
-    let directionNumber = 0
-    let numberOfRow = 1
-    let arrayToFilter = Object.keys(this.state.squares)
     const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
     let arrayLength = valueArray.length;
     // checking if the length is equal to 4, then we need to check if there are 4 of a kind in a row and need to block or think about blocking 3 in a row
@@ -382,17 +380,20 @@ class App extends Component {
             ...this.state.squares, [blockingMove]: 'O'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else if (str.includes('OOOOO')) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else if (str === ('XXXXO')) {
           if (blockingMove != `${numberOfRow}a6`) {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OOOOX')) {
           if (blockingMove != `${numberOfRow}a6`) {
@@ -400,6 +401,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OXXXX')) {
           if (blockingMove != `${numberOfRow}a1`) {
@@ -407,6 +409,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('XOOOO')) {
           if (blockingMove != `${numberOfRow}a1`) {
@@ -414,6 +417,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         }
         console.log(blockingMove)
@@ -433,17 +437,20 @@ class App extends Component {
             ...this.state.squares, [blockingMove]: 'O'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else if (str.includes('OOOOO')) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else if (str === ('XXXXO')) {
           if (blockingMove != `6a${numberOfRow}`) {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OOOOX')) {
           if (blockingMove != `6a${numberOfRow}`) {
@@ -451,6 +458,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OXXXX')) {
           if (blockingMove != `1a${numberOfRow}`) {
@@ -458,6 +466,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('XOOOO')) {
           if (blockingMove != `1a${numberOfRow}`) {
@@ -465,6 +474,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         }
       }
@@ -505,11 +515,13 @@ class App extends Component {
               ...this.state.squares, [moves[1]]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('XXXO')) {
           const moves = blockingMove.split('.')
@@ -555,11 +567,13 @@ class App extends Component {
               ...this.state.squares, [moves[1]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OOOO')) {
           const moves = blockingMove.split('.')
@@ -573,6 +587,7 @@ class App extends Component {
               ...this.state.squares, [moves[0]]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('XXXO')) {
           const moves = blockingMove.split('.')
@@ -640,8 +655,7 @@ class App extends Component {
     }
   }
 
-  orderChaosEasyDiagonalAiChecker = () => {
-    let arrayToFilter = Object.keys(this.state.squares)
+  orderChaosEasyDiagonalAiChecker = (arrayToFilter) => {
     // are the x coordinate and y coordinate the same
     const valueArray = arrayToFilter.filter(key => key[0] === key[2])
     let arrayLength = valueArray.length;
@@ -664,17 +678,20 @@ class App extends Component {
           ...this.state.squares, [blockingMove]: 'O'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
       } else if (str.includes('OOOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
       } else if (str === ('XXXXO')) {
         if (blockingMove != `6a6`) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'O'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         }
       } else if (str === ('OOOOX')) {
         if (blockingMove != `6a6`) {
@@ -682,6 +699,7 @@ class App extends Component {
             ...this.state.squares, [blockingMove]: 'X'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         }
       } else if (str === ('OXXXX')) {
         if (blockingMove != `1a1`) {
@@ -689,6 +707,7 @@ class App extends Component {
             ...this.state.squares, [blockingMove]: 'O'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         }
       } else if (str === ('XOOOO')) {
         if (blockingMove != `1a1`) {
@@ -696,6 +715,7 @@ class App extends Component {
             ...this.state.squares, [blockingMove]: 'X'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         }
       }
       console.log(blockingMove)
@@ -722,11 +742,13 @@ class App extends Component {
             ...this.state.squares, [moves[1]]: 'O'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else {
           const squares = {
             ...this.state.squares, [moves[0]]: 'O'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         }
       } else if (str === ('OOOO')) {
         const moves = blockingMove.split('.')
@@ -735,11 +757,13 @@ class App extends Component {
             ...this.state.squares, [moves[1]]: 'X'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else {
           const squares = {
             ...this.state.squares, [moves[0]]: 'X'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         }
       } else if (str === ('XXXO')) {
         const moves = blockingMove.split('.')
@@ -790,9 +814,7 @@ class App extends Component {
     }
   }
 
-  orderChaosMediumDiagonalAiChecker = () => {
-    let sum = 7
-    let arrayToFilter = Object.keys(this.state.squares)
+  orderChaosMediumDiagonalAiChecker = (arrayToFilter, sum) => {
     // are the x coordinate and y coordinate the same
     const valueArray = arrayToFilter.filter(key => parseInt(key[0], 10) + parseInt(key[2],10)===sum)
     console.log(valueArray)
@@ -814,11 +836,13 @@ class App extends Component {
           ...this.state.squares, [blockingMove]: 'O'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
       }
     } else if (sum === 8 && arrayLength === 4) {
       let str = ''
@@ -837,11 +861,13 @@ class App extends Component {
           ...this.state.squares, [blockingMove]: 'O'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
       }
     } else if (sum === 7) {
 
@@ -862,17 +888,20 @@ class App extends Component {
             ...this.state.squares, [blockingMove]: 'O'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else if (str.includes('OOOOO')) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          return "STOP"
         } else if (str === ('XXXXO')) {
           if (blockingMove != `1a6`) {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OOOOX')) {
           if (blockingMove != `1a6`) {
@@ -880,6 +909,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OXXXX')) {
           if (blockingMove != `6a1`) {
@@ -887,6 +917,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('XOOOO')) {
           if (blockingMove != `6a1`) {
@@ -894,6 +925,7 @@ class App extends Component {
               ...this.state.squares, [blockingMove]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         }
         console.log(blockingMove)
@@ -920,11 +952,13 @@ class App extends Component {
               ...this.state.squares, [moves[1]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OOOO')) {
           const moves = blockingMove.split('.')
@@ -933,11 +967,13 @@ class App extends Component {
               ...this.state.squares, [moves[1]]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('XXXO')) {
           const moves = blockingMove.split('.')
@@ -991,8 +1027,7 @@ class App extends Component {
 
   }
 
-  orderChaosHardDiagonalAiChecker = () => {
-    let arrayToFilter = Object.keys(this.state.squares)
+  orderChaosHardDiagonalAiChecker = (arrayToFilter) => {
     // checking if its the first diagonal
     const valueArray = arrayToFilter.filter(key => parseInt(key[0], 10) - parseInt(key[2],10)===1)
     // checking which diagonal is bigger
@@ -1016,11 +1051,13 @@ class App extends Component {
           ...this.state.squares, [blockingMove]: 'O'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
       }
     } else if (arrayLength2 === 4) {
       let str = ''
@@ -1039,11 +1076,13 @@ class App extends Component {
           ...this.state.squares, [blockingMove]: 'O'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
         this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        return "STOP"
       }
     }
   }
@@ -1051,11 +1090,97 @@ class App extends Component {
   // Compiles all our order and chaos checks
 
   orderChaosAiMoveChecker = () => {
-
+    let keys = (Object.keys(this.state.squares));
+    let arrayToCheck = [];
+    // let length = keys.length;
+    let i=1;
+    while (i<7) {
+      const row = this.orderChaosHorizontalVerticalChecker(0,i,keys);
+      const column = this.orderChaosHorizontalVerticalChecker(2,i,keys);
+      if (row) {
+        arrayToCheck.push(row);
+      }
+      if (column) {
+        arrayToCheck.push(column);
+      }
+      // column.push(arrayToCheck);
+      i++;
+    }
+    let option = this.orderChaosEasyDiagonalAiChecker(keys)
+    let option2 = this.orderChaosMediumDiagonalAiChecker(keys,6)
+    let option3 = this.orderChaosMediumDiagonalAiChecker(keys,7)
+    let option4 = this.orderChaosMediumDiagonalAiChecker(keys,8)
+    let option5 = this.orderChaosHardDiagonalAiChecker(keys)
+    if (option) {
+      arrayToCheck.push(option)
+    }
+    if (option2) {
+      arrayToCheck.push(option2)
+    }
+    if (option3) {
+      arrayToCheck.push(option3)
+    }
+    if (option4) {
+      arrayToCheck.push(option4)
+    }
+    if (option5) {
+      arrayToCheck.push(option5)
+    }
+    return arrayToCheck;
   }
 
   orderChaosAi = () => {
+    if (this.state.isComputerTurn && !this.state.gameOver) {
+      console.log('computer turn')
+      let options =[];
+      console.log(options)
+      //returns danger array from places we might need to block
+      const dangerArray = this.orderChaosAiMoveChecker();
+      // if we already moved, then don't worry about moving again
+      let stopCheck = dangerArray.filter(win => win === "STOP")
+      if (stopCheck.length != 0) {
+        return;
+      }
+      let dangerArrayLength = dangerArray.length
+      if (dangerArrayLength != 0) {
+        let randomMove = dangerArray[Math.floor(Math.random()*dangerArrayLength)]
+        let blockHere = randomMove.split('.')
+        const squares = {
+          ...this.state.squares, [`${blockHere[0]}`]: `${blockHere[1]}`
+        }
+        this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false})
 
+      } else {
+
+        let keys = (Object.keys(this.state.squares));
+        for(let j = 1; j<7; j++) {
+          for (let i = 1; i<7; i++) {
+            options.push(`${j}a${i}`);
+          }
+        }
+        let length = keys.length;
+        //k is the array number for options
+
+        for (let k = 0; k<keys.length; k++) {
+        //m is the array number for keys length
+          for (let m=0; m<36; m++){
+            if (keys[k] === options[m]){
+              options.splice(m,1);
+              break;
+            }
+          }
+        }
+        let randomSelector = 36 - length;
+
+        console.log(options)
+        let number = Math.floor((Math.random())*randomSelector);
+        const squares = {
+          ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
+        }
+        this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false})
+        return;
+      }
+    }
   }
   // Order and Chaos win checkers
 
@@ -1444,8 +1569,6 @@ class App extends Component {
     // dynamically changes size of board
     let gameNumber = 0;
     let keys = Object.keys(this.state.squares)
-    console.log(keys.length)
-
     let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
     <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button><button className="symbolButton" onClick={this.chooseNim}>Nim</button></div>;
     // Decides if X or O is moving
@@ -1546,7 +1669,7 @@ class App extends Component {
           <div></div>
           <div className="content">
           {declaration}
-          <button className="symbolButton" onClick={this.orderChaosHardDiagonalAiChecker}>Computer Test</button>
+          <button className="symbolButton" onClick={this.orderChaosAi}>Computer Test</button>
 
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
