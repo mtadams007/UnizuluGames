@@ -16,9 +16,15 @@ class App extends Component {
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
-    isComputerPlayer: false,
+    isComputerPlayer: true,
+    isComputerTurn: false,
   }
 
+  componentDidUpdate = (prevProps, prevState, snapshot) => {
+    if (!this.state.gameOver && Object.keys(this.state.squares).length != 9) {
+      window.setTimeout(this.ticTacToeAi, 300)
+    }
+  }
   // Basic navigation
 
   goHomeScreen = () => {
@@ -62,24 +68,29 @@ class App extends Component {
   // puts a mark down when you click for tic tac toe or order and chaos
 
   makeMoveHandler = (event, id) => {
-
-    if (!this.state.gameOver) {
-    // Checks whether the move has already been put in the state.squares hash
-      if(this.state.squares[id]){
-        console.log('filled');
-      } else {
-        // checks whether or not it is Xs turn
-        if(this.state.isX === true){
-        // assigns a new object and manipulates it
-          const squares = {
-            ...this.state.squares, [id]: 'X'
-          }
-          this.setState({squares: squares, isX: false, orderTurn: !this.state.orderTurn})
+    if (!this.state.isComputerTurn) {
+      if (!this.state.gameOver) {
+      // Checks whether the move has already been put in the state.squares hash
+        if(this.state.squares[id]){
+          console.log('filled');
         } else {
-          const squares = {
-            ...this.state.squares, [id]: 'O'
+          // checks whether or not it is Xs turn
+          if(this.state.isX === true){
+          // assigns a new object and manipulates it
+            const squares = {
+              ...this.state.squares, [id]: 'X'
+            }
+            if (this.state.isComputerPlayer === true) {
+              this.setState({squares: squares, isX: false, orderTurn: !this.state.orderTurn, isComputerTurn: true})
+            } else {
+              this.setState({squares: squares, isX: false, orderTurn: !this.state.orderTurn})
+            }
+          } else {
+            const squares = {
+              ...this.state.squares, [id]: 'O'
+            }
+            this.setState({squares: squares, isX: true, orderTurn: !this.state.orderTurn})
           }
-          this.setState({squares: squares, isX: true, orderTurn: !this.state.orderTurn})
         }
       }
     }
@@ -88,6 +99,7 @@ class App extends Component {
   // Tic Tac Toe win checker
 
   isTttWin = () => {
+
     let keys = (Object.keys(this.state.squares));
     let key = keys.slice(-1)[0];
     let winningSymbol = (this.state.squares[key])
@@ -95,6 +107,7 @@ class App extends Component {
     let parsedArray = test.split('a');
     let xCoord = parseInt(parsedArray[0], 10);
     let yCoord = parseInt(parsedArray[1], 10);
+    let answer = false;
     if (this.state.gameOver === false){
       //Looking for horizontal victories
       if(keys.includes(`${xCoord}a${(yCoord+1)%3+1}`) && keys.includes(`${xCoord}a${(yCoord+2)%3+1}`)){
@@ -106,6 +119,7 @@ class App extends Component {
           element2.classList.add("win");
           element3.classList.add("win");
           this.setState({gameOver: true})
+          answer = true
         }
       }
       // Checks vertical victories
@@ -118,6 +132,7 @@ class App extends Component {
           element2.classList.add("win");
           element3.classList.add("win");
           this.setState({gameOver: true})
+          answer = true
         }
       }
       if (xCoord === yCoord) {
@@ -129,6 +144,7 @@ class App extends Component {
           element2.classList.add("win");
           element3.classList.add("win");
           this.setState({gameOver: true})
+          answer = true
         }
       }
       if (xCoord+yCoord === 4){
@@ -141,10 +157,12 @@ class App extends Component {
            element2.classList.add("win");
            element3.classList.add("win");
            this.setState({gameOver: true})
+           answer = true
         }
       }
     }
-    if (this.state.gameOver === true){
+    if (answer === true) {
+      console.log(answer)
       return true;
     }
   }
@@ -181,13 +199,13 @@ class App extends Component {
         let squares = {
           ...this.state.squares, [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
-        this.setState({squares: squares})
+        this.setState({squares: squares, isComputerTurn: false})
         return ("VICTORY")
     } else {
       let squares = {
         ...this.state.squares, [`${winningXCoord}a${numberOfRow}`]: `${this.state.isX ? "X" : "O"}`
       }
-      this.setState({squares: squares})
+      this.setState({squares: squares, isComputerTurn: false})
       return ("VICTORY")
     }
 
@@ -212,7 +230,7 @@ class App extends Component {
         let squares = {
           ...this.state.squares, [`${winningCoord}a${winningCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
-        this.setState({squares: squares})
+        this.setState({squares: squares, isComputerTurn: false})
         return ("VICTORY")
       }
     }
@@ -268,7 +286,7 @@ class App extends Component {
         let squares = {
           ...this.state.squares, [`${winningXCoord}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
-        this.setState({squares: squares})
+        this.setState({squares: squares, isComputerTurn: false})
         return ("VICTORY")
       }
     }
@@ -277,49 +295,52 @@ class App extends Component {
   // AI is purposefully not supposed to be unbeatable, but challenging. It trys to win first, then prevent the other player from winning, and finally goes randomly if neither of the first two
 
   ticTacToeAi = () => {
-    const symbol = (this.state.isX ? "X" : "O")
-    let options =[];
-    console.log(options)
-    let isX = this.state.isX;
-    const dangerArray = this.ticTacToeWinChecker();
-    let victoryCheck = dangerArray.filter(win => win === "VICTORY")
-    if (victoryCheck.length != 0) {
-      return;
-    }
-    if (dangerArray.length != 0) {
-      const squares = {
-        ...this.state.squares, [`${dangerArray[0]}`]: `${this.state.isX ? "X" : "O"}`
+    if (this.state.isComputerTurn && !this.state.gameOver) {
+      console.log('computer turn')
+      const symbol = (this.state.isX ? "X" : "O")
+      let options =[];
+      console.log(options)
+      let isX = this.state.isX;
+      const dangerArray = this.ticTacToeWinChecker();
+      let victoryCheck = dangerArray.filter(win => win === "VICTORY")
+      if (victoryCheck.length != 0) {
+        return;
       }
-      this.setState({squares: squares, isX: !isX})
-    } else {
-
-      let keys = (Object.keys(this.state.squares));
-      for(let j = 1; j<4; j++) {
-        for (let i = 1; i<4; i++) {
-          options.push(`${j}a${i}`);
+      if (dangerArray.length != 0) {
+        const squares = {
+          ...this.state.squares, [`${dangerArray[0]}`]: `${this.state.isX ? "X" : "O"}`
         }
-      }
-      let length = keys.length;
-      //k is the array number for options
+        this.setState({squares: squares, isX: !isX, isComputerTurn: false})
+      } else {
 
-      for (let k = 0; k<keys.length; k++) {
-      //m is the array number for keys length
-        for (let m=0; m<9; m++){
-          if (keys[k] === options[m]){
-            options.splice(m,1);
-            break;
+        let keys = (Object.keys(this.state.squares));
+        for(let j = 1; j<4; j++) {
+          for (let i = 1; i<4; i++) {
+            options.push(`${j}a${i}`);
           }
         }
-      }
-      let randomSelector = 9 - length;
+        let length = keys.length;
+        //k is the array number for options
 
-      console.log(options)
-      let number = Math.floor((Math.random())*randomSelector);
-      const squares = {
-        ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
+        for (let k = 0; k<keys.length; k++) {
+        //m is the array number for keys length
+          for (let m=0; m<9; m++){
+            if (keys[k] === options[m]){
+              options.splice(m,1);
+              break;
+            }
+          }
+        }
+        let randomSelector = 9 - length;
+
+        console.log(options)
+        let number = Math.floor((Math.random())*randomSelector);
+        const squares = {
+          ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
+        }
+        this.setState({squares: squares, isX: !isX, isComputerTurn: false})
+        // return;
       }
-      this.setState({squares: squares, isX: !isX})
-      return;
     }
   }
 
@@ -709,6 +730,9 @@ class App extends Component {
     let nimArray = [0];
     // dynamically changes size of board
     let gameNumber = 0;
+    let keys = Object.keys(this.state.squares)
+    console.log(keys.length)
+
     let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
     <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button><button className="symbolButton" onClick={this.chooseNim}>Nim</button></div>;
     // Decides if X or O is moving
@@ -719,6 +743,7 @@ class App extends Component {
       symbol = 'O'
       winSymbol = 'X'
     }
+
 
     // Checks whether we're playing Tic Tac Toe
     if (this.state.whichGame==="TicTacToe"){
@@ -731,14 +756,23 @@ class App extends Component {
         rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p></div>
         languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
       }
-      if(this.isTttWin()) {
-        declaration= (<h1>{winSymbol} Wins!</h1>)
-      } else if(Object.keys(this.state.squares).length === 9) {
-        declaration = (<h1>Tie game</h1>)
-
-      } else {
+      if(!this.isTttWin()) {
         declaration = (<h1>{symbol}'s Turn</h1>)
+      } else if (keys.length === 9) {
+        console.log('hello')
+        this.setState({gameOver: true})
       }
+      if (this.state.gameOver) {
+        console.log('heyr')
+        if(this.isTttWin) {
+          console.log('hey im alive')
+          declaration= (<h1>{winSymbol} Wins!</h1>)
+        } else {
+          console.log('im here')
+          declaration = (<h1>Tie game</h1>)
+        }
+      }
+
       // Checks if we're playing order and chaos
     } else if (this.state.whichGame==="OrderChaos"){
         buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
@@ -763,7 +797,7 @@ class App extends Component {
         } else if (keys.length === 36) {
           declaration = <h1> Chaos Wins! </h1>
         } else {
-        declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
+          declaration = <h1>{player}'s Turn. Symbol: {symbol}</h1>
       }
 
     } else if (this.state.whichGame === 'Nim') {
@@ -800,8 +834,10 @@ class App extends Component {
           <div className="content">
           {declaration}
           <button className="symbolButton" onClick={this.ticTacToeAi}>Computer Test</button>
+
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
+
           {buttonArray}
         </div>
           <div className="rules">
