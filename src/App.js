@@ -634,6 +634,135 @@ class App extends Component {
     }
   }
 
+  orderChaosEasyDiagonalAiChecker = () => {
+    let arrayToFilter = Object.keys(this.state.squares)
+    // are the x coordinate and y coordinate the same
+    const valueArray = arrayToFilter.filter(key => key[0] === key[2])
+    let arrayLength = valueArray.length;
+    // checking if the length is equal to 5, then we need to check if there are 4 of a kind in a row and need to block or think about blocking 3 in a row
+
+    if (arrayLength === 5) {
+      let blockingMove = ''
+      let str = ''
+      let i = 1;
+      while (i<7) {
+        if (this.state.squares[`${i}a${i}`]) {
+          str += (this.state.squares[`${i}a${i}`])
+        } else {
+          blockingMove = `${i}a${i}`
+        }
+        i++;
+      }
+      if (str.includes('XXXXX')) {
+        const squares = {
+          ...this.state.squares, [blockingMove]: 'O'
+        }
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+      } else if (str.includes('OOOOO')) {
+        const squares = {
+          ...this.state.squares, [blockingMove]: 'X'
+        }
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+      } else if (str === ('XXXXO')) {
+        if (blockingMove != `6a6`) {
+          const squares = {
+            ...this.state.squares, [blockingMove]: 'O'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        }
+      } else if (str === ('OOOOX')) {
+        if (blockingMove != `6a6`) {
+          const squares = {
+            ...this.state.squares, [blockingMove]: 'X'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        }
+      } else if (str === ('OXXXX')) {
+        if (blockingMove != `1a1`) {
+          const squares = {
+            ...this.state.squares, [blockingMove]: 'O'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        }
+      } else if (str === ('XOOOO')) {
+        if (blockingMove != `1a1`) {
+          const squares = {
+            ...this.state.squares, [blockingMove]: 'X'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        }
+      }
+      console.log(blockingMove)
+      console.log(str)
+    } else if (arrayLength === 4) {
+      let blockingMove = ''
+      let str = ''
+      let i = 1;
+      while (i<7) {
+        if (this.state.squares[`${i}a${i}`]) {
+          str += (this.state.squares[`${i}a${i}`])
+        } else {
+          blockingMove += `${i}a${i}.`
+        }
+        i++;
+      }
+      if (str === ('XXXX')) {
+
+        const moves = blockingMove.split('.')
+        console.log(moves)
+        // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
+        if (moves[0] === `1a1`) {
+          const squares = {
+            ...this.state.squares, [moves[1]]: 'O'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        } else {
+          const squares = {
+            ...this.state.squares, [moves[0]]: 'O'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        }
+      } else if (str === ('OOOO')) {
+        const moves = blockingMove.split('.')
+        if (moves[0] === `1a1`) {
+          const squares = {
+            ...this.state.squares, [moves[1]]: 'X'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        } else {
+          const squares = {
+            ...this.state.squares, [moves[0]]: 'X'
+          }
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn})
+        }
+      } else if (str === ('XXXO')) {
+        const moves = blockingMove.split('.')
+        if (moves[1] != `6a6`) {
+          console.log(`${moves[1]}.O`)
+          return `${moves[1]}.O`
+        }
+      } else if (str === ('OOOX')) {
+        const moves = blockingMove.split('.')
+        if (moves[1] != `6a6`) {
+          console.log(`${moves[1]}.X`)
+          return `${moves[1]}.X`
+        }
+      } else if (str === ('OXXX')) {
+        const moves = blockingMove.split('.')
+        if (moves[0] != `1a1`) {
+          console.log(`${moves[0]}.O`)
+          return `${moves[0]}.O`
+        }
+      } else if (str === ('XOOO')) {
+        const moves = blockingMove.split('.')
+        if (moves[0] != `1a1`) {
+          console.log(`${moves[0]}.X`)
+          return `${moves[0]}.X`
+        }
+      }
+    }
+  }
+
   // Order and Chaos win checkers
 
   horizontalWinChecker = () => {
@@ -1123,7 +1252,7 @@ class App extends Component {
           <div></div>
           <div className="content">
           {declaration}
-          <button className="symbolButton" onClick={this.orderChaosHorizontalVerticalChecker}>Computer Test</button>
+          <button className="symbolButton" onClick={this.orderChaosEasyDiagonalAiChecker}>Computer Test</button>
 
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
