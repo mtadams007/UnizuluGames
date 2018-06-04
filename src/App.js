@@ -571,32 +571,66 @@ class App extends Component {
         } else if (str === ('XXXO')) {
           const moves = blockingMove.split('.')
           if (moves[1] != `6a${numberOfRow}`) {
-            console.log(`${moves[1]}.O`)
             return `${moves[1]}.O`
           }
         } else if (str === ('OOOX')) {
           const moves = blockingMove.split('.')
           if (moves[1] != `6a${numberOfRow}`) {
-            console.log(`${moves[1]}.X`)
             return `${moves[1]}.X`
           }
         } else if (str === ('OXXX')) {
           const moves = blockingMove.split('.')
           if (moves[0] != `1a${numberOfRow}`) {
-            console.log(`${moves[0]}.O`)
             return `${moves[0]}.O`
           }
         } else if (str === ('XOOO')) {
           const moves = blockingMove.split('.')
           if (moves[0] != `1a${numberOfRow}`) {
-            console.log(`${moves[0]}.X`)
             return `${moves[0]}.X`
           }
         }
       }
 
     } else if (arrayLength === 3) {
-
+      let blockingMove = ''
+      let str = ''
+      let i = 1;
+      // checking horizontal threats
+      if (directionNumber === 0) {
+        while (i<7) {
+          if (this.state.squares[`${numberOfRow}a${i}`]) {
+            str += (this.state.squares[`${numberOfRow}a${i}`])
+          } else {
+            blockingMove += `${numberOfRow}a${i}.`
+          }
+          i++;
+        }
+        if (str === 'XXX') {
+          let moves = blockingMove.split('.')
+          console.log(`${moves[1]}.O`)
+          return `${moves[1]}.O`
+        } else if (str === 'OOO') {
+          let moves = blockingMove.split('.')
+          return `${moves[1]}.X`
+        }
+      } else if (directionNumber === 2) {
+        while (i<7) {
+          if (this.state.squares[`${i}a${numberOfRow}`]) {
+            str += (this.state.squares[`${i}a${numberOfRow}`])
+          } else {
+            blockingMove += `${i}a${numberOfRow}.`
+          }
+          i++;
+        }
+        if (str === 'XXX') {
+          let moves = blockingMove.split('.')
+          console.log(`${moves[1]}.O`)
+          return `${moves[1]}.O`
+        } else if (str === 'OOO') {
+          let moves = blockingMove.split('.')
+          return `${moves[1]}.X`
+        }
+      }
     }
   }
 
