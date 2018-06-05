@@ -16,7 +16,7 @@ class App extends Component {
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
-    isComputerPlayer: true,
+    isComputerPlayer: false,
     isComputerTurn: false,
   }
 
@@ -1566,6 +1566,66 @@ class App extends Component {
     }
   }
 
+  nimAi = () => {
+    const numberOfRows = 3
+    // Converting all lengths to binary
+    const keys = Object.keys(this.state.pebbles)
+    const key1 = keys.filter(key => key[0] === `1`)
+    const key2 = keys.filter(key => key[0] === `2`)
+    const key3 = keys.filter(key => key[0] === `3`)
+    let binary1 = (3 - key1.length).toString(2);
+    let binary2 = (4 - key2.length).toString(2);
+    let binary3 = (5 - key3.length).toString(2);
+
+    const length1 = binary1.length
+    const length2 = binary2.length
+    const length3 = binary3.length
+    // changing row is the row that we must take from
+    let changingRow = ":(";
+    if (length1 === 1) {
+      binary1 = "00" + binary1
+    } else if (length1 === 2) {
+      binary1 = "0" + binary1
+    }
+    if (length2 === 1) {
+      binary2 = "00" + binary2
+    } else if (length2 === 2) {
+      binary2 = "0" + binary2
+    }
+    if (binary3.length === 1) {
+      binary3 = "00" + binary3
+    } else if (length3 === 2) {
+      binary3 = "0" + binary3
+    }
+    console.log(binary1)
+    console.log(binary2)
+    console.log(binary3)
+    let i = 0
+    while (i<numberOfRows) {
+      // finding which one to change
+      if (((binary1[i] === '1') && (binary2[i] === '0' && binary3[i] === '0'))) {
+        changingRow = i.toString() + '1' + binary1;
+        break;
+      } else if ((binary2[i] === '1') && (binary1[i] === '0' && binary3[i] === '0')){
+        changingRow = i.toString() + '2' + binary2
+        break;
+      } else if (((binary3[i] === '1') && (binary1[i] === '0' && binary2[i] === '0'))){
+        changingRow = i.toString() + '3' + binary3
+        break;
+      }
+      i++
+    }
+    console.log(changingRow);
+    if (changingRow === ":(") {
+      console.log('random move')
+    } else if (changingRow[0] === '2'){
+      console.log(`remove one from row${changingRow[1]}`)
+    } else if (changingRow[0] === '1') {
+      console.log('working on it')
+    }
+  }
+
+
   render() {
     let symbol = null;
     let winSymbol = null;
@@ -1676,7 +1736,7 @@ class App extends Component {
           <div></div>
           <div className="content">
           {declaration}
-          <button className="symbolButton" onClick={this.orderChaosAi}>Computer Test</button>
+          <button className="symbolButton" onClick={this.nimAi}>Computer Test</button>
 
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
