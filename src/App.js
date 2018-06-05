@@ -20,11 +20,15 @@ class App extends Component {
     isComputerTurn: false,
   }
 
-  // componentDidUpdate = (prevProps, prevState, snapshot) => {
-  //   if (!this.state.gameOver && Object.keys(this.state.squares).length != 9) {
-  //     window.setTimeout(this.ticTacToeAi, 300)
-  //   }
-  // }
+  componentDidUpdate = (prevProps, prevState, snapshot) => {
+    if (!this.state.gameOver) {
+      if (this.state.whichGame === 'TicTacToe' && Object.keys(this.state.squares).length < 9) {
+      window.setTimeout(this.ticTacToeAi, 300)
+      } else if (this.state.whichGame === 'OrderChaos' && Object.keys(this.state.squares).length !=36) {
+      window.setTimeout(this.orderChaosAi, 300)
+      }
+    }
+  }
 
   // Basic navigation
 
@@ -583,6 +587,7 @@ class App extends Component {
               ...this.state.squares, [moves[1]]: 'X'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'X'
