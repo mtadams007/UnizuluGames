@@ -16,7 +16,7 @@ class App extends Component {
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
-    isComputerPlayer: false,
+    isComputerPlayer: true,
     isComputerTurn: false,
   }
 
@@ -26,6 +26,8 @@ class App extends Component {
       window.setTimeout(this.ticTacToeAi, 300)
       } else if (this.state.whichGame === 'OrderChaos' && Object.keys(this.state.squares).length !=36) {
       window.setTimeout(this.orderChaosAi, 300)
+    } else if (this.state.whichGame === 'Nim' && Object.keys(this.state.pebbles).length !=12) {
+      window.setTimeout(this.nimAi, 300)
       }
     }
   }
@@ -1544,6 +1546,7 @@ class App extends Component {
   }
 
   computerRandomMove = (key1,key2,key3) => {
+    console.log("RANDOM MOVE")
     const pebbles = {
       ...this.state.pebbles
     }
@@ -1556,7 +1559,7 @@ class App extends Component {
     } else if(key1Length < 3) {
       let key = [];
       let i = 0;
-      while (i<key1Length){
+      while (i<3-key1Length){
       key.push(`1n${i+1}`)
       i++;
       }
@@ -1567,7 +1570,7 @@ class App extends Component {
     }else if (key2Length < 4) {
       let key = [];
       let i = 0;
-      while (i<key2Length){
+      while (i<4-key2Length){
       key.push(`2n${i+1}`)
       i++;
       }
@@ -1578,44 +1581,88 @@ class App extends Component {
     } else if (key3Length <5){
       let key = [];
       let i = 0;
-      while (i<key3Length){
+      while (i<5-key3Length){
       key.push(`3n${i+1}`)
       i++;
-      }
+    }
       myKeys.push(key)
     }
     let random = Math.floor((Math.random()* myKeys.length))
+    console.log(`my keys = ${myKeys}`)
     let row = myKeys[random]
-    console.log(myKeys)
     row.sort().reverse()
+    console.log(`row length = ${row.length}`)
     let numToRemove = Math.floor((Math.random()*row.length)) + 1
     let start = row[0].charAt(2);
     let rowNumber = row[0].charAt(0)
-    console.log(row)
+    console.log(`rowNumber = ${rowNumber}`)
     let i = 1
+    console.log(numToRemove)
     while (i<=numToRemove) {
-      pebbles[`${rowNumber}n${start-i}`] = 'disappear';
+      pebbles[`${rowNumber}n${start-i+1}`] = 'disappear';
+      console.log(`${rowNumber}n${start-i+1}`)
       i++;
     }
     this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: false})
   }
 
-  computerRemoveNimStones = (numToRemove, row) => {
-    row.sort()
+  computerRemoveNimStones = (numToRemove, rowNumber, rowLength) => {
+    let myKeys = []
+    console.log("NOT RANDOM")
+    console.log(numToRemove)
+    console.log(rowNumber)
+    console.log(rowLength)
+    if (rowNumber === 1){
+      if (rowLength === 0) {
+        myKeys.push('1n1','1n2','1n3')
+      } else if(rowLength < 3) {
+        // let key = [];
+        let i = 0;
+        while (i<rowLength){
+        myKeys.push(`1n${i+1}`)
+        i++;
+        }
+        // myKeys.push(key)
+      }
+    } else if (rowNumber === 2){
+      if (rowLength === 0) {
+        myKeys.push('2n1','2n2','2n3','2n4')
+      } else if(rowLength < 4) {
+        // let key = [];
+        let i = 0;
+        while (i<rowLength){
+        myKeys.push(`2n${i+1}`)
+        i++;
+        }
+        // myKeys.push(key)
+      }
+    } else if (rowNumber === 3){
+      if (rowLength === 0) {
+        myKeys.push('3n1','3n2','3n3','3n4', '3n5')
+      } else if(rowLength < 5) {
+        // let key = [];
+        let i = 0;
+        while (i<rowLength){
+        myKeys.push(`3n${i+1}`)
+        i++;
+        }
+        // myKeys.push(key)
+      }
+    }
     const pebbles = {
       ...this.state.pebbles
     }
-    console.log(row)
-    let start = row[0].charAt(2);
-    let rowNumber = row[0].charAt(0);
-    console.log(row)
-    let i = 0
+    console.log(myKeys)
+
+    myKeys.sort().reverse()
+    let start = myKeys[0].charAt(2);
+    let i = 1
     while (i<=numToRemove) {
-      pebbles[`${rowNumber}n${start-i}`] = 'disappear';
+      pebbles[`${rowNumber}n${start-i+1}`] = 'disappear';
       i++;
     }
     this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: false})
-  }
+    }
 
   removeNimStones = (event, id, startIndex, row, endIndex) => {
     if (!this.state.gameOver) {
@@ -1628,8 +1675,12 @@ class App extends Component {
       for (let i = startIndex; i <= endIndex; i++) {
         pebbles[`${row}n${i}`] = 'disappear';
       }
-
+      if (this.state.isComputerPlayer) {
+        console.log('there is a computer playing')
+      this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: true})
+      } else {
       this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
+      }
     }
   }
 
@@ -1641,101 +1692,103 @@ class App extends Component {
   }
 
   nimAi = () => {
-    const numberOfRows = 3
-    // Converting all lengths to binary
-    const keys = Object.keys(this.state.pebbles)
-    const key1 = keys.filter(key => key[0] === `1`)
-    const key2 = keys.filter(key => key[0] === `2`)
-    const key3 = keys.filter(key => key[0] === `3`)
-    console.log(key1)
-    console.log(key2)
-    console.log(key3)
-    const key1Length = (3 - key1.length)
-    const key2Length = (4 - key2.length)
-    const key3Length = (5 - key3.length)
-    let binary1 = key1Length.toString(2);
-    let binary2 = key2Length.toString(2);
-    let binary3 = key3Length.toString(2);
+    console.log("in nim ai")
+    if (this.state.isComputerTurn && !this.state.gameOver) {
+      console.log("passed first if statement")
+      const numberOfRows = 3
+      // Converting all lengths to binary
+      const keys = Object.keys(this.state.pebbles)
+      const key1 = keys.filter(key => key[0] === `1`)
+      const key2 = keys.filter(key => key[0] === `2`)
+      const key3 = keys.filter(key => key[0] === `3`)
+      console.log(keys)
 
-    const length1 = binary1.length
-    const length2 = binary2.length
-    const length3 = binary3.length
-    // changing row is the row that we must take from
-    let changingRow = ":(";
-    if (keys.length >= 6) {
-      if (length1 === 1) {
-        binary1 = "00" + binary1
-      } else if (length1 === 2) {
-        binary1 = "0" + binary1
-      }
-      if (length2 === 1) {
-        binary2 = "00" + binary2
-      } else if (length2 === 2) {
-        binary2 = "0" + binary2
-      }
-      if (binary3.length === 1) {
-        binary3 = "00" + binary3
-      } else if (length3 === 2) {
-        binary3 = "0" + binary3
-      }
-      let rowToPass;
-      let i = 0
-      while (i<numberOfRows) {
-        // finding which one to change
-        if (((binary1[i] === '1') && (binary2[i] === '0' && binary3[i] === '0'))) {
-          changingRow = i.toString() + '1' + binary1;
-          rowToPass = key1
-          break;
-        } else if ((binary2[i] === '1') && (binary1[i] === '0' && binary3[i] === '0')){
-          changingRow = i.toString() + '2' + binary2
-          rowToPass = key2
-          break;
-        } else if (((binary3[i] === '1') && (binary1[i] === '0' && binary2[i] === '0'))){
-          changingRow = i.toString() + '3' + binary3
-          rowToPass = key3
-          break;
+      const key1Length = (3 - key1.length)
+      const key2Length = (4 - key2.length)
+      const key3Length = (5 - key3.length)
+      let binary1 = key1Length.toString(2);
+      let binary2 = key2Length.toString(2);
+      let binary3 = key3Length.toString(2);
+
+      const length1 = binary1.length
+      const length2 = binary2.length
+      const length3 = binary3.length
+      // changing row is the row that we must take from
+      let changingRow = ":(";
+      if (keys.length === 11) {
+        this.computerRandomMove(key1,key2,key3);
+      } else if (keys.length >= 6) {
+        if (length1 === 1) {
+          binary1 = "00" + binary1
+        } else if (length1 === 2) {
+          binary1 = "0" + binary1
         }
-        i++
-      }
-      console.log(changingRow);
-      // the first if statement means that the computer is at a disadvantage so has to go randomly
-      if (changingRow === ":(") {
-        console.log('random move')
+        if (length2 === 1) {
+          binary2 = "00" + binary2
+        } else if (length2 === 2) {
+          binary2 = "0" + binary2
+        }
+        if (binary3.length === 1) {
+          binary3 = "00" + binary3
+        } else if (length3 === 2) {
+          binary3 = "0" + binary3
+        }
+        let rowLength;
+        let rowNumber;
+        let i = 0
+        while (i<numberOfRows) {
+          // finding which one to change
+          if (((binary1[i] === '1') && (binary2[i] === '0' && binary3[i] === '0'))) {
+            changingRow = i.toString() + '1' + binary1;
+            rowLength = key1Length
+            rowNumber = 1
+            break;
+          } else if ((binary2[i] === '1') && (binary1[i] === '0' && binary3[i] === '0')){
+            changingRow = i.toString() + '2' + binary2
+            rowLength = key2Length
+            rowNumber = 2
+            break;
+          } else if (((binary3[i] === '1') && (binary1[i] === '0' && binary2[i] === '0'))){
+            changingRow = i.toString() + '3' + binary3
+            rowLength = key3Length
+            rowNumber = 3
+            break;
+          }
+          i++
+        }
+        console.log(changingRow);
+        // the first if statement means that the computer is at a disadvantage so has to go randomly
+        if (changingRow === ":(") {
+          this.computerRandomMove(key1, key2, key3)
+        } else if (changingRow[0] === '2'){
+          this.computerRemoveNimStones(1, rowNumber, rowLength)
+        } else if (changingRow[0] === '1') {
+          this.computerRandomMove(key1, key2, key3)
+          console.log('should have a smarter move here but Im on a deadline')
+        } else if (changingRow[0] === '0') {
+          if (changingRow[1] === '3' || changingRow[1] === '2') {
+            if (key1Length === 1) {
+              this.computerRemoveNimStones(3, rowNumber, rowLength)
+            } else {
+              this.computerRemoveNimStones(2, rowNumber, rowLength)
+            }
+          }else if (changingRow[1] === '3' || changingRow[1] === '1') {
+            if (key2Length === 1) {
+              this.computerRemoveNimStones(3, rowNumber, rowLength)
+            } else {
+              this.computerRemoveNimStones(2, rowNumber, rowLength)
+            }
+          }else if (changingRow[1] === '2' || changingRow[1] === '1') {
+            if (key3Length === 1) {
+              this.computerRemoveNimStones(3, rowNumber, rowLength)
+            } else {
+              this.computerRemoveNimStones(2, rowNumber, rowLength)
+            }
+          }
+        }
+      } else {
         this.computerRandomMove(key1, key2, key3)
-      } else if (changingRow[0] === '2'){
-        console.log(`remove one from row${changingRow[1]}`)
-        this.computerRemoveNimStones(1,rowToPass)
-      } else if (changingRow[0] === '1') {
-        console.log('working on it')
-      } else if (changingRow[0] === '0') {
-        if (changingRow[1] === '3' || changingRow[1] === '2') {
-          if (key1Length === 1) {
-            console.log(`remove three from row${changingRow[1]}`)
-            this.computerRemoveNimStones(3,rowToPass)
-          } else {
-            console.log(`remove two from row${changingRow[1]}`)
-            this.computerRemoveNimStones(2,rowToPass)
-          }
-        }else if (changingRow[1] === '3' || changingRow[1] === '1') {
-          if (key2Length === 1) {
-            console.log(`remove three from row${changingRow[1]}`)
-            this.computerRemoveNimStones(3,rowToPass)
-          } else {
-            console.log(`remove two from row${changingRow[1]}`)
-            this.computerRemoveNimStones(2,rowToPass)
-          }
-        }else if (changingRow[1] === '2' || changingRow[1] === '1') {
-          if (key3Length === 1) {
-            console.log(`remove three from row${changingRow[1]}`)
-            this.computerRemoveNimStones(3,rowToPass)
-          } else {
-            console.log(`remove two from row${changingRow[1]}`)
-            this.computerRemoveNimStones(2,rowToPass)
-          }
-        }
       }
-    } else {
-      this.computerRandomMove(key1, key2, key3)
     }
   }
 
