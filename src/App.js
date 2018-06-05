@@ -21,9 +21,9 @@ class App extends Component {
   }
 
   // componentDidUpdate = (prevProps, prevState, snapshot) => {
-    // if (!this.state.gameOver && Object.keys(this.state.squares).length != 9) {
-    //   window.setTimeout(this.ticTacToeAi, 300)
-    // }
+  //   if (!this.state.gameOver && Object.keys(this.state.squares).length != 9) {
+  //     window.setTimeout(this.ticTacToeAi, 300)
+  //   }
   // }
 
   // Basic navigation
@@ -87,12 +87,19 @@ class App extends Component {
               this.setState({squares: squares, isX: false, orderTurn: !this.state.orderTurn})
             }
           } else {
+            if (this.state.isComputerPlayer === true) {
             const squares = {
               ...this.state.squares, [id]: 'O'
             }
-            this.setState({squares: squares, isX: true, orderTurn: !this.state.orderTurn})
+            this.setState({squares: squares, isX: true, orderTurn: !this.state.orderTurn, isComputerTurn: true})
+          } else {
+          const squares = {
+            ...this.state.squares, [id]: 'O'
           }
+          this.setState({squares: squares, isX: true, orderTurn: !this.state.orderTurn})
         }
+      }
+    }
       }
     }
   }
@@ -555,7 +562,6 @@ class App extends Component {
         if (str === ('XXXX')) {
 
           const moves = blockingMove.split('.')
-          console.log(moves)
           // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
           if (moves[0] === `1a${numberOfRow}`) {
             const squares = {
