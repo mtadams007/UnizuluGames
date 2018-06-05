@@ -1543,6 +1543,80 @@ class App extends Component {
     return rows;
   }
 
+  computerRandomMove = (key1,key2,key3) => {
+    const pebbles = {
+      ...this.state.pebbles
+    }
+    let key1Length = key1.length
+    let key2Length = key2.length
+    let key3Length = key3.length
+    let myKeys = []
+    if (key1Length === 0) {
+      myKeys.push(['1n1','1n2','1n3'])
+    } else if(key1Length < 3) {
+      let key = [];
+      let i = 0;
+      while (i<key1Length){
+      key.push(`1n${i+1}`)
+      i++;
+      }
+      myKeys.push(key)
+    }
+    if (key2Length === 0) {
+      myKeys.push(['2n1','2n2','2n3','2n4'])
+    }else if (key2Length < 4) {
+      let key = [];
+      let i = 0;
+      while (i<key2Length){
+      key.push(`2n${i+1}`)
+      i++;
+      }
+      myKeys.push(key)
+    }
+    if (key3Length === 0) {
+      myKeys.push(['3n1','3n2','3n3','3n4','3n5'])
+    } else if (key3Length <5){
+      let key = [];
+      let i = 0;
+      while (i<key3Length){
+      key.push(`3n${i+1}`)
+      i++;
+      }
+      myKeys.push(key)
+    }
+    let random = Math.floor((Math.random()* myKeys.length))
+    let row = myKeys[random]
+    console.log(myKeys)
+    row.sort().reverse()
+    let numToRemove = Math.floor((Math.random()*row.length)) + 1
+    let start = row[0].charAt(2);
+    let rowNumber = row[0].charAt(0)
+    console.log(row)
+    let i = 1
+    while (i<=numToRemove) {
+      pebbles[`${rowNumber}n${start-i}`] = 'disappear';
+      i++;
+    }
+    this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+  }
+
+  computerRemoveNimStones = (numToRemove, row) => {
+    row.sort()
+    const pebbles = {
+      ...this.state.pebbles
+    }
+    console.log(row)
+    let start = row[0].charAt(2);
+    let rowNumber = row[0].charAt(0);
+    console.log(row)
+    let i = 0
+    while (i<=numToRemove) {
+      pebbles[`${rowNumber}n${start-i}`] = 'disappear';
+      i++;
+    }
+    this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+  }
+
   removeNimStones = (event, id, startIndex, row, endIndex) => {
     if (!this.state.gameOver) {
 
@@ -1573,55 +1647,95 @@ class App extends Component {
     const key1 = keys.filter(key => key[0] === `1`)
     const key2 = keys.filter(key => key[0] === `2`)
     const key3 = keys.filter(key => key[0] === `3`)
-    let binary1 = (3 - key1.length).toString(2);
-    let binary2 = (4 - key2.length).toString(2);
-    let binary3 = (5 - key3.length).toString(2);
+    console.log(key1)
+    console.log(key2)
+    console.log(key3)
+    const key1Length = (3 - key1.length)
+    const key2Length = (4 - key2.length)
+    const key3Length = (5 - key3.length)
+    let binary1 = key1Length.toString(2);
+    let binary2 = key2Length.toString(2);
+    let binary3 = key3Length.toString(2);
 
     const length1 = binary1.length
     const length2 = binary2.length
     const length3 = binary3.length
     // changing row is the row that we must take from
     let changingRow = ":(";
-    if (length1 === 1) {
-      binary1 = "00" + binary1
-    } else if (length1 === 2) {
-      binary1 = "0" + binary1
-    }
-    if (length2 === 1) {
-      binary2 = "00" + binary2
-    } else if (length2 === 2) {
-      binary2 = "0" + binary2
-    }
-    if (binary3.length === 1) {
-      binary3 = "00" + binary3
-    } else if (length3 === 2) {
-      binary3 = "0" + binary3
-    }
-    console.log(binary1)
-    console.log(binary2)
-    console.log(binary3)
-    let i = 0
-    while (i<numberOfRows) {
-      // finding which one to change
-      if (((binary1[i] === '1') && (binary2[i] === '0' && binary3[i] === '0'))) {
-        changingRow = i.toString() + '1' + binary1;
-        break;
-      } else if ((binary2[i] === '1') && (binary1[i] === '0' && binary3[i] === '0')){
-        changingRow = i.toString() + '2' + binary2
-        break;
-      } else if (((binary3[i] === '1') && (binary1[i] === '0' && binary2[i] === '0'))){
-        changingRow = i.toString() + '3' + binary3
-        break;
+    if (keys.length >= 6) {
+      if (length1 === 1) {
+        binary1 = "00" + binary1
+      } else if (length1 === 2) {
+        binary1 = "0" + binary1
       }
-      i++
-    }
-    console.log(changingRow);
-    if (changingRow === ":(") {
-      console.log('random move')
-    } else if (changingRow[0] === '2'){
-      console.log(`remove one from row${changingRow[1]}`)
-    } else if (changingRow[0] === '1') {
-      console.log('working on it')
+      if (length2 === 1) {
+        binary2 = "00" + binary2
+      } else if (length2 === 2) {
+        binary2 = "0" + binary2
+      }
+      if (binary3.length === 1) {
+        binary3 = "00" + binary3
+      } else if (length3 === 2) {
+        binary3 = "0" + binary3
+      }
+      let rowToPass;
+      let i = 0
+      while (i<numberOfRows) {
+        // finding which one to change
+        if (((binary1[i] === '1') && (binary2[i] === '0' && binary3[i] === '0'))) {
+          changingRow = i.toString() + '1' + binary1;
+          rowToPass = key1
+          break;
+        } else if ((binary2[i] === '1') && (binary1[i] === '0' && binary3[i] === '0')){
+          changingRow = i.toString() + '2' + binary2
+          rowToPass = key2
+          break;
+        } else if (((binary3[i] === '1') && (binary1[i] === '0' && binary2[i] === '0'))){
+          changingRow = i.toString() + '3' + binary3
+          rowToPass = key3
+          break;
+        }
+        i++
+      }
+      console.log(changingRow);
+      // the first if statement means that the computer is at a disadvantage so has to go randomly
+      if (changingRow === ":(") {
+        console.log('random move')
+        this.computerRandomMove(key1, key2, key3)
+      } else if (changingRow[0] === '2'){
+        console.log(`remove one from row${changingRow[1]}`)
+        this.computerRemoveNimStones(1,rowToPass)
+      } else if (changingRow[0] === '1') {
+        console.log('working on it')
+      } else if (changingRow[0] === '0') {
+        if (changingRow[1] === '3' || changingRow[1] === '2') {
+          if (key1Length === 1) {
+            console.log(`remove three from row${changingRow[1]}`)
+            this.computerRemoveNimStones(3,rowToPass)
+          } else {
+            console.log(`remove two from row${changingRow[1]}`)
+            this.computerRemoveNimStones(2,rowToPass)
+          }
+        }else if (changingRow[1] === '3' || changingRow[1] === '1') {
+          if (key2Length === 1) {
+            console.log(`remove three from row${changingRow[1]}`)
+            this.computerRemoveNimStones(3,rowToPass)
+          } else {
+            console.log(`remove two from row${changingRow[1]}`)
+            this.computerRemoveNimStones(2,rowToPass)
+          }
+        }else if (changingRow[1] === '2' || changingRow[1] === '1') {
+          if (key3Length === 1) {
+            console.log(`remove three from row${changingRow[1]}`)
+            this.computerRemoveNimStones(3,rowToPass)
+          } else {
+            console.log(`remove two from row${changingRow[1]}`)
+            this.computerRemoveNimStones(2,rowToPass)
+          }
+        }
+      }
+    } else {
+      this.computerRandomMove(key1, key2, key3)
     }
   }
 
