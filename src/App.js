@@ -12,7 +12,6 @@ class App extends Component {
     isX: true,
     gameOver: false,
     whichGame: '',
-    // whichGame: 'TicTacToe',
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
