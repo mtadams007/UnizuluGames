@@ -16,9 +16,11 @@ class App extends Component {
     orderTurn: true,
     language: 'eng',
     nimWinNumber: 12,
-    isComputerPlayer: true,
+    isComputerPlayer: false,
     isComputerTurn: false,
   }
+
+  // allows computer to move after asynchronous call
 
   componentDidUpdate = (prevProps, prevState, snapshot) => {
     if (!this.state.gameOver) {
@@ -46,7 +48,7 @@ class App extends Component {
       elements[0].classList.remove("win");
       i++;
     }
-    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}, isComputerTurn: false})
+    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: {}, isComputerTurn: false, isComputerPlayer: false})
     return true;
   }
 
@@ -60,8 +62,11 @@ class App extends Component {
   }
 
   chooseOrderChaos = () => {
-    console.log(this.state.whichGame)
     this.setState({whichGame: 'OrderChaos'})
+  }
+
+  playComputer = () => {
+    this.setState({isComputerPlayer: true})
   }
 
   toggleLanguage = () => {
@@ -216,13 +221,13 @@ class App extends Component {
         let squares = {
           ...this.state.squares, [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
-        this.setState({squares: squares, isComputerTurn: false})
+        this.setState({squares: squares, isComputerTurn: false, isX: !this.state.isX})
         return ("VICTORY")
     } else {
       let squares = {
         ...this.state.squares, [`${winningXCoord}a${numberOfRow}`]: `${this.state.isX ? "X" : "O"}`
       }
-      this.setState({squares: squares, isComputerTurn: false})
+      this.setState({squares: squares, isComputerTurn: false, isX: !this.state.isX})
       return ("VICTORY")
     }
 
@@ -247,7 +252,7 @@ class App extends Component {
         let squares = {
           ...this.state.squares, [`${winningCoord}a${winningCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
-        this.setState({squares: squares, isComputerTurn: false})
+        this.setState({squares: squares, isComputerTurn: false, isX: !this.state.isX})
         return ("VICTORY")
       }
     }
@@ -305,7 +310,7 @@ class App extends Component {
         let squares = {
           ...this.state.squares, [`${winningXCoord}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
-        this.setState({squares: squares, isComputerTurn: false})
+        this.setState({squares: squares, isComputerTurn: false, isX: !this.state.isX})
         return ("VICTORY")
       }
     }
@@ -392,20 +397,20 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [blockingMove]: 'O'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else if (str.includes('OOOOO')) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else if (str === ('XXXXO')) {
           if (blockingMove != `${numberOfRow}a6`) {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OOOOX')) {
@@ -413,7 +418,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OXXXX')) {
@@ -421,7 +426,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('XOOOO')) {
@@ -429,7 +434,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         }
@@ -448,20 +453,20 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [blockingMove]: 'O'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else if (str.includes('OOOOO')) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else if (str === ('XXXXO')) {
           if (blockingMove != `6a${numberOfRow}`) {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OOOOX')) {
@@ -469,7 +474,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OXXXX')) {
@@ -477,7 +482,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('XOOOO')) {
@@ -485,7 +490,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         }
@@ -513,12 +518,12 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [moves[1]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           }
         } else if (str === ('OOOO')) {
           const moves = blockingMove.split('.')
@@ -526,13 +531,13 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [moves[1]]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('XXXO')) {
@@ -573,13 +578,13 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [moves[1]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OOOO')) {
@@ -588,13 +593,13 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [moves[1]]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('XXXO')) {
@@ -684,20 +689,20 @@ class App extends Component {
         const squares = {
           ...this.state.squares, [blockingMove]: 'O'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
       } else if (str.includes('OOOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
       } else if (str === ('XXXXO')) {
         if (blockingMove != `6a6`) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'O'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         }
       } else if (str === ('OOOOX')) {
@@ -705,7 +710,7 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         }
       } else if (str === ('OXXXX')) {
@@ -713,7 +718,7 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [blockingMove]: 'O'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         }
       } else if (str === ('XOOOO')) {
@@ -721,7 +726,7 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         }
       }
@@ -748,13 +753,13 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [moves[1]]: 'O'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else {
           const squares = {
             ...this.state.squares, [moves[0]]: 'O'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         }
       } else if (str === ('OOOO')) {
@@ -763,13 +768,13 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [moves[1]]: 'X'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else {
           const squares = {
             ...this.state.squares, [moves[0]]: 'X'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         }
       } else if (str === ('XXXO')) {
@@ -841,13 +846,13 @@ class App extends Component {
         const squares = {
           ...this.state.squares, [blockingMove]: 'O'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
       }
     } else if (sum === 8 && arrayLength === 4) {
@@ -866,13 +871,13 @@ class App extends Component {
         const squares = {
           ...this.state.squares, [blockingMove]: 'O'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
       }
     } else if (sum === 7) {
@@ -893,20 +898,20 @@ class App extends Component {
           const squares = {
             ...this.state.squares, [blockingMove]: 'O'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else if (str.includes('OOOOO')) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'X'
           }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
         } else if (str === ('XXXXO')) {
           if (blockingMove != `1a6`) {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OOOOX')) {
@@ -914,7 +919,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OXXXX')) {
@@ -922,7 +927,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('XOOOO')) {
@@ -930,7 +935,7 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [blockingMove]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         }
@@ -957,13 +962,13 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [moves[1]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('OOOO')) {
@@ -972,13 +977,13 @@ class App extends Component {
             const squares = {
               ...this.state.squares, [moves[1]]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'X'
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
             return "STOP"
           }
         } else if (str === ('XXXO')) {
@@ -1056,13 +1061,13 @@ class App extends Component {
         const squares = {
           ...this.state.squares, [blockingMove]: 'O'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
       }
     } else if (arrayLength2 === 4) {
@@ -1081,13 +1086,13 @@ class App extends Component {
         const squares = {
           ...this.state.squares, [blockingMove]: 'O'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
     } else if (str === ('OOOO')) {
         const squares = {
           ...this.state.squares, [blockingMove]: 'X'
         }
-        this.setState({squares: squares, isX: !this.state.isX, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
         return "STOP"
       }
     }
@@ -1156,7 +1161,7 @@ class App extends Component {
         const squares = {
           ...this.state.squares, [`${blockHere[0]}`]: `${blockHere[1]}`
         }
-        this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false, orderTurn: !this.state.orderTurn})
 
       } else {
 
@@ -1186,7 +1191,7 @@ class App extends Component {
         const squares = {
           ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
         }
-        this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false})
+        this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false, orderTurn: !this.state.orderTurn})
         return;
       }
     }
@@ -1588,14 +1593,11 @@ class App extends Component {
       myKeys.push(key)
     }
     let random = Math.floor((Math.random()* myKeys.length))
-    console.log(`my keys = ${myKeys}`)
     let row = myKeys[random]
     row.sort().reverse()
-    console.log(`row length = ${row.length}`)
     let numToRemove = Math.floor((Math.random()*row.length)) + 1
     let start = row[0].charAt(2);
     let rowNumber = row[0].charAt(0)
-    console.log(`rowNumber = ${rowNumber}`)
     let i = 1
     console.log(numToRemove)
     while (i<=numToRemove) {
@@ -1603,7 +1605,7 @@ class App extends Component {
       console.log(`${rowNumber}n${start-i+1}`)
       i++;
     }
-    this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+    this.setState({pebbles: pebbles, orderTurn: this.state.orderTurn, isComputerTurn: false})
   }
 
   computerRemoveNimStones = (numToRemove, rowNumber, rowLength) => {
@@ -1661,7 +1663,7 @@ class App extends Component {
       pebbles[`${rowNumber}n${start-i+1}`] = 'disappear';
       i++;
     }
-    this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: false})
+    this.setState({pebbles: pebbles, orderTurn: this.state.orderTurn, isComputerTurn: false})
     }
 
   removeNimStones = (event, id, startIndex, row, endIndex) => {
@@ -1692,16 +1694,13 @@ class App extends Component {
   }
 
   nimAi = () => {
-    console.log("in nim ai")
     if (this.state.isComputerTurn && !this.state.gameOver) {
-      console.log("passed first if statement")
       const numberOfRows = 3
       // Converting all lengths to binary
       const keys = Object.keys(this.state.pebbles)
       const key1 = keys.filter(key => key[0] === `1`)
       const key2 = keys.filter(key => key[0] === `2`)
       const key3 = keys.filter(key => key[0] === `3`)
-      console.log(keys)
 
       const key1Length = (3 - key1.length)
       const key2Length = (4 - key2.length)
@@ -1805,6 +1804,7 @@ class App extends Component {
     let keys = Object.keys(this.state.squares)
     let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
     <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button><button className="symbolButton" onClick={this.chooseNim}>Nim</button></div>;
+    let computer;
     // Decides if X or O is moving
     if (this.state.isX) {
       symbol = 'X'
@@ -1817,6 +1817,9 @@ class App extends Component {
 
     // Checks whether we're playing Tic Tac Toe
     if (this.state.whichGame==="TicTacToe"){
+      if (!this.state.isComputerPlayer){
+        computer = <button className="symbolButton" onClick={this.playComputer}>playComputer</button>
+      }
       buttonArray = null;
       gameNumber = 3;
       if (this.state.language === 'eng') {
@@ -1845,6 +1848,9 @@ class App extends Component {
 
       // Checks if we're playing order and chaos
     } else if (this.state.whichGame==="OrderChaos"){
+      if (!this.state.isComputerPlayer){
+        computer = <button className="symbolButton" onClick={this.playComputer}>playComputer</button>
+      }
         buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
         <button className="symbolButton" onClick={this.toggleSymbolO}>O</button></div>
         gameNumber = 6;
@@ -1871,6 +1877,9 @@ class App extends Component {
       }
 
     } else if (this.state.whichGame === 'Nim') {
+      if (!this.state.isComputerPlayer){
+        computer = <button className="symbolButton" onClick={this.playComputer}>playComputer</button>
+      }
       buttonArray = null;
       nimArray = [3,4,5];
       let player;
@@ -1900,14 +1909,13 @@ class App extends Component {
             <img src="UnizuluLogo.png" className='logo' alt='Unizulu Logo'></img>
             <button className="homeButton" onClick={this.goHomeScreen}>Go home</button>
         </div>
-          <div></div>
+          <div>{computer}</div>
           <div className="content">
           {declaration}
           <button className="symbolButton" onClick={this.nimAi}>Computer Test</button>
 
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
-
           {buttonArray}
         </div>
           <div className="rules">
