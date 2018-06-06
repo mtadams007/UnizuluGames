@@ -37,7 +37,7 @@ class App extends Component {
   // Basic navigation
 
   goHomeScreen = () => {
-    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true, pebbles:{}})
+    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true, pebbles:''})
   }
 
   resetGame = () => {
@@ -66,7 +66,7 @@ class App extends Component {
   }
 
   playComputer = () => {
-    this.setState({isComputerPlayer: true})
+    this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: '', isComputerPlayer: true, isComputerTurn: false})
   }
 
   toggleLanguage = () => {
@@ -1689,6 +1689,7 @@ class App extends Component {
   isNimWin = () => {
     const length = (Object.keys(this.state.pebbles)).length;
     if (length === this.state.nimWinNumber) {
+      // this.setState({gameOver: true})
       return true;
     }
   }
@@ -1799,11 +1800,14 @@ class App extends Component {
     let rules = null;
     let languageButton = null;
     let nimArray = [0];
+    let gameControlButton = null;
+
     // dynamically changes size of board
     let gameNumber = 0;
     let keys = Object.keys(this.state.squares)
-    let buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button>
-    <button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button><button className="symbolButton" onClick={this.chooseNim}>Nim</button></div>;
+    let buttonArray = <div className="buttonArray"><span className="gameChoice"><img className="gameImage" src="tictactoe.png" alt="Tic Tac Toe" ></img><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button></span>
+    <span className="gameChoice"><img className="gameImage" src="OrderChaos.png" alt="Order and Chaos"></img><button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button></span><span className="gameChoice"><img className="gameImage" src="nim.png" alt="Nim"></img>
+  <button className="symbolButton" onClick={this.chooseNim}>Nim</button></span></div>;
     let computer;
     // Decides if X or O is moving
     if (this.state.isX) {
@@ -1822,19 +1826,26 @@ class App extends Component {
       }
       buttonArray = null;
       gameNumber = 3;
-      if (this.state.language === 'eng') {
-        rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> The players take turns putting either an "X" or "O" where they like.  The winner is the first to get three of their symbol in a row either horizontally, vertically or diagonally. </p></div>
-        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+
+      rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> The players take turns putting either an "X" or "O" where they like.  The winner is the first to get three of their symbol in a row either horizontally, vertically or diagonally. </p></div>
+      if (Object.keys(this.state.squares).length === 0 || this.state.gameOver) {
+        gameControlButton = <div className="gameControlArray"><button className="gameControlButton" onClick={this.resetGame}>Play a Friend</button><button className="gameControlButton" onClick={this.playComputer}>Play the Computer</button></div>
+      } else if (this.state.isComputerPlayer) {
+        gameControlButton = <h1>Playing against Computer</h1>
       } else {
+        gameControlButton = <h1>Playing against a Friend</h1>
+      }
+      if (this.state.language === "zulu") {
         rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo  okwaze ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi, kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile), kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma kucezeke. </p></div>
-        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+        languageButton = <div><button className="languageButton" onClick={this.toggleLanguage}>English</button></div>
+      } else {
+      rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> The players take turns putting either an "X" or "O" where they like.  The winner is the first to get three of their symbol in a row either horizontally, vertically or diagonally. </p></div>
+      languageButton = <div><button className="languageButton" onClick={this.toggleLanguage}>IsiZulu</button></div>
       }
       if(!this.isTttWin()) {
         declaration = (<h1>{symbol}'s Turn</h1>)
         if (keys.length === 9) {
           declaration = (<h1>Tie game</h1>)
-          // this.setState({gameOver: true})
-          // return;
         }
       }
       if (this.state.gameOver) {
@@ -1851,12 +1862,21 @@ class App extends Component {
         buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
         <button className="symbolButton" onClick={this.toggleSymbolO}>O</button></div>
         gameNumber = 6;
-        if (this.state.language === 'eng') {
+        console.log(this.state.squares)
+
+        if (Object.keys(this.state.squares).length === 0 || this.state.gameOver) {
+            gameControlButton = <div className="gameControlArray"><button className="gameControlButton" onClick={this.resetGame}>Play a Friend</button><button className="gameControlButton" onClick={this.playComputer}>Play the Computer</button></div>
+        } else if (this.state.isComputerPlayer) {
+          gameControlButton = <h1>Playing against Computer</h1>
+        } else {
+          gameControlButton = <h1>Playing against a Friend</h1>
+        }
+        if (this.state.language === "eng") {
           rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph"> One player plays as Order and the other plays as Chaos.  Order wins if they get five "X"s or "O"s in a row, and Chaos wins if they prevent Order from getting five in a row.  Each player can put either an "X" or an "O" on their respective turns.  They can switch between the two whenever they like. </p></div>
-          languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>IsiZulu</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+          languageButton = <div><button className="languageButton" onClick={this.toggleLanguage}>Zulu</button></div>
         } else {
           rules = <div><h3>Order and Chaos:</h3><p className="rulesParagraph">Umdlalo u order and Chaos  udlalwa ebhodini eliphindaphindeke ngokwesithupha ngokwesithupha njengoba kuveziwe esithombeni ngezansi. Umdlali wokuqala udlala engu Order umdlali wesibili udlala engu Chaos. U Order uwina uma ekwaze ukulandelanisa o X noma o O abayisihlanu ebhodini besekuthi u Chaos uwina uma ekwaze ukuvimba u Order ukuthi alandelanise o X noma o O abayisihlanu. Umdlali emunye angadlala ngo X noma ngo O. bangashintsha shintsha phakathi kokubili ngokuthanda kwabo. </p></div>
-          languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+          languageButton = <div><button className="languageButton" onClick={this.toggleLanguage}>English</button></div>
         }
         let player;
         if (this.state.orderTurn) {
@@ -1880,13 +1900,24 @@ class App extends Component {
       buttonArray = null;
       nimArray = [3,4,5];
       let player;
-      if (this.state.language === 'eng') {
+      console.log(this.state.gameOver)
+      console.log(this.state.pebbles)
+      if (this.state.language === "eng") {
         rules = <div><h3>Nim:</h3><p className="rulesParagraph"> Nim is played with a set of 12 counters.  You place them in three groups as pictured:   Each player takes turns removing as many counters as they like from one group.  They can take as many as they like provided they all come from the same group.  The player who takes the last counter loses.  The game can be adjusted by adding more or less counters to each pile or adding more piles. </p></div>
-        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>isiZulu</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+        languageButton = <div><button className="languageButton" onClick={this.toggleLanguage}>IsiZulu</button></div>
       } else {
         rules = <div><h3>Nim:</h3><p className="rulesParagraph"> UNim udlalwa ngezinkomo ezingu12. Zibekwa zibe ngamaqoqo amathathu, njengasesithombeni. Umdlali, ngethuba lakhe, angathatha nom izinkomo ezingaki, kodwa eqoqweni elilodwa. Umdlali othatha inkomo yokugcina uyena ohlulwayo. Lomdlalo ungashintshwa ngokwenza amaqoqo abe maningi, noma ngokwenza izinkomo zibe ningi noma ncane ngeqoqo ngalinye. </p></div>
-        languageButton = <div><button className="symbolButton" onClick={this.toggleLanguage}>English</button><button className="symbolButton" onClick={this.resetGame}>Start Over</button></div>
+        languageButton = <div><button className="languageButton" onClick={this.toggleLanguage}>English</button></div>
       }
+
+      if (Object.keys(this.state.pebbles).length === 0 || Object.keys(this.state.pebbles).length === 12) {
+        gameControlButton = <div className="gameControlArray"><button className="gameControlButton" onClick={this.resetGame}>Play a Friend</button><button className="gameControlButton" onClick={this.playComputer}>Play the Computer</button></div>
+      } else if (this.state.isComputerPlayer) {
+        gameControlButton = <h1>Playing against Computer</h1>
+      } else {
+        gameControlButton = <h1>Playing against a Friend</h1>
+      }
+
       if (this.state.orderTurn) {
         player = "Player 1"
       } else {
@@ -1906,18 +1937,15 @@ class App extends Component {
             <img src="UnizuluLogo.png" className='logo' alt='Unizulu Logo'></img>
             <button className="homeButton" onClick={this.goHomeScreen}>Go home</button>
         </div>
-          <div>{computer}</div>
+          <div className="rules">{languageButton}{rules}</div>
           <div className="content">
           {declaration}
-          <button className="symbolButton" onClick={this.nimAi}>Computer Test</button>
-
           {this.buildNim(nimArray)}
           {this.renderSq(gameNumber)}
           {buttonArray}
         </div>
           <div className="rules">
-            {rules}
-            {languageButton}
+            {gameControlButton}
           </div>
         </div>
 
