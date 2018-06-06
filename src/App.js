@@ -1831,18 +1831,15 @@ class App extends Component {
       }
       if(!this.isTttWin()) {
         declaration = (<h1>{symbol}'s Turn</h1>)
-      } else if (keys.length === 9) {
-        console.log('hello')
-        this.setState({gameOver: true})
+        if (keys.length === 9) {
+          declaration = (<h1>Tie game</h1>)
+          // this.setState({gameOver: true})
+          // return;
+        }
       }
       if (this.state.gameOver) {
-        console.log('heyr')
         if(this.isTttWin) {
-          console.log('hey im alive')
           declaration= (<h1>{winSymbol} Wins!</h1>)
-        } else {
-          console.log('im here')
-          declaration = (<h1>Tie game</h1>)
         }
       }
 
