@@ -16,4 +16,4 @@ Nim is played with a set of 12 pebbles placed in three rows. Players take turns 
 
 ## Notes
 
-As of now there are no difficulty levels. The target user is a rural student in South Africa where this might be their first experience with a computer. The app was designed to make things as obvious as possible with as few extraneous buttons or distractions as possible. As this is my first React app I did not do as good a job using components as I could have, but I will try to fix that as soon as I can.
+As of now there are no difficulty levels. The target user is a rural student in South Africa where this might be their first experience with a computer. The app was designed to make things as obvious as possible with as few extraneous buttons or distractions as possible. As this is my first React app I did not do as good a job using components as I could have, but I will try to fix that as soon as I can. Further changes will be made when it is tested by students in South Africa. Help with the Zulu translations was provided by Xolani Mazibuko.
