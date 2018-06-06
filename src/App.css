@@ -55,6 +55,27 @@ body {
   background-color: #ddd;
 }
 
+.gameControlButton {
+  font-size: 15px;
+  border: 1px solid red;
+  border-radius: 10rem;
+  padding: 15px;
+  margin: 20px;
+  width: 170px;
+}
+
+.gameControlArray {
+  margin-top: 50%;
+}
+
+.languageButton {
+  font-size: 15px;
+  border: 1px solid red;
+  border-radius: 10rem;
+  padding: 15px;
+  margin-left: 20%;
+  width: 150px;
+}
 .rules {
   margin: 25px;
   float: left
