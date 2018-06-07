@@ -36,10 +36,13 @@ class App extends Component {
   // Basic navigation
 
   goHomeScreen = () => {
-    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true, pebbles:''})
+    this.setState({squares: '', isX: true, gameOver: false, whichGame: '', orderTurn: true, pebbles:'', isComputerTurn: false, isComputerPlayer: false})
   }
 
+  // reset game sets everything back to normal
+
   resetGame = () => {
+    // this removes the class win from tictactoe and orderChaos which makes the squares white again
     let elements = document.getElementsByClassName("win");
     let length = elements.length
     let i = 0;
@@ -52,7 +55,6 @@ class App extends Component {
   }
 
   chooseTicTacToe = () => {
-    console.log(this.state.whichGame)
     this.setState({whichGame: 'TicTacToe'})
   }
 
@@ -64,7 +66,16 @@ class App extends Component {
     this.setState({whichGame: 'OrderChaos'})
   }
 
+  // Resets game as well so computer isn't confused as to when to play
+
   playComputer = () => {
+    let elements = document.getElementsByClassName("win");
+    let length = elements.length
+    let i = 0;
+    while (i<length){
+      elements[0].classList.remove("win");
+      i++;
+    }
     this.setState({squares: '', isX: true, gameOver: false, orderTurn: true, pebbles: '', isComputerPlayer: true, isComputerTurn: false})
   }
 
@@ -153,6 +164,7 @@ class App extends Component {
           answer = true
         }
       }
+      // Checks diagonal victories from top left to bottom right
       if (xCoord === yCoord) {
         if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
           let element1 = document.getElementById(`${(xCoord%3)+1}a${(yCoord%3)+1}`);
@@ -165,6 +177,7 @@ class App extends Component {
           answer = true
         }
       }
+      // checks diagonal victories from bottom left to top right
       if (xCoord+yCoord === 4){
         if(this.state.squares[`${((xCoord)%3)+1}a${((yCoord+1)%3)+1}`] === this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] &&
            this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord)%3)+1}`] === winningSymbol){
@@ -179,6 +192,7 @@ class App extends Component {
         }
       }
     }
+    // true means someone won
     if (answer === true) {
       console.log(answer)
       return true;
@@ -188,7 +202,7 @@ class App extends Component {
   // Checks horizontal and vertical spots whether there are two similar pieces in a row
 
   ticTacToeFilterMe = (directionNumber, numberOfRow, arrayToFilter, gameNumber) => {
-    // filtering either the row or column, directionNumber is 0 for horiontal, so the key calls the xCoordinate, otherwise 2 for vertical
+    // filtering either the row or column, directionNumber is 0 for horizontal, so the key calls the xCoordinate, otherwise 2 for vertical
     const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
     // gameNumber is how long a row we're checking for. In this case it is 2
     if (valueArray.length === gameNumber && this.state.squares[valueArray[0]]===this.state.squares[valueArray[1]]) {
@@ -205,9 +219,8 @@ class App extends Component {
       let winningXCoord = 6-(firstXCoord+secondXCoord);
       let move = '';
       // Confusing use of ternary here, but if the two in a row are NOT the current player's turn, it gets pushed to the danger array, otherwise computer will win here.
+      // The reason for not blocking immediately is because we'd rather win if theres a chance
       if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")) {
-      console.log('in danger array spot')
-
         if (directionNumber === 0) {
           move =`${numberOfRow}a${winningYCoord}`
         } else {
@@ -216,10 +229,10 @@ class App extends Component {
         return move;
         // if directionNumber is 0, then we make the horizontal victory
       } else if (directionNumber === 0) {
-      console.log('not in danger zone')
         let squares = {
           ...this.state.squares, [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
         }
+        // we return VICTORY so that when we check later we know not to put another mark down
         this.setState({squares: squares, isComputerTurn: false, isX: !this.state.isX})
         return ("VICTORY")
     } else {
@@ -265,19 +278,43 @@ class App extends Component {
     // let length = keys.length;
     let i=1;
     while (i<4) {
+      // we push in all the squares that had a symbol and filter them by row and column. these we push into our filter check function
       const row = this.ticTacToeFilterMe(0,i,keys,2);
       const column = this.ticTacToeFilterMe(2,i,keys,2);
       if (row) {
+        if (row === "VICTORY") {
+          arrayToCheck.push(row);
+          break;
+        } else {
         arrayToCheck.push(row);
+        }
       }
       if (column) {
+        if (column === "VICTORY") {
+          arrayToCheck.push(column);
+          break;
+        } else {
         arrayToCheck.push(column);
+        }
       }
       // column.push(arrayToCheck);
       i++;
     }
-    let option = this.ticTacToeDiagonalCheckerOne(keys)
-    let option2 = this.ticTacToeDiagonalCheckerTwo(keys)
+    // checking diagonal moveslet victoryCheck = dangerArray.filter(win => win === "VICTORY")
+    let option;
+    let victoryCheck = arrayToCheck.filter(win => win === "VICTORY")
+    if (victoryCheck.length != 0) {
+      return ["VICTORY"];
+    } else {
+      option = this.ticTacToeDiagonalCheckerOne(keys)
+    }
+    victoryCheck = arrayToCheck.filter(win => win === "VICTORY")
+    let option2;
+    if (victoryCheck.length != 0) {
+      return ["VICTORY"];
+    } else {
+      option2 = this.ticTacToeDiagonalCheckerTwo(keys)
+    }
     if (option) {
       arrayToCheck.push(option)
     }
@@ -302,6 +339,7 @@ class App extends Component {
       let secondXCoord = parseInt(key2Parsed[0], 10);
       let winningXCoord = 6-(firstXCoord+secondXCoord);
       let move = '';
+      // as before we make the confusing ternary operation so that we know whether to try to block
       if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")){
         move = `${winningXCoord}a${winningYCoord}`
         return move;
@@ -318,11 +356,12 @@ class App extends Component {
   // AI is purposefully not supposed to be unbeatable, but challenging. It trys to win first, then prevent the other player from winning, and finally goes randomly if neither of the first two
 
   ticTacToeAi = () => {
+    // First we make sure that it is the computers turn and that the game is not over
     if (this.state.isComputerTurn && !this.state.gameOver) {
-      console.log('computer turn')
+    // we make sure the computer knows what his symbol is so he doesn't put the wrong one down. currently he's always O but I'd like to change that in the future
       const symbol = (this.state.isX ? "X" : "O")
+      // options are its possible moves
       let options =[];
-      console.log(options)
       let isX = this.state.isX;
       //returns danger array from places we might need to block
       const dangerArray = this.ticTacToeBlockChecker();
@@ -331,13 +370,14 @@ class App extends Component {
       if (victoryCheck.length != 0) {
         return;
       }
+      // if theres a possibility of loss and we haven't won, the computer blocks the first win it can see.
       if (dangerArray.length != 0) {
         const squares = {
           ...this.state.squares, [`${dangerArray[0]}`]: `${this.state.isX ? "X" : "O"}`
         }
         this.setState({squares: squares, isX: !isX, isComputerTurn: false})
       } else {
-
+        // if there is no danger of losing and no way of winning we make a random move. First we need to create the options of where we could go
         let keys = (Object.keys(this.state.squares));
         for(let j = 1; j<4; j++) {
           for (let i = 1; i<4; i++) {
@@ -346,7 +386,7 @@ class App extends Component {
         }
         let length = keys.length;
         //k is the array number for options
-
+        // in this loop we eliminate all the moves that were already made
         for (let k = 0; k<keys.length; k++) {
         //m is the array number for keys length
           for (let m=0; m<9; m++){
@@ -356,9 +396,10 @@ class App extends Component {
             }
           }
         }
+        //We make a random move here
+
         let randomSelector = 9 - length;
 
-        console.log(options)
         let number = Math.floor((Math.random())*randomSelector);
         const squares = {
           ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
@@ -392,6 +433,7 @@ class App extends Component {
           }
           i++;
         }
+        // if there's five symbols in a row then we must block. we return STOP so that we don't make two moves
         if (str.includes('XXXXX')) {
           const squares = {
             ...this.state.squares, [blockingMove]: 'O'
@@ -404,6 +446,7 @@ class App extends Component {
           }
           this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
           return "STOP"
+          // If there's four in a row and another one blocking we check whether its a potential victory and then we block
         } else if (str === ('XXXXO')) {
           if (blockingMove != `${numberOfRow}a6`) {
             const squares = {
@@ -438,7 +481,7 @@ class App extends Component {
           }
         }
 
-        // vertical check
+        // vertical check same logic as vertical
       } else if (directionNumber === 2) {
         while (i<7) {
           if (this.state.squares[`${i}a${numberOfRow}`]) {
@@ -1806,7 +1849,7 @@ class App extends Component {
     let keys = Object.keys(this.state.squares)
     let buttonArray = <div className="buttonArray"><span className="gameChoice"><img className="gameImage" src="tictactoe.png" alt="Tic Tac Toe" ></img><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button></span>
     <span className="gameChoice"><img className="gameImage" src="OrderChaos.png" alt="Order and Chaos"></img><button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button></span><span className="gameChoice"><img className="gameImage" src="nim.png" alt="Nim"></img>
-  <button className="symbolButton" onClick={this.chooseNim}>Nim</button></span></div>;
+    <button className="symbolButton" onClick={this.chooseNim}>Nim</button></span></div>;
     let computer;
     // Decides if X or O is moving
     if (this.state.isX) {
