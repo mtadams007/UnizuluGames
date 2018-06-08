@@ -166,9 +166,9 @@ class App extends Component {
       }
       // Checks diagonal victories from top left to bottom right
       if (xCoord === yCoord) {
-        if(this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`] && this.state.squares[`${(xCoord%3)+2}a${(yCoord%3)+2}`]===winningSymbol){
-          let element1 = document.getElementById(`${(xCoord%3)+1}a${(yCoord%3)+1}`);
-          let element2 = document.getElementById(`${(xCoord%3)+2}a${(yCoord%3)+2}`);
+        if(this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord+1)%3)+1}`]===this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`] && this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===winningSymbol){
+          let element1 = document.getElementById(`${((xCoord+1)%3)+1}a${((yCoord+1)%3)+1}`);
+          let element2 = document.getElementById(`${(xCoord%3)+1}a${(yCoord%3)+1}`);
           let element3 = document.getElementById(`${xCoord}a${yCoord}`);
           element1.classList.add("win");
           element2.classList.add("win");
@@ -287,7 +287,7 @@ class App extends Component {
           // we need to break here because otherwise if there is a later victory for the opposite symbol the computer plays both
           break;
         } else {
-        arrayToCheck.push(row);
+          arrayToCheck.push(row);
         }
       }
       if (column) {
@@ -1153,19 +1153,68 @@ class App extends Component {
       const row = this.orderChaosHorizontalVerticalChecker(0,i,keys);
       const column = this.orderChaosHorizontalVerticalChecker(2,i,keys);
       if (row) {
+        if(row ==="STOP") {
+          arrayToCheck.push(row);
+          //As in tic tac toe, we must break when we find a place to stop.
+          break;
+        } else {
         arrayToCheck.push(row);
+        }
       }
       if (column) {
+        if (column === "STOP") {
+          arrayToCheck.push(column);
+          break;
+        } else {
         arrayToCheck.push(column);
+        }
       }
       // column.push(arrayToCheck);
       i++;
     }
-    let option = this.orderChaosEasyDiagonalAiChecker(keys)
-    let option2 = this.orderChaosMediumDiagonalAiChecker(keys,6)
-    let option3 = this.orderChaosMediumDiagonalAiChecker(keys,7)
-    let option4 = this.orderChaosMediumDiagonalAiChecker(keys,8)
-    let option5 = this.orderChaosHardDiagonalAiChecker(keys)
+    let option;
+    let option2;
+    let option3;
+    let option4;
+    let option5;
+    let stopCheck = arrayToCheck.filter(win => win === "STOP")
+    if (stopCheck.length != 0) {
+      return ["STOP"]
+    } else {
+      option = this.orderChaosEasyDiagonalAiChecker(keys)
+    }
+    if (option) {
+      stopCheck = option.filter(win => win === "STOP")
+      if (stopCheck.length != 0) {
+        return ["STOP"]
+      } else {
+        option2 = this.orderChaosMediumDiagonalAiChecker(keys,6)
+      }
+    }
+    if (option2) {
+      stopCheck = option2.filter(win => win === "STOP")
+      if (stopCheck.length != 0) {
+        return ["STOP"]
+      } else {
+        option3 = this.orderChaosMediumDiagonalAiChecker(keys,7)
+      }
+    }
+    if (option3) {
+      stopCheck = option3.filter(win => win === "STOP")
+      if (stopCheck.length != 0) {
+        return ["STOP"]
+      } else {
+        option4 = this.orderChaosMediumDiagonalAiChecker(keys,8)
+      }
+    }
+    if (option4) {
+      stopCheck = option4.filter(win => win === "STOP")
+      if (stopCheck.length != 0) {
+        return ["STOP"]
+      } else {
+        option5 = this.orderChaosHardDiagonalAiChecker(keys)
+      }
+    }
     if (option) {
       arrayToCheck.push(option)
     }
@@ -1908,7 +1957,7 @@ class App extends Component {
         gameNumber = 6;
         console.log(this.state.squares)
 
-        if (Object.keys(this.state.squares).length === 0 || this.state.gameOver ) {
+        if (Object.keys(this.state.squares).length === 0 || this.state.gameOver || Object.keys(this.state.squares).length === 36) {
             gameControlButton = <div className="gameControlArray"><button className="gameControlButton" onClick={this.resetGame}>Play a Friend</button><button className="gameControlButton" onClick={this.playComputer}>Play the Computer</button></div>
         } else if (this.state.isComputerPlayer) {
           gameControlButton = <h1>Playing against Computer</h1>
