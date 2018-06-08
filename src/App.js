@@ -1687,9 +1687,6 @@ class App extends Component {
   }
 
   computerRemoveNimStones = (numToRemove, rowNumber, rowLength) => {
-    console.log(`num to remove is ${numToRemove}`)
-    console.log(`rowNumber is ${rowNumber}`)
-    console.log(`rowLength is ${rowLength}`)
     let myKeys = []
     if (rowNumber === 1){
       if (rowLength === 0) {
@@ -1731,8 +1728,6 @@ class App extends Component {
     const pebbles = {
       ...this.state.pebbles
     }
-    console.log(myKeys)
-
     myKeys.sort().reverse()
     let start = myKeys[0].charAt(2);
     let i = 1
@@ -1794,10 +1789,8 @@ class App extends Component {
       if (key1Length != 0 && key2Length + key3Length === 0 && key1Length != 1) {
         this.computerRemoveNimStones(key1Length - 1,1,key1Length)
       } else if (key2Length != 0 && key1Length + key3Length === 0 && key2Length != 1) {
-        console.log('remove from 2')
         this.computerRemoveNimStones(key2Length - 1,2,key2Length)
       } else if (key3Length != 0 && key2Length + key1Length === 0 && key3Length != 1) {
-        console.log('remove from 3')
         this.computerRemoveNimStones(key3Length - 1,3,key3Length)
       } else {
       // changing row is the row that we must take from
