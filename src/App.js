@@ -1155,8 +1155,8 @@ class App extends Component {
       if (row) {
         if(row ==="STOP") {
           arrayToCheck.push(row);
-          //As in tic tac toe, we must break when we find a place to stop.
-          break;
+          //As in tic tac toe, we must break when we find a victory
+          return ["STOP"]
         } else {
         arrayToCheck.push(row);
         }
@@ -1164,7 +1164,7 @@ class App extends Component {
       if (column) {
         if (column === "STOP") {
           arrayToCheck.push(column);
-          break;
+          return ["STOP"]
         } else {
         arrayToCheck.push(column);
         }
