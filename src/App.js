@@ -284,6 +284,7 @@ class App extends Component {
       if (row) {
         if (row === "VICTORY") {
           arrayToCheck.push(row);
+          // we need to break here because otherwise if there is a later victory for the opposite symbol the computer plays both
           break;
         } else {
         arrayToCheck.push(row);
@@ -292,6 +293,7 @@ class App extends Component {
       if (column) {
         if (column === "VICTORY") {
           arrayToCheck.push(column);
+          //same reason as above is why we're breaking here
           break;
         } else {
         arrayToCheck.push(column);
@@ -1870,7 +1872,7 @@ class App extends Component {
       gameNumber = 3;
 
       rules = <div><h3>Tic Tac Toe:</h3><p className="rulesParagraph"> The players take turns putting either an "X" or "O" where they like.  The winner is the first to get three of their symbol in a row either horizontally, vertically or diagonally. </p></div>
-      if (Object.keys(this.state.squares).length === 0 || this.state.gameOver) {
+      if (Object.keys(this.state.squares).length === 0 || this.state.gameOver || Object.keys(this.state.squares).length === 9) {
         gameControlButton = <div className="gameControlArray"><button className="gameControlButton" onClick={this.resetGame}>Play a Friend</button><button className="gameControlButton" onClick={this.playComputer}>Play the Computer</button></div>
       } else if (this.state.isComputerPlayer) {
         gameControlButton = <h1>Playing against Computer</h1>
@@ -1906,7 +1908,7 @@ class App extends Component {
         gameNumber = 6;
         console.log(this.state.squares)
 
-        if (Object.keys(this.state.squares).length === 0 || this.state.gameOver) {
+        if (Object.keys(this.state.squares).length === 0 || this.state.gameOver ) {
             gameControlButton = <div className="gameControlArray"><button className="gameControlButton" onClick={this.resetGame}>Play a Friend</button><button className="gameControlButton" onClick={this.playComputer}>Play the Computer</button></div>
         } else if (this.state.isComputerPlayer) {
           gameControlButton = <h1>Playing against Computer</h1>
