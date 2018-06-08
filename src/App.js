@@ -1799,7 +1799,7 @@ class App extends Component {
       } else if (key3Length != 0 && key2Length + key1Length === 0) {
         console.log('remove from 3')
         this.computerRemoveNimStones(key3Length - 1,3,key3Length)
-      }
+      } else {
       // changing row is the row that we must take from
       window.setTimeout(3000)
       if (keys.length === 11) {
@@ -1880,6 +1880,7 @@ class App extends Component {
         this.computerRandomMove(key1, key2, key3)
       }
     }
+  }
   }
 
 
