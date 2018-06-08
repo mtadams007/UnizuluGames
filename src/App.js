@@ -1183,16 +1183,22 @@ class App extends Component {
       return ["STOP"]
     } else {
       option = this.orderChaosEasyDiagonalAiChecker(keys)
-
-
-      option2 = this.orderChaosMediumDiagonalAiChecker(keys,6)
-
-      option3 = this.orderChaosMediumDiagonalAiChecker(keys,7)
-
-      option4 = this.orderChaosMediumDiagonalAiChecker(keys,8)
-
-      option5 = this.orderChaosHardDiagonalAiChecker(keys)
-
+      window.setTimeout(50)
+      if (this.state.isComputerTurn) {
+        option2 = this.orderChaosMediumDiagonalAiChecker(keys,6)
+      }
+      window.setTimeout(50)
+      if (this.state.isComputerTurn) {
+        option3 = this.orderChaosMediumDiagonalAiChecker(keys,7)
+      }
+      window.setTimeout(50)
+      if (this.state.isComputerTurn) {
+        option4 = this.orderChaosMediumDiagonalAiChecker(keys,8)
+      }
+      window.setTimeout(50)
+      if (this.state.isComputerTurn) {
+        option5 = this.orderChaosHardDiagonalAiChecker(keys)
+      }
     }
     if (option) {
       arrayToCheck.push(option)
