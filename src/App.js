@@ -166,7 +166,8 @@ class App extends Component {
       }
       // Checks diagonal victories from top left to bottom right
       if (xCoord === yCoord) {
-        if(this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord+1)%3)+1}`]===this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`] && this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]===winningSymbol){
+        if(this.state.squares[`${((xCoord+1)%3)+1}a${((yCoord+1)%3)+1}`]===this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`] && this.state.squares[`${(xCoord%3)+1}a${(yCoord%3)+1}`]
+        === winningSymbol){
           let element1 = document.getElementById(`${((xCoord+1)%3)+1}a${((yCoord+1)%3)+1}`);
           let element2 = document.getElementById(`${(xCoord%3)+1}a${(yCoord%3)+1}`);
           let element3 = document.getElementById(`${xCoord}a${yCoord}`);
@@ -1182,38 +1183,16 @@ class App extends Component {
       return ["STOP"]
     } else {
       option = this.orderChaosEasyDiagonalAiChecker(keys)
-    }
-    if (option) {
-      stopCheck = option.filter(win => win === "STOP")
-      if (stopCheck.length != 0) {
-        return ["STOP"]
-      } else {
-        option2 = this.orderChaosMediumDiagonalAiChecker(keys,6)
-      }
-    }
-    if (option2) {
-      stopCheck = option2.filter(win => win === "STOP")
-      if (stopCheck.length != 0) {
-        return ["STOP"]
-      } else {
-        option3 = this.orderChaosMediumDiagonalAiChecker(keys,7)
-      }
-    }
-    if (option3) {
-      stopCheck = option3.filter(win => win === "STOP")
-      if (stopCheck.length != 0) {
-        return ["STOP"]
-      } else {
-        option4 = this.orderChaosMediumDiagonalAiChecker(keys,8)
-      }
-    }
-    if (option4) {
-      stopCheck = option4.filter(win => win === "STOP")
-      if (stopCheck.length != 0) {
-        return ["STOP"]
-      } else {
-        option5 = this.orderChaosHardDiagonalAiChecker(keys)
-      }
+
+
+      option2 = this.orderChaosMediumDiagonalAiChecker(keys,6)
+
+      option3 = this.orderChaosMediumDiagonalAiChecker(keys,7)
+
+      option4 = this.orderChaosMediumDiagonalAiChecker(keys,8)
+
+      option5 = this.orderChaosHardDiagonalAiChecker(keys)
+
     }
     if (option) {
       arrayToCheck.push(option)
