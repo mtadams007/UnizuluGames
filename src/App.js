@@ -1687,15 +1687,14 @@ class App extends Component {
   }
 
   computerRemoveNimStones = (numToRemove, rowNumber, rowLength) => {
+    console.log(`num to remove is ${numToRemove}`)
+    console.log(`rowNumber is ${rowNumber}`)
+    console.log(`rowLength is ${rowLength}`)
     let myKeys = []
-    console.log("NOT RANDOM")
-    console.log(numToRemove)
-    console.log(rowNumber)
-    console.log(rowLength)
     if (rowNumber === 1){
       if (rowLength === 0) {
         myKeys.push('1n1','1n2','1n3')
-      } else if(rowLength < 3) {
+      } else if(rowLength <= 3) {
         // let key = [];
         let i = 0;
         while (i<rowLength){
@@ -1707,7 +1706,7 @@ class App extends Component {
     } else if (rowNumber === 2){
       if (rowLength === 0) {
         myKeys.push('2n1','2n2','2n3','2n4')
-      } else if(rowLength < 4) {
+      } else if(rowLength <= 4) {
         // let key = [];
         let i = 0;
         while (i<rowLength){
@@ -1719,7 +1718,7 @@ class App extends Component {
     } else if (rowNumber === 3){
       if (rowLength === 0) {
         myKeys.push('3n1','3n2','3n3','3n4', '3n5')
-      } else if(rowLength < 5) {
+      } else if(rowLength <= 5) {
         // let key = [];
         let i = 0;
         while (i<rowLength){
@@ -1791,8 +1790,18 @@ class App extends Component {
       const length1 = binary1.length
       const length2 = binary2.length
       const length3 = binary3.length
-      // changing row is the row that we must take from
       let changingRow = ":(";
+      if (key1Length != 0 && key2Length + key3Length === 0) {
+        this.computerRemoveNimStones(key1Length - 1,1,key1Length)
+      } else if (key2Length != 0 && key1Length + key3Length === 0) {
+        console.log('remove from 2')
+        this.computerRemoveNimStones(key2Length - 1,2,key2Length)
+      } else if (key3Length != 0 && key2Length + key1Length === 0) {
+        console.log('remove from 3')
+        this.computerRemoveNimStones(key3Length - 1,3,key3Length)
+      }
+      // changing row is the row that we must take from
+      window.setTimeout(3000)
       if (keys.length === 11) {
         this.computerRandomMove(key1,key2,key3);
       } else if (keys.length >= 6) {
@@ -1841,6 +1850,9 @@ class App extends Component {
         } else if (changingRow[0] === '2'){
           this.computerRemoveNimStones(1, rowNumber, rowLength)
         } else if (changingRow[0] === '1') {
+          // this has the most edge cases.
+          // The AI will find out if it is the last row, and if so take all but one.
+
           this.computerRandomMove(key1, key2, key3)
           console.log('should have a smarter move here but Im on a deadline')
         } else if (changingRow[0] === '0') {
