@@ -564,11 +564,13 @@ class App extends Component {
               ...this.state.squares, [moves[1]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OOOO')) {
           const moves = blockingMove.split('.')
@@ -702,7 +704,6 @@ class App extends Component {
         }
         if (str === 'XXX') {
           let moves = blockingMove.split('.')
-          console.log(`${moves[1]}.O`)
           return `${moves[1]}.O`
         } else if (str === 'OOO') {
           let moves = blockingMove.split('.')
@@ -1235,12 +1236,11 @@ class App extends Component {
       if (dangerArrayLength != 0) {
         let randomMove = dangerArray[Math.floor(Math.random()*dangerArrayLength)]
         let blockHere = randomMove.split('.')
-        console.log('setting a key')
         const squares = {
           ...this.state.squares, [`${blockHere[0]}`]: `${blockHere[1]}`
         }
         this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false, orderTurn: !this.state.orderTurn})
-
+        return;
       } else {
 
 
@@ -1688,14 +1688,10 @@ class App extends Component {
 
   computerRemoveNimStones = (numToRemove, rowNumber, rowLength) => {
     let myKeys = []
-    console.log("NOT RANDOM")
-    console.log(numToRemove)
-    console.log(rowNumber)
-    console.log(rowLength)
     if (rowNumber === 1){
       if (rowLength === 0) {
         myKeys.push('1n1','1n2','1n3')
-      } else if(rowLength < 3) {
+      } else if(rowLength <= 3) {
         // let key = [];
         let i = 0;
         while (i<rowLength){
@@ -1707,7 +1703,7 @@ class App extends Component {
     } else if (rowNumber === 2){
       if (rowLength === 0) {
         myKeys.push('2n1','2n2','2n3','2n4')
-      } else if(rowLength < 4) {
+      } else if(rowLength <= 4) {
         // let key = [];
         let i = 0;
         while (i<rowLength){
@@ -1719,7 +1715,7 @@ class App extends Component {
     } else if (rowNumber === 3){
       if (rowLength === 0) {
         myKeys.push('3n1','3n2','3n3','3n4', '3n5')
-      } else if(rowLength < 5) {
+      } else if(rowLength <= 5) {
         // let key = [];
         let i = 0;
         while (i<rowLength){
@@ -1732,8 +1728,6 @@ class App extends Component {
     const pebbles = {
       ...this.state.pebbles
     }
-    console.log(myKeys)
-
     myKeys.sort().reverse()
     let start = myKeys[0].charAt(2);
     let i = 1
@@ -1791,8 +1785,24 @@ class App extends Component {
       const length1 = binary1.length
       const length2 = binary2.length
       const length3 = binary3.length
-      // changing row is the row that we must take from
       let changingRow = ":(";
+
+      if (key1Length != 0 && key2Length + key3Length === 0 && key1Length != 1) {
+        this.computerRemoveNimStones(key1Length - 1,1,key1Length)
+      } else if (key2Length != 0 && key1Length + key3Length === 0 && key2Length != 1) {
+        this.computerRemoveNimStones(key2Length - 1,2,key2Length)
+      } else if (key3Length != 0 && key2Length + key1Length === 0 && key3Length != 1) {
+        this.computerRemoveNimStones(key3Length - 1,3,key3Length)
+        //  STILL NEED TO ACCOUNT FOR A BUNCH IN ONE ROW AND ONLY 1 IN ANOTHER
+      } else if (key1Length != 0 && key2Length + key3Length === 1 && key1Length != 1) {
+        this.computerRemoveNimStones(key1Length,1,key1Length)
+      } else if (key2Length != 0 && key1Length + key3Length === 1 && key2Length != 1) {
+        this.computerRemoveNimStones(key2Length,2,key2Length)
+      } else if (key3Length != 0 && key2Length + key1Length === 1 && key3Length != 1) {
+        this.computerRemoveNimStones(key3Length,3,key3Length)
+      } else {
+      // changing row is the row that we must take from
+      window.setTimeout(3000)
       if (keys.length === 11) {
         this.computerRandomMove(key1,key2,key3);
       } else if (keys.length >= 6) {
@@ -1841,6 +1851,9 @@ class App extends Component {
         } else if (changingRow[0] === '2'){
           this.computerRemoveNimStones(1, rowNumber, rowLength)
         } else if (changingRow[0] === '1') {
+          // this has the most edge cases.
+          // The AI will find out if it is the last row, and if so take all but one.
+
           this.computerRandomMove(key1, key2, key3)
           console.log('should have a smarter move here but Im on a deadline')
         } else if (changingRow[0] === '0') {
@@ -1868,6 +1881,7 @@ class App extends Component {
         this.computerRandomMove(key1, key2, key3)
       }
     }
+  }
   }
 
 
