@@ -564,11 +564,13 @@ class App extends Component {
               ...this.state.squares, [moves[1]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           } else {
             const squares = {
               ...this.state.squares, [moves[0]]: 'O'
             }
             this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
           }
         } else if (str === ('OOOO')) {
           const moves = blockingMove.split('.')
@@ -702,7 +704,6 @@ class App extends Component {
         }
         if (str === 'XXX') {
           let moves = blockingMove.split('.')
-          console.log(`${moves[1]}.O`)
           return `${moves[1]}.O`
         } else if (str === 'OOO') {
           let moves = blockingMove.split('.')
@@ -1235,12 +1236,11 @@ class App extends Component {
       if (dangerArrayLength != 0) {
         let randomMove = dangerArray[Math.floor(Math.random()*dangerArrayLength)]
         let blockHere = randomMove.split('.')
-        console.log('setting a key')
         const squares = {
           ...this.state.squares, [`${blockHere[0]}`]: `${blockHere[1]}`
         }
         this.setState({squares: squares, isX: !this.state.isX, isComputerTurn: false, orderTurn: !this.state.orderTurn})
-
+        return;
       } else {
 
 
