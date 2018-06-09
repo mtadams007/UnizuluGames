@@ -1786,12 +1786,27 @@ class App extends Component {
       const length2 = binary2.length
       const length3 = binary3.length
       let changingRow = ":(";
+
       if (key1Length != 0 && key2Length + key3Length === 0 && key1Length != 1) {
         this.computerRemoveNimStones(key1Length - 1,1,key1Length)
       } else if (key2Length != 0 && key1Length + key3Length === 0 && key2Length != 1) {
         this.computerRemoveNimStones(key2Length - 1,2,key2Length)
       } else if (key3Length != 0 && key2Length + key1Length === 0 && key3Length != 1) {
         this.computerRemoveNimStones(key3Length - 1,3,key3Length)
+        //  STILL NEED TO ACCOUNT FOR A BUNCH IN ONE ROW AND ONLY 1 IN ANOTHER
+      } else if (key1Length != 0 && key2Length + key3Length === 1 && key1Length != 1) {
+        this.computerRemoveNimStones(key1Length,1,key1Length)
+      } else if (key2Length != 0 && key1Length + key3Length === 1 && key2Length != 1) {
+        this.computerRemoveNimStones(key2Length,2,key2Length)
+      } else if (key3Length != 0 && key2Length + key1Length === 1 && key3Length != 1) {
+        this.computerRemoveNimStones(key3Length,3,key3Length)
+
+      } else if (key1Length != 1 && key2Length + key3Length === 0 && key1Length != 1) {
+        this.computerRemoveNimStones(key1Length,1,key1Length)
+      } else if (key2Length != 1 && key1Length + key3Length === 0 && key2Length != 1) {
+        this.computerRemoveNimStones(key2Length,2,key2Length)
+      } else if (key3Length != 1 && key2Length + key1Length === 0 && key3Length != 1) {
+        this.computerRemoveNimStones(key3Length,3,key3Length)
       } else {
       // changing row is the row that we must take from
       window.setTimeout(3000)
