@@ -416,298 +416,300 @@ class App extends Component {
   // Order and Chaos Checkers
 
   orderChaosHorizontalVerticalChecker = (directionNumber, numberOfRow, arrayToFilter) => {
-    // the valueArray is checking how many keys are in a row
-    const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
-    let arrayLength = valueArray.length;
-    // checking if the length is equal to 4, then we need to check if there are 4 of a kind in a row and need to block or think about blocking 3 in a row
+    if (this.state.isComputerTurn) {
+      // the valueArray is checking how many keys are in a row
+      const valueArray = arrayToFilter.filter(key => key[directionNumber] === `${numberOfRow}`)
+      let arrayLength = valueArray.length;
+      // checking if the length is equal to 4, then we need to check if there are 4 of a kind in a row and need to block or think about blocking 3 in a row
 
-    if (arrayLength === 5) {
-      let blockingMove = ''
-      let str = ''
-      let i = 1;
-        // checks if we're checking horizontal or not
+      if (arrayLength === 5) {
+        let blockingMove = ''
+        let str = ''
+        let i = 1;
+          // checks if we're checking horizontal or not
 
+          if (directionNumber === 0) {
+          while (i<7) {
+            if (this.state.squares[`${numberOfRow}a${i}`]) {
+              str += (this.state.squares[`${numberOfRow}a${i}`])
+            } else {
+              blockingMove = `${numberOfRow}a${i}`
+            }
+            i++;
+          }
+          // if there's five symbols in a row then we must block. we return STOP so that we don't make two moves
+          if (str.includes('XXXXX')) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'O'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
+          } else if (str.includes('OOOOO')) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'X'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
+            // If there's four in a row and another one blocking we check whether its a potential victory and then we block
+          } else if (str === ('XXXXO')) {
+            if (blockingMove != `${numberOfRow}a6`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('OOOOX')) {
+            if (blockingMove != `${numberOfRow}a6`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('OXXXX')) {
+            if (blockingMove != `${numberOfRow}a1`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('XOOOO')) {
+            if (blockingMove != `${numberOfRow}a1`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          }
+
+          // vertical check same logic as vertical
+        } else if (directionNumber === 2) {
+          while (i<7) {
+            if (this.state.squares[`${i}a${numberOfRow}`]) {
+              str += (this.state.squares[`${i}a${numberOfRow}`])
+            } else {
+              blockingMove = `${i}a${numberOfRow}`
+            }
+            i++;
+          }
+          if (str.includes('XXXXX')) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'O'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
+          } else if (str.includes('OOOOO')) {
+            const squares = {
+              ...this.state.squares, [blockingMove]: 'X'
+            }
+            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+            return "STOP"
+          } else if (str === ('XXXXO')) {
+            if (blockingMove != `6a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('OOOOX')) {
+            if (blockingMove != `6a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('OXXXX')) {
+            if (blockingMove != `1a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('XOOOO')) {
+            if (blockingMove != `1a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [blockingMove]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          }
+        }
+      } else if (arrayLength === 4) {
+        let blockingMove = ''
+        let str = ''
+        let i = 1;
+        // checking horizontal threats
         if (directionNumber === 0) {
-        while (i<7) {
-          if (this.state.squares[`${numberOfRow}a${i}`]) {
-            str += (this.state.squares[`${numberOfRow}a${i}`])
-          } else {
-            blockingMove = `${numberOfRow}a${i}`
-          }
-          i++;
-        }
-        // if there's five symbols in a row then we must block. we return STOP so that we don't make two moves
-        if (str.includes('XXXXX')) {
-          const squares = {
-            ...this.state.squares, [blockingMove]: 'O'
-          }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-          return "STOP"
-        } else if (str.includes('OOOOO')) {
-          const squares = {
-            ...this.state.squares, [blockingMove]: 'X'
-          }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-          return "STOP"
-          // If there's four in a row and another one blocking we check whether its a potential victory and then we block
-        } else if (str === ('XXXXO')) {
-          if (blockingMove != `${numberOfRow}a6`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'O'
+          while (i<7) {
+            if (this.state.squares[`${numberOfRow}a${i}`]) {
+              str += (this.state.squares[`${numberOfRow}a${i}`])
+            } else {
+              blockingMove += `${numberOfRow}a${i}.`
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
+            i++;
           }
-        } else if (str === ('OOOOX')) {
-          if (blockingMove != `${numberOfRow}a6`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'X'
+          if (str === ('XXXX')) {
+
+            const moves = blockingMove.split('.')
+            console.log(moves)
+            // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
+            if (moves[0] === `${numberOfRow}a1`) {
+              const squares = {
+                ...this.state.squares, [moves[1]]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            } else {
+              const squares = {
+                ...this.state.squares, [moves[0]]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
+          } else if (str === ('OOOO')) {
+            const moves = blockingMove.split('.')
+            if (moves[0] === `${numberOfRow}a1`) {
+              const squares = {
+                ...this.state.squares, [moves[1]]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            } else {
+              const squares = {
+                ...this.state.squares, [moves[0]]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('XXXO')) {
+            const moves = blockingMove.split('.')
+            if (moves[1] != `${numberOfRow}a6`) {
+              return `${moves[1]}.O`
+            }
+          } else if (str === ('OOOX')) {
+            const moves = blockingMove.split('.')
+            if (moves[1] != `${numberOfRow}a6`) {
+              return `${moves[1]}.X`
+            }
+          } else if (str === ('OXXX')) {
+            const moves = blockingMove.split('.')
+            if (moves[0] != `${numberOfRow}a1`) {
+              return `${moves[0]}.O`
+            }
+          } else if (str === ('XOOO')) {
+            const moves = blockingMove.split('.')
+            if (moves[0] != `${numberOfRow}a1`) {
+              return `${moves[0]}.X`
+            }
           }
-        } else if (str === ('OXXXX')) {
-          if (blockingMove != `${numberOfRow}a1`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'O'
+        } if (directionNumber === 2) {
+          while (i<7) {
+            if (this.state.squares[`${i}a${numberOfRow}`]) {
+              str += (this.state.squares[`${i}a${numberOfRow}`])
+            } else {
+              blockingMove += `${i}a${numberOfRow}.`
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
+            i++;
           }
-        } else if (str === ('XOOOO')) {
-          if (blockingMove != `${numberOfRow}a1`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'X'
+          if (str === ('XXXX')) {
+
+            const moves = blockingMove.split('.')
+            // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
+            if (moves[0] === `1a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [moves[1]]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            } else {
+              const squares = {
+                ...this.state.squares, [moves[0]]: 'O'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
+          } else if (str === ('OOOO')) {
+            const moves = blockingMove.split('.')
+            if (moves[0] === `1a${numberOfRow}`) {
+              const squares = {
+                ...this.state.squares, [moves[1]]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            } else {
+              const squares = {
+                ...this.state.squares, [moves[0]]: 'X'
+              }
+              this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
+              return "STOP"
+            }
+          } else if (str === ('XXXO')) {
+            const moves = blockingMove.split('.')
+            if (moves[1] != `6a${numberOfRow}`) {
+              return `${moves[1]}.O`
+            }
+          } else if (str === ('OOOX')) {
+            const moves = blockingMove.split('.')
+            if (moves[1] != `6a${numberOfRow}`) {
+              return `${moves[1]}.X`
+            }
+          } else if (str === ('OXXX')) {
+            const moves = blockingMove.split('.')
+            if (moves[0] != `1a${numberOfRow}`) {
+              return `${moves[0]}.O`
+            }
+          } else if (str === ('XOOO')) {
+            const moves = blockingMove.split('.')
+            if (moves[0] != `1a${numberOfRow}`) {
+              return `${moves[0]}.X`
+            }
           }
         }
 
-        // vertical check same logic as vertical
-      } else if (directionNumber === 2) {
-        while (i<7) {
-          if (this.state.squares[`${i}a${numberOfRow}`]) {
-            str += (this.state.squares[`${i}a${numberOfRow}`])
-          } else {
-            blockingMove = `${i}a${numberOfRow}`
-          }
-          i++;
-        }
-        if (str.includes('XXXXX')) {
-          const squares = {
-            ...this.state.squares, [blockingMove]: 'O'
-          }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-          return "STOP"
-        } else if (str.includes('OOOOO')) {
-          const squares = {
-            ...this.state.squares, [blockingMove]: 'X'
-          }
-          this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-          return "STOP"
-        } else if (str === ('XXXXO')) {
-          if (blockingMove != `6a${numberOfRow}`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'O'
+      } else if (arrayLength === 3) {
+        let blockingMove = ''
+        let str = ''
+        let i = 1;
+        // checking horizontal threats
+        if (directionNumber === 0) {
+          while (i<7) {
+            if (this.state.squares[`${numberOfRow}a${i}`]) {
+              str += (this.state.squares[`${numberOfRow}a${i}`])
+            } else {
+              blockingMove += `${numberOfRow}a${i}.`
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
+            i++;
           }
-        } else if (str === ('OOOOX')) {
-          if (blockingMove != `6a${numberOfRow}`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'X'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          }
-        } else if (str === ('OXXXX')) {
-          if (blockingMove != `1a${numberOfRow}`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'O'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          }
-        } else if (str === ('XOOOO')) {
-          if (blockingMove != `1a${numberOfRow}`) {
-            const squares = {
-              ...this.state.squares, [blockingMove]: 'X'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          }
-        }
-      }
-    } else if (arrayLength === 4) {
-      let blockingMove = ''
-      let str = ''
-      let i = 1;
-      // checking horizontal threats
-      if (directionNumber === 0) {
-        while (i<7) {
-          if (this.state.squares[`${numberOfRow}a${i}`]) {
-            str += (this.state.squares[`${numberOfRow}a${i}`])
-          } else {
-            blockingMove += `${numberOfRow}a${i}.`
-          }
-          i++;
-        }
-        if (str === ('XXXX')) {
-
-          const moves = blockingMove.split('.')
-          console.log(moves)
-          // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
-          if (moves[0] === `${numberOfRow}a1`) {
-            const squares = {
-              ...this.state.squares, [moves[1]]: 'O'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          } else {
-            const squares = {
-              ...this.state.squares, [moves[0]]: 'O'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          }
-        } else if (str === ('OOOO')) {
-          const moves = blockingMove.split('.')
-          if (moves[0] === `${numberOfRow}a1`) {
-            const squares = {
-              ...this.state.squares, [moves[1]]: 'X'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          } else {
-            const squares = {
-              ...this.state.squares, [moves[0]]: 'X'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          }
-        } else if (str === ('XXXO')) {
-          const moves = blockingMove.split('.')
-          if (moves[1] != `${numberOfRow}a6`) {
+          if (str === 'XXX') {
+            let moves = blockingMove.split('.')
             return `${moves[1]}.O`
-          }
-        } else if (str === ('OOOX')) {
-          const moves = blockingMove.split('.')
-          if (moves[1] != `${numberOfRow}a6`) {
+          } else if (str === 'OOO') {
+            let moves = blockingMove.split('.')
             return `${moves[1]}.X`
           }
-        } else if (str === ('OXXX')) {
-          const moves = blockingMove.split('.')
-          if (moves[0] != `${numberOfRow}a1`) {
-            return `${moves[0]}.O`
-          }
-        } else if (str === ('XOOO')) {
-          const moves = blockingMove.split('.')
-          if (moves[0] != `${numberOfRow}a1`) {
-            return `${moves[0]}.X`
-          }
-        }
-      } if (directionNumber === 2) {
-        while (i<7) {
-          if (this.state.squares[`${i}a${numberOfRow}`]) {
-            str += (this.state.squares[`${i}a${numberOfRow}`])
-          } else {
-            blockingMove += `${i}a${numberOfRow}.`
-          }
-          i++;
-        }
-        if (str === ('XXXX')) {
-
-          const moves = blockingMove.split('.')
-          // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
-          if (moves[0] === `1a${numberOfRow}`) {
-            const squares = {
-              ...this.state.squares, [moves[1]]: 'O'
+        } else if (directionNumber === 2) {
+          while (i<7) {
+            if (this.state.squares[`${i}a${numberOfRow}`]) {
+              str += (this.state.squares[`${i}a${numberOfRow}`])
+            } else {
+              blockingMove += `${i}a${numberOfRow}.`
             }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          } else {
-            const squares = {
-              ...this.state.squares, [moves[0]]: 'O'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
+            i++;
           }
-        } else if (str === ('OOOO')) {
-          const moves = blockingMove.split('.')
-          if (moves[0] === `1a${numberOfRow}`) {
-            const squares = {
-              ...this.state.squares, [moves[1]]: 'X'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          } else {
-            const squares = {
-              ...this.state.squares, [moves[0]]: 'X'
-            }
-            this.setState({squares: squares, isX: !this.state.isX, orderTurn: this.state.orderTurn, isComputerTurn: false})
-            return "STOP"
-          }
-        } else if (str === ('XXXO')) {
-          const moves = blockingMove.split('.')
-          if (moves[1] != `6a${numberOfRow}`) {
+          if (str === 'XXX') {
+            let moves = blockingMove.split('.')
             return `${moves[1]}.O`
-          }
-        } else if (str === ('OOOX')) {
-          const moves = blockingMove.split('.')
-          if (moves[1] != `6a${numberOfRow}`) {
+          } else if (str === 'OOO') {
+            let moves = blockingMove.split('.')
             return `${moves[1]}.X`
           }
-        } else if (str === ('OXXX')) {
-          const moves = blockingMove.split('.')
-          if (moves[0] != `1a${numberOfRow}`) {
-            return `${moves[0]}.O`
-          }
-        } else if (str === ('XOOO')) {
-          const moves = blockingMove.split('.')
-          if (moves[0] != `1a${numberOfRow}`) {
-            return `${moves[0]}.X`
-          }
-        }
-      }
-
-    } else if (arrayLength === 3) {
-      let blockingMove = ''
-      let str = ''
-      let i = 1;
-      // checking horizontal threats
-      if (directionNumber === 0) {
-        while (i<7) {
-          if (this.state.squares[`${numberOfRow}a${i}`]) {
-            str += (this.state.squares[`${numberOfRow}a${i}`])
-          } else {
-            blockingMove += `${numberOfRow}a${i}.`
-          }
-          i++;
-        }
-        if (str === 'XXX') {
-          let moves = blockingMove.split('.')
-          return `${moves[1]}.O`
-        } else if (str === 'OOO') {
-          let moves = blockingMove.split('.')
-          return `${moves[1]}.X`
-        }
-      } else if (directionNumber === 2) {
-        while (i<7) {
-          if (this.state.squares[`${i}a${numberOfRow}`]) {
-            str += (this.state.squares[`${i}a${numberOfRow}`])
-          } else {
-            blockingMove += `${i}a${numberOfRow}.`
-          }
-          i++;
-        }
-        if (str === 'XXX') {
-          let moves = blockingMove.split('.')
-          return `${moves[1]}.O`
-        } else if (str === 'OOO') {
-          let moves = blockingMove.split('.')
-          return `${moves[1]}.X`
         }
       }
     }
@@ -1153,6 +1155,7 @@ class App extends Component {
     let i=1;
     while (i<7) {
       const row = this.orderChaosHorizontalVerticalChecker(0,i,keys);
+      window.setTimeout(200)
       const column = this.orderChaosHorizontalVerticalChecker(2,i,keys);
       if (row) {
         if(row ==="STOP") {
