@@ -94,7 +94,6 @@ class App extends Component {
       if (!this.state.gameOver) {
       // Checks whether the move has already been put in the state.squares hash
         if(this.state.squares[id]){
-          console.log('filled');
         } else {
           // checks whether or not it is Xs turn
           if(this.state.isX === true){
@@ -195,7 +194,6 @@ class App extends Component {
     }
     // true means someone won
     if (answer === true) {
-      console.log(answer)
       return true;
     }
   }
@@ -558,7 +556,6 @@ class App extends Component {
           if (str === ('XXXX')) {
 
             const moves = blockingMove.split('.')
-            console.log(moves)
             // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
             if (moves[0] === `${numberOfRow}a1`) {
               const squares = {
@@ -778,8 +775,6 @@ class App extends Component {
           return "STOP"
         }
       }
-      console.log(blockingMove)
-      console.log(str)
     } else if (arrayLength === 4) {
       let blockingMove = ''
       let str = ''
@@ -795,7 +790,6 @@ class App extends Component {
       if (str === ('XXXX')) {
 
         const moves = blockingMove.split('.')
-        console.log(moves)
         // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
         if (moves[0] === `1a1`) {
           const squares = {
@@ -828,25 +822,21 @@ class App extends Component {
       } else if (str === ('XXXO')) {
         const moves = blockingMove.split('.')
         if (moves[1] != `6a6`) {
-          console.log(`${moves[1]}.O`)
           return `${moves[1]}.O`
         }
       } else if (str === ('OOOX')) {
         const moves = blockingMove.split('.')
         if (moves[1] != `6a6`) {
-          console.log(`${moves[1]}.X`)
           return `${moves[1]}.X`
         }
       } else if (str === ('OXXX')) {
         const moves = blockingMove.split('.')
         if (moves[0] != `1a1`) {
-          console.log(`${moves[0]}.O`)
           return `${moves[0]}.O`
         }
       } else if (str === ('XOOO')) {
         const moves = blockingMove.split('.')
         if (moves[0] != `1a1`) {
-          console.log(`${moves[0]}.X`)
           return `${moves[0]}.X`
         }
       }
@@ -987,8 +977,6 @@ class App extends Component {
             return "STOP"
           }
         }
-        console.log(blockingMove)
-        console.log(str)
       } else if (arrayLength === 4) {
         let blockingMove = ''
         let str = ''
@@ -1004,7 +992,6 @@ class App extends Component {
         if (str === ('XXXX')) {
 
           const moves = blockingMove.split('.')
-          console.log(moves)
           // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
           if (moves[0] === `6a1`) {
             const squares = {
@@ -1037,25 +1024,21 @@ class App extends Component {
         } else if (str === ('XXXO')) {
           const moves = blockingMove.split('.')
           if (moves[1] != `1a6`) {
-            console.log(`${moves[1]}.O`)
             return `${moves[1]}.O`
           }
         } else if (str === ('OOOX')) {
           const moves = blockingMove.split('.')
           if (moves[1] != `1a6`) {
-            console.log(`${moves[1]}.X`)
             return `${moves[1]}.X`
           }
         } else if (str === ('OXXX')) {
           const moves = blockingMove.split('.')
           if (moves[0] != `6a1`) {
-            console.log(`${moves[0]}.O`)
             return `${moves[0]}.O`
           }
         } else if (str === ('XOOO')) {
           const moves = blockingMove.split('.')
           if (moves[0] != `6a1`) {
-            console.log(`${moves[0]}.X`)
             return `${moves[0]}.X`
           }
         }
@@ -1224,9 +1207,7 @@ class App extends Component {
 
   orderChaosAi = () => {
     let keys = (Object.keys(this.state.squares));
-    console.log(keys)
     if (this.state.isComputerTurn && !this.state.gameOver) {
-      console.log('computer turn')
       let options =[];
       //returns danger array from places we might need to block
       const dangerArray = this.orderChaosAiMoveChecker();
@@ -1266,8 +1247,6 @@ class App extends Component {
           }
         }
         let randomSelector = 36 - length;
-
-        console.log(options)
         let number = Math.floor((Math.random())*randomSelector);
         const squares = {
           ...this.state.squares, [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
@@ -1632,7 +1611,6 @@ class App extends Component {
   }
 
   computerRandomMove = (key1,key2,key3) => {
-    console.log("RANDOM MOVE")
     const pebbles = {
       ...this.state.pebbles
     }
@@ -1680,10 +1658,8 @@ class App extends Component {
     let start = row[0].charAt(2);
     let rowNumber = row[0].charAt(0)
     let i = 1
-    console.log(numToRemove)
     while (i<=numToRemove) {
       pebbles[`${rowNumber}n${start-i+1}`] = 'disappear';
-      console.log(`${rowNumber}n${start-i+1}`)
       i++;
     }
     this.setState({pebbles: pebbles, orderTurn: this.state.orderTurn, isComputerTurn: false})
@@ -1753,7 +1729,6 @@ class App extends Component {
         pebbles[`${row}n${i}`] = 'disappear';
       }
       if (this.state.isComputerPlayer) {
-        console.log('there is a computer playing')
       this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn, isComputerTurn: true})
       } else {
       this.setState({pebbles: pebbles, orderTurn: !this.state.orderTurn})
@@ -1847,7 +1822,6 @@ class App extends Component {
           }
           i++
         }
-        console.log(changingRow);
         // the first if statement means that the computer is at a disadvantage so has to go randomly
         if (changingRow === ":(") {
           this.computerRandomMove(key1, key2, key3)
@@ -1858,7 +1832,6 @@ class App extends Component {
           // The AI will find out if it is the last row, and if so take all but one.
 
           this.computerRandomMove(key1, key2, key3)
-          console.log('should have a smarter move here but Im on a deadline')
         } else if (changingRow[0] === '0') {
           if (changingRow[1] === '3' || changingRow[1] === '2') {
             if (key1Length === 1) {
@@ -1957,7 +1930,6 @@ class App extends Component {
         buttonArray = <div className="buttonArray"><button className="symbolButton" onClick={this.toggleSymbolX}>X</button>
         <button className="symbolButton" onClick={this.toggleSymbolO}>O</button></div>
         gameNumber = 6;
-        console.log(this.state.squares)
 
         if (Object.keys(this.state.squares).length === 0 || this.state.gameOver || Object.keys(this.state.squares).length === 36) {
             gameControlButton = <div className="gameControlArray"><button className="gameControlButton" onClick={this.resetGame}>Play a Friend</button><button className="gameControlButton" onClick={this.playComputer}>Play the Computer</button></div>
@@ -1995,8 +1967,6 @@ class App extends Component {
       buttonArray = null;
       nimArray = [3,4,5];
       let player;
-      console.log(this.state.gameOver)
-      console.log(this.state.pebbles)
       if (this.state.language === "eng") {
         rules = <div><h3>Nim:</h3><p className="rulesParagraph"> Nim is played with a set of 12 counters.  You place them in three groups as pictured:   Each player takes turns removing as many counters as they like from one group.  They can take as many as they like provided they all come from the same group.  The player who takes the last counter loses.  The game can be adjusted by adding more or less counters to each pile or adding more piles. </p></div>
         languageButton = <div><button className="languageButton" onClick={this.toggleLanguage}>IsiZulu</button></div>
