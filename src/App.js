@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import Square from './Square/Square'
 import Pebble from './Pebble/Pebble'
+import nim from './images/nim.png'
+import OrderChaos from './images/OrderChaos.png'
+import tictactoe from './images/tictactoe.png'
+import UnizuluLogo from './images/UnizuluLogo.png'
 import './App.css';
 
 class App extends Component {
@@ -1873,8 +1877,8 @@ class App extends Component {
     // dynamically changes size of board
     let gameNumber = 0;
     let keys = Object.keys(this.state.squares)
-    let buttonArray = <div className="buttonArray"><span className="gameChoice"><img className="gameImage" src="tictactoe.png" alt="Tic Tac Toe" ></img><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button></span>
-    <span className="gameChoice"><img className="gameImage" src="OrderChaos.png" alt="Order and Chaos"></img><button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button></span><span className="gameChoice"><img className="gameImage" src="nim.png" alt="Nim"></img>
+    let buttonArray = <div className="buttonArray"><span className="gameChoice"><img className="gameImage" src={tictactoe} alt="Tic Tac Toe" ></img><button className="symbolButton" onClick={this.chooseTicTacToe}>TicTacToe</button></span>
+    <span className="gameChoice"><img className="gameImage" src={OrderChaos} alt="Order and Chaos"></img><button className="symbolButton" onClick={this.chooseOrderChaos}>OrderChaos</button></span><span className="gameChoice"><img className="gameImage" src={nim} alt="Nim"></img>
     <button className="symbolButton" onClick={this.chooseNim}>Nim</button></span></div>;
     let computer;
     // Decides if X or O is moving
@@ -1999,7 +2003,7 @@ class App extends Component {
       <div className="App">
         <div className="grid">
         <div className="header">
-            <img src="UnizuluLogo.png" className='logo' alt='Unizulu Logo'></img>
+            <img src={UnizuluLogo} className='logo' alt='Unizulu Logo'></img>
             <button className="homeButton" onClick={this.goHomeScreen}>Go home</button>
         </div>
           <div className="rules">{languageButton}{rules}</div>
