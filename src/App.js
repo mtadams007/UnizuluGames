@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Square from "./Square/Square";
 import Pebble from "./Pebble/Pebble";
+import TicTacToeGame from "./TicTacToeGame/TicTacToeGame";
 import "./App.css";
 import {
   win,
@@ -36,12 +37,12 @@ class App extends Component {
         window.setTimeout(this.ticTacToeAi, 300);
       } else if (
         this.state.whichGame === chooseOrderChaos &&
-        Object.keys(this.state.squares).length != 36
+        Object.keys(this.state.squares).length !== 36
       ) {
         window.setTimeout(this.orderChaosAi, 300);
       } else if (
         this.state.whichGame === chooseNim &&
-        Object.keys(this.state.pebbles).length != 12
+        Object.keys(this.state.pebbles).length !== 12
       ) {
         window.setTimeout(this.nimAi, 300);
       }
@@ -101,8 +102,8 @@ class App extends Component {
   // Resets game as well so computer isn't confused as to when to play
 
   playComputer = () => {
-    let elements = document.getElementsByClassName(win);
-    let length = elements.length;
+    const elements = document.getElementsByClassName(win);
+    const length = elements.length;
     let i = 0;
     while (i < length) {
       elements[0].classList.remove(win);
@@ -185,379 +186,6 @@ class App extends Component {
     }
   };
 
-  // Tic Tac Toe win checker
-
-  isTttWin = () => {
-    let keys = Object.keys(this.state.squares);
-    let key = keys.slice(-1)[0];
-    let winningSymbol = this.state.squares[key];
-    let test = String(key);
-    let parsedArray = test.split("a");
-    let xCoord = parseInt(parsedArray[0], 10);
-    let yCoord = parseInt(parsedArray[1], 10);
-    let answer = false;
-    if (this.state.gameOver === false) {
-      //Looking for horizontal victories
-      if (
-        keys.includes(`${xCoord}a${((yCoord + 1) % 3) + 1}`) &&
-        keys.includes(`${xCoord}a${((yCoord + 2) % 3) + 1}`)
-      ) {
-        if (
-          this.state.squares[`${xCoord}a${((yCoord + 1) % 3) + 1}`] ===
-            this.state.squares[`${xCoord}a${((yCoord + 2) % 3) + 1}`] &&
-          this.state.squares[`${xCoord}a${(yCoord % 3) + 1}`] === winningSymbol
-        ) {
-          let element1 = document.getElementById(
-            `${xCoord}a${((yCoord + 1) % 3) + 1}`
-          );
-          let element2 = document.getElementById(
-            `${xCoord}a${((yCoord + 2) % 3) + 1}`
-          );
-          let element3 = document.getElementById(
-            `${xCoord}a${(yCoord % 3) + 1}`
-          );
-          element1.classList.add(win);
-          element2.classList.add(win);
-          element3.classList.add(win);
-          this.setState({ gameOver: true });
-          answer = true;
-        }
-      }
-      // Checks vertical victories
-      if (
-        keys.includes(`${((xCoord + 1) % 3) + 1}a${yCoord}`) &&
-        keys.includes(`${((xCoord + 2) % 3) + 1}a${yCoord}`)
-      ) {
-        if (
-          this.state.squares[`${((xCoord + 1) % 3) + 1}a${yCoord}`] ===
-            this.state.squares[`${((xCoord + 2) % 3) + 1}a${yCoord}`] &&
-          this.state.squares[`${(xCoord % 3) + 1}a${yCoord}`] === winningSymbol
-        ) {
-          let element1 = document.getElementById(
-            `${((xCoord + 1) % 3) + 1}a${yCoord}`
-          );
-          let element2 = document.getElementById(
-            `${((xCoord + 2) % 3) + 1}a${yCoord}`
-          );
-          let element3 = document.getElementById(
-            `${(xCoord % 3) + 1}a${yCoord}`
-          );
-          element1.classList.add(win);
-          element2.classList.add(win);
-          element3.classList.add(win);
-          this.setState({ gameOver: true });
-          answer = true;
-        }
-      }
-      // Checks diagonal victories from top left to bottom right
-      if (xCoord === yCoord) {
-        if (
-          this.state.squares[
-            `${((xCoord + 1) % 3) + 1}a${((yCoord + 1) % 3) + 1}`
-          ] === this.state.squares[`${(xCoord % 3) + 1}a${(yCoord % 3) + 1}`] &&
-          this.state.squares[`${(xCoord % 3) + 1}a${(yCoord % 3) + 1}`] ===
-            winningSymbol
-        ) {
-          let element1 = document.getElementById(
-            `${((xCoord + 1) % 3) + 1}a${((yCoord + 1) % 3) + 1}`
-          );
-          let element2 = document.getElementById(
-            `${(xCoord % 3) + 1}a${(yCoord % 3) + 1}`
-          );
-          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
-          element1.classList.add(win);
-          element2.classList.add(win);
-          element3.classList.add(win);
-          this.setState({ gameOver: true });
-          answer = true;
-        }
-      }
-      // checks diagonal victories from bottom left to top right
-      if (xCoord + yCoord === 4) {
-        if (
-          this.state.squares[
-            `${(xCoord % 3) + 1}a${((yCoord + 1) % 3) + 1}`
-          ] ===
-            this.state.squares[
-              `${((xCoord + 1) % 3) + 1}a${(yCoord % 3) + 1}`
-            ] &&
-          this.state.squares[
-            `${((xCoord + 1) % 3) + 1}a${(yCoord % 3) + 1}`
-          ] === winningSymbol
-        ) {
-          let element1 = document.getElementById(
-            `${(xCoord % 3) + 1}a${((yCoord + 1) % 3) + 1}`
-          );
-          let element2 = document.getElementById(
-            `${((xCoord + 1) % 3) + 1}a${(yCoord % 3) + 1}`
-          );
-          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
-          element1.classList.add(win);
-          element2.classList.add(win);
-          element3.classList.add(win);
-          this.setState({ gameOver: true });
-          answer = true;
-        }
-      }
-    }
-    // true means someone won
-    if (answer === true) {
-      return true;
-    }
-  };
-
-  // Checks horizontal and vertical spots whether there are two similar pieces in a row
-
-  ticTacToeFilterMe = (
-    directionNumber,
-    numberOfRow,
-    arrayToFilter,
-    gameNumber
-  ) => {
-    // filtering either the row or column, directionNumber is 0 for horizontal, so the key calls the xCoordinate, otherwise 2 for vertical
-    const valueArray = arrayToFilter.filter(
-      key => key[directionNumber] === `${numberOfRow}`
-    );
-    // gameNumber is how long a row we're checking for. In this case it is 2
-    if (
-      valueArray.length === gameNumber &&
-      this.state.squares[valueArray[0]] === this.state.squares[valueArray[1]]
-    ) {
-      let key1 = String(valueArray[0]);
-      let key2 = String(valueArray[1]);
-      let key1Parsed = key1.split("a");
-      let key2Parsed = key2.split("a");
-      let firstYCoord = parseInt(key1Parsed[1], 10);
-      let secondYCoord = parseInt(key2Parsed[1], 10);
-      //the winning coordinate is the difference between double the list minus the last two added two together
-      let winningYCoord = 6 - (firstYCoord + secondYCoord);
-      let firstXCoord = parseInt(key1Parsed[0], 10);
-      let secondXCoord = parseInt(key2Parsed[0], 10);
-      let winningXCoord = 6 - (firstXCoord + secondXCoord);
-      let move = "";
-      // Confusing use of ternary here, but if the two in a row are NOT the current player's turn, it gets pushed to the danger array, otherwise computer will win here.
-      // The reason for not blocking immediately is because we'd rather win if theres a chance
-      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")) {
-        if (directionNumber === 0) {
-          move = `${numberOfRow}a${winningYCoord}`;
-        } else {
-          move = `${winningXCoord}a${numberOfRow}`;
-        }
-        return move;
-        // if directionNumber is 0, then we make the horizontal victory
-      } else if (directionNumber === 0) {
-        let squares = {
-          ...this.state.squares,
-          [`${numberOfRow}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
-        };
-        // we return VICTORY so that when we check later we know not to put another mark down
-        this.setState({
-          squares: squares,
-          isComputerTurn: false,
-          isX: !this.state.isX
-        });
-        return "VICTORY";
-      } else {
-        let squares = {
-          ...this.state.squares,
-          [`${winningXCoord}a${numberOfRow}`]: `${this.state.isX ? "X" : "O"}`
-        };
-        this.setState({
-          squares: squares,
-          isComputerTurn: false,
-          isX: !this.state.isX
-        });
-        return "VICTORY";
-      }
-    }
-  };
-
-  ticTacToeDiagonalCheckerOne = arrayToFilter => {
-    const valueArray = arrayToFilter.filter(key => key[0] === key[2]);
-    if (
-      valueArray.length === 2 &&
-      this.state.squares[valueArray[0]] === this.state.squares[valueArray[1]]
-    ) {
-      let key1 = String(valueArray[0]);
-      let key2 = String(valueArray[1]);
-      let key1Parsed = key1.split("a");
-      let key2Parsed = key2.split("a");
-      let firstCoord = parseInt(key1Parsed[0], 10);
-      let secondCoord = parseInt(key2Parsed[1], 10);
-      let winningCoord = 6 - (firstCoord + secondCoord);
-      let move = "";
-      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")) {
-        move = `${winningCoord}a${winningCoord}`;
-        return move;
-      } else {
-        let squares = {
-          ...this.state.squares,
-          [`${winningCoord}a${winningCoord}`]: `${this.state.isX ? "X" : "O"}`
-        };
-        this.setState({
-          squares: squares,
-          isComputerTurn: false,
-          isX: !this.state.isX
-        });
-        return "VICTORY";
-      }
-    }
-  };
-
-  // Checks all the moves for the AI
-
-  ticTacToeBlockChecker = () => {
-    let keys = Object.keys(this.state.squares);
-    let arrayToCheck = [];
-    // let length = keys.length;
-    let i = 1;
-    while (i < 4) {
-      // we push in all the squares that had a symbol and filter them by row and column. these we push into our filter check function
-      const row = this.ticTacToeFilterMe(0, i, keys, 2);
-      const column = this.ticTacToeFilterMe(2, i, keys, 2);
-      if (row) {
-        if (row === "VICTORY") {
-          arrayToCheck.push(row);
-          // we need to break here because otherwise if there is a later victory for the opposite symbol the computer plays both
-          break;
-        } else {
-          arrayToCheck.push(row);
-        }
-      }
-      if (column) {
-        if (column === "VICTORY") {
-          arrayToCheck.push(column);
-          //same reason as above is why we're breaking here
-          break;
-        } else {
-          arrayToCheck.push(column);
-        }
-      }
-      // column.push(arrayToCheck);
-      i++;
-    }
-    // checking diagonal moveslet victoryCheck = dangerArray.filter(win => win === "VICTORY")
-    let option;
-    let victoryCheck = arrayToCheck.filter(win => win === "VICTORY");
-    if (victoryCheck.length != 0) {
-      return ["VICTORY"];
-    } else {
-      option = this.ticTacToeDiagonalCheckerOne(keys);
-    }
-    victoryCheck = arrayToCheck.filter(win => win === "VICTORY");
-    let option2;
-    if (victoryCheck.length != 0) {
-      return ["VICTORY"];
-    } else {
-      option2 = this.ticTacToeDiagonalCheckerTwo(keys);
-    }
-    if (option) {
-      arrayToCheck.push(option);
-    }
-    if (option2) {
-      arrayToCheck.push(option2);
-    }
-    return arrayToCheck;
-  };
-
-  ticTacToeDiagonalCheckerTwo = arrayToFilter => {
-    const valueArray = arrayToFilter.filter(
-      key => parseInt(key[0], 10) + parseInt(key[2], 10) === 4
-    );
-
-    if (
-      valueArray.length === 2 &&
-      this.state.squares[valueArray[0]] === this.state.squares[valueArray[1]]
-    ) {
-      let key1 = String(valueArray[0]);
-      let key2 = String(valueArray[1]);
-      let key1Parsed = key1.split("a");
-      let key2Parsed = key2.split("a");
-      let firstYCoord = parseInt(key1Parsed[1], 10);
-      let secondYCoord = parseInt(key2Parsed[1], 10);
-      let winningYCoord = 6 - (firstYCoord + secondYCoord);
-      let firstXCoord = parseInt(key1Parsed[0], 10);
-      let secondXCoord = parseInt(key2Parsed[0], 10);
-      let winningXCoord = 6 - (firstXCoord + secondXCoord);
-      let move = "";
-      // as before we make the confusing ternary operation so that we know whether to try to block
-      if (this.state.squares[valueArray[0]] === (this.state.isX ? "O" : "X")) {
-        move = `${winningXCoord}a${winningYCoord}`;
-        return move;
-      } else {
-        let squares = {
-          ...this.state.squares,
-          [`${winningXCoord}a${winningYCoord}`]: `${this.state.isX ? "X" : "O"}`
-        };
-        this.setState({
-          squares: squares,
-          isComputerTurn: false,
-          isX: !this.state.isX
-        });
-        return "VICTORY";
-      }
-    }
-  };
-
-  // AI is purposefully not supposed to be unbeatable, but challenging. It trys to win first, then prevent the other player from winning, and finally goes randomly if neither of the first two
-
-  ticTacToeAi = () => {
-    // First we make sure that it is the computers turn and that the game is not over
-    if (this.state.isComputerTurn && !this.state.gameOver) {
-      // we make sure the computer knows what his symbol is so he doesn't put the wrong one down. currently he's always O but I'd like to change that in the future
-      const symbol = this.state.isX ? "X" : "O";
-      // options are its possible moves
-      let options = [];
-      let isX = this.state.isX;
-      //returns danger array from places we might need to block
-      const dangerArray = this.ticTacToeBlockChecker();
-      // if we already won, then don't worry about moving again
-      let victoryCheck = dangerArray.filter(win => win === "VICTORY");
-      if (victoryCheck.length != 0) {
-        return;
-      }
-      // if theres a possibility of loss and we haven't won, the computer blocks the first win it can see.
-      if (dangerArray.length != 0) {
-        const squares = {
-          ...this.state.squares,
-          [`${dangerArray[0]}`]: `${this.state.isX ? "X" : "O"}`
-        };
-        this.setState({ squares: squares, isX: !isX, isComputerTurn: false });
-      } else {
-        // if there is no danger of losing and no way of winning we make a random move. First we need to create the options of where we could go
-        let keys = Object.keys(this.state.squares);
-        for (let j = 1; j < 4; j++) {
-          for (let i = 1; i < 4; i++) {
-            options.push(`${j}a${i}`);
-          }
-        }
-        let length = keys.length;
-        //k is the array number for options
-        // in this loop we eliminate all the moves that were already made
-        for (let k = 0; k < keys.length; k++) {
-          //m is the array number for keys length
-          for (let m = 0; m < 9; m++) {
-            if (keys[k] === options[m]) {
-              options.splice(m, 1);
-              break;
-            }
-          }
-        }
-        //We make a random move here
-
-        let randomSelector = 9 - length;
-
-        let number = Math.floor(Math.random() * randomSelector);
-        const squares = {
-          ...this.state.squares,
-          [`${options[number]}`]: `${this.state.isX ? "X" : "O"}`
-        };
-        this.setState({ squares: squares, isX: !isX, isComputerTurn: false });
-        // return;
-      }
-    }
-  };
-
   // Order and Chaos Checkers
 
   orderChaosHorizontalVerticalChecker = (
@@ -615,7 +243,7 @@ class App extends Component {
             return "STOP";
             // If there's four in a row and another one blocking we check whether its a potential victory and then we block
           } else if (str === "XXXXO") {
-            if (blockingMove != `${numberOfRow}a6`) {
+            if (blockingMove !== `${numberOfRow}a6`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "O"
@@ -629,7 +257,7 @@ class App extends Component {
               return "STOP";
             }
           } else if (str === "OOOOX") {
-            if (blockingMove != `${numberOfRow}a6`) {
+            if (blockingMove !== `${numberOfRow}a6`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "X"
@@ -643,7 +271,7 @@ class App extends Component {
               return "STOP";
             }
           } else if (str === "OXXXX") {
-            if (blockingMove != `${numberOfRow}a1`) {
+            if (blockingMove !== `${numberOfRow}a1`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "O"
@@ -657,7 +285,7 @@ class App extends Component {
               return "STOP";
             }
           } else if (str === "XOOOO") {
-            if (blockingMove != `${numberOfRow}a1`) {
+            if (blockingMove !== `${numberOfRow}a1`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "X"
@@ -707,7 +335,7 @@ class App extends Component {
             });
             return "STOP";
           } else if (str === "XXXXO") {
-            if (blockingMove != `6a${numberOfRow}`) {
+            if (blockingMove !== `6a${numberOfRow}`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "O"
@@ -721,7 +349,7 @@ class App extends Component {
               return "STOP";
             }
           } else if (str === "OOOOX") {
-            if (blockingMove != `6a${numberOfRow}`) {
+            if (blockingMove !== `6a${numberOfRow}`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "X"
@@ -735,7 +363,7 @@ class App extends Component {
               return "STOP";
             }
           } else if (str === "OXXXX") {
-            if (blockingMove != `1a${numberOfRow}`) {
+            if (blockingMove !== `1a${numberOfRow}`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "O"
@@ -749,7 +377,7 @@ class App extends Component {
               return "STOP";
             }
           } else if (str === "XOOOO") {
-            if (blockingMove != `1a${numberOfRow}`) {
+            if (blockingMove !== `1a${numberOfRow}`) {
               const squares = {
                 ...this.state.squares,
                 [blockingMove]: "X"
@@ -835,22 +463,22 @@ class App extends Component {
             }
           } else if (str === "XXXO") {
             const moves = blockingMove.split(".");
-            if (moves[1] != `${numberOfRow}a6`) {
+            if (moves[1] !== `${numberOfRow}a6`) {
               return `${moves[1]}.O`;
             }
           } else if (str === "OOOX") {
             const moves = blockingMove.split(".");
-            if (moves[1] != `${numberOfRow}a6`) {
+            if (moves[1] !== `${numberOfRow}a6`) {
               return `${moves[1]}.X`;
             }
           } else if (str === "OXXX") {
             const moves = blockingMove.split(".");
-            if (moves[0] != `${numberOfRow}a1`) {
+            if (moves[0] !== `${numberOfRow}a1`) {
               return `${moves[0]}.O`;
             }
           } else if (str === "XOOO") {
             const moves = blockingMove.split(".");
-            if (moves[0] != `${numberOfRow}a1`) {
+            if (moves[0] !== `${numberOfRow}a1`) {
               return `${moves[0]}.X`;
             }
           }
@@ -921,22 +549,22 @@ class App extends Component {
             }
           } else if (str === "XXXO") {
             const moves = blockingMove.split(".");
-            if (moves[1] != `6a${numberOfRow}`) {
+            if (moves[1] !== `6a${numberOfRow}`) {
               return `${moves[1]}.O`;
             }
           } else if (str === "OOOX") {
             const moves = blockingMove.split(".");
-            if (moves[1] != `6a${numberOfRow}`) {
+            if (moves[1] !== `6a${numberOfRow}`) {
               return `${moves[1]}.X`;
             }
           } else if (str === "OXXX") {
             const moves = blockingMove.split(".");
-            if (moves[0] != `1a${numberOfRow}`) {
+            if (moves[0] !== `1a${numberOfRow}`) {
               return `${moves[0]}.O`;
             }
           } else if (str === "XOOO") {
             const moves = blockingMove.split(".");
-            if (moves[0] != `1a${numberOfRow}`) {
+            if (moves[0] !== `1a${numberOfRow}`) {
               return `${moves[0]}.X`;
             }
           }
@@ -1026,7 +654,7 @@ class App extends Component {
         });
         return "STOP";
       } else if (str === "XXXXO") {
-        if (blockingMove != `6a6`) {
+        if (blockingMove !== `6a6`) {
           const squares = {
             ...this.state.squares,
             [blockingMove]: "O"
@@ -1040,7 +668,7 @@ class App extends Component {
           return "STOP";
         }
       } else if (str === "OOOOX") {
-        if (blockingMove != `6a6`) {
+        if (blockingMove !== `6a6`) {
           const squares = {
             ...this.state.squares,
             [blockingMove]: "X"
@@ -1054,7 +682,7 @@ class App extends Component {
           return "STOP";
         }
       } else if (str === "OXXXX") {
-        if (blockingMove != `1a1`) {
+        if (blockingMove !== `1a1`) {
           const squares = {
             ...this.state.squares,
             [blockingMove]: "O"
@@ -1068,7 +696,7 @@ class App extends Component {
           return "STOP";
         }
       } else if (str === "XOOOO") {
-        if (blockingMove != `1a1`) {
+        if (blockingMove !== `1a1`) {
           const squares = {
             ...this.state.squares,
             [blockingMove]: "X"
@@ -1151,22 +779,22 @@ class App extends Component {
         }
       } else if (str === "XXXO") {
         const moves = blockingMove.split(".");
-        if (moves[1] != `6a6`) {
+        if (moves[1] !== `6a6`) {
           return `${moves[1]}.O`;
         }
       } else if (str === "OOOX") {
         const moves = blockingMove.split(".");
-        if (moves[1] != `6a6`) {
+        if (moves[1] !== `6a6`) {
           return `${moves[1]}.X`;
         }
       } else if (str === "OXXX") {
         const moves = blockingMove.split(".");
-        if (moves[0] != `1a1`) {
+        if (moves[0] !== `1a1`) {
           return `${moves[0]}.O`;
         }
       } else if (str === "XOOO") {
         const moves = blockingMove.split(".");
-        if (moves[0] != `1a1`) {
+        if (moves[0] !== `1a1`) {
           return `${moves[0]}.X`;
         }
       }
@@ -1312,7 +940,7 @@ class App extends Component {
           });
           return "STOP";
         } else if (str === "XXXXO") {
-          if (blockingMove != `1a6`) {
+          if (blockingMove !== `1a6`) {
             const squares = {
               ...this.state.squares,
               [blockingMove]: "O"
@@ -1326,7 +954,7 @@ class App extends Component {
             return "STOP";
           }
         } else if (str === "OOOOX") {
-          if (blockingMove != `1a6`) {
+          if (blockingMove !== `1a6`) {
             const squares = {
               ...this.state.squares,
               [blockingMove]: "X"
@@ -1340,7 +968,7 @@ class App extends Component {
             return "STOP";
           }
         } else if (str === "OXXXX") {
-          if (blockingMove != `6a1`) {
+          if (blockingMove !== `6a1`) {
             const squares = {
               ...this.state.squares,
               [blockingMove]: "O"
@@ -1354,7 +982,7 @@ class App extends Component {
             return "STOP";
           }
         } else if (str === "XOOOO") {
-          if (blockingMove != `6a1`) {
+          if (blockingMove !== `6a1`) {
             const squares = {
               ...this.state.squares,
               [blockingMove]: "X"
@@ -1437,22 +1065,22 @@ class App extends Component {
           }
         } else if (str === "XXXO") {
           const moves = blockingMove.split(".");
-          if (moves[1] != `1a6`) {
+          if (moves[1] !== `1a6`) {
             return `${moves[1]}.O`;
           }
         } else if (str === "OOOX") {
           const moves = blockingMove.split(".");
-          if (moves[1] != `1a6`) {
+          if (moves[1] !== `1a6`) {
             return `${moves[1]}.X`;
           }
         } else if (str === "OXXX") {
           const moves = blockingMove.split(".");
-          if (moves[0] != `6a1`) {
+          if (moves[0] !== `6a1`) {
             return `${moves[0]}.O`;
           }
         } else if (str === "XOOO") {
           const moves = blockingMove.split(".");
-          if (moves[0] != `6a1`) {
+          if (moves[0] !== `6a1`) {
             return `${moves[0]}.X`;
           }
         }
@@ -1606,7 +1234,7 @@ class App extends Component {
     let option4;
     let option5;
     let stopCheck = arrayToCheck.filter(win => win === "STOP");
-    if (stopCheck.length != 0) {
+    if (stopCheck.length !== 0) {
       return ["STOP"];
     } else {
       option = this.orderChaosEasyDiagonalAiChecker(keys);
@@ -1653,11 +1281,11 @@ class App extends Component {
       const dangerArray = this.orderChaosAiMoveChecker();
       // if we already moved, then don't worry about moving again
       let stopCheck = dangerArray.filter(win => win === "STOP");
-      if (stopCheck.length != 0) {
+      if (stopCheck.length !== 0) {
         return;
       }
       let dangerArrayLength = dangerArray.length;
-      if (dangerArrayLength != 0) {
+      if (dangerArrayLength !== 0) {
         let randomMove =
           dangerArray[Math.floor(Math.random() * dangerArrayLength)];
         let blockHere = randomMove.split(".");
@@ -1713,7 +1341,7 @@ class App extends Component {
     let keys = Object.keys(this.state.squares);
     let key = keys.slice(-1)[0];
     let winningSymbol;
-    if (key != null) {
+    if (key !== null) {
       winningSymbol = this.state.squares[key];
     } else {
       winningSymbol =
@@ -1725,11 +1353,11 @@ class App extends Component {
     let i = 1;
     while (i < 6) {
       if (this.state.squares[`${xCoord}a${1}`] === winningSymbol) {
-        if (this.state.squares[`${xCoord}a${i}`] != winningSymbol) {
+        if (this.state.squares[`${xCoord}a${i}`] !== winningSymbol) {
           break;
         }
       } else if (this.state.squares[`${xCoord}a${2}`] === winningSymbol) {
-        if (this.state.squares[`${xCoord}a${i + 1}`] != winningSymbol) {
+        if (this.state.squares[`${xCoord}a${i + 1}`] !== winningSymbol) {
           break;
         }
       } else {
@@ -1763,7 +1391,7 @@ class App extends Component {
     let keys = Object.keys(this.state.squares);
     let key = keys.slice(-1)[0];
     let winningSymbol;
-    if (key != null) {
+    if (key !== null) {
       winningSymbol = this.state.squares[key];
     } else {
       winningSymbol =
@@ -1775,11 +1403,11 @@ class App extends Component {
     let i = 1;
     while (i < 6) {
       if (this.state.squares[`${1}a${yCoord}`] === winningSymbol) {
-        if (this.state.squares[`${i}a${yCoord}`] != winningSymbol) {
+        if (this.state.squares[`${i}a${yCoord}`] !== winningSymbol) {
           break;
         }
       } else if (this.state.squares[`${2}a${yCoord}`] === winningSymbol) {
-        if (this.state.squares[`${i + 1}a${yCoord}`] != winningSymbol) {
+        if (this.state.squares[`${i + 1}a${yCoord}`] !== winningSymbol) {
           break;
         }
       } else {
@@ -2051,7 +1679,7 @@ class App extends Component {
     const sum = numArray.reduce((acc, val) => {
       return acc + val;
     });
-    if (this.state.nimWinNumber != sum) {
+    if (this.state.nimWinNumber !== sum) {
       this.setState({ nimWinNumber: sum });
     }
 
@@ -2243,37 +1871,41 @@ class App extends Component {
       const length3 = binary3.length;
       let changingRow = ":(";
 
-      if (key1Length != 0 && key2Length + key3Length === 0 && key1Length != 1) {
+      if (
+        key1Length !== 0 &&
+        key2Length + key3Length === 0 &&
+        key1Length !== 1
+      ) {
         this.computerRemoveNimStones(key1Length - 1, 1, key1Length);
       } else if (
-        key2Length != 0 &&
+        key2Length !== 0 &&
         key1Length + key3Length === 0 &&
-        key2Length != 1
+        key2Length !== 1
       ) {
         this.computerRemoveNimStones(key2Length - 1, 2, key2Length);
       } else if (
-        key3Length != 0 &&
+        key3Length !== 0 &&
         key2Length + key1Length === 0 &&
-        key3Length != 1
+        key3Length !== 1
       ) {
         this.computerRemoveNimStones(key3Length - 1, 3, key3Length);
         //  STILL NEED TO ACCOUNT FOR A BUNCH IN ONE ROW AND ONLY 1 IN ANOTHER
       } else if (
-        key1Length != 0 &&
+        key1Length !== 0 &&
         key2Length + key3Length === 1 &&
-        key1Length != 1
+        key1Length !== 1
       ) {
         this.computerRemoveNimStones(key1Length, 1, key1Length);
       } else if (
-        key2Length != 0 &&
+        key2Length !== 0 &&
         key1Length + key3Length === 1 &&
-        key2Length != 1
+        key2Length !== 1
       ) {
         this.computerRemoveNimStones(key2Length, 2, key2Length);
       } else if (
-        key3Length != 0 &&
+        key3Length !== 0 &&
         key2Length + key1Length === 1 &&
-        key3Length != 1
+        key3Length !== 1
       ) {
         this.computerRemoveNimStones(key3Length, 3, key3Length);
       } else {
@@ -2364,6 +1996,125 @@ class App extends Component {
           this.computerRandomMove(key1, key2, key3);
         }
       }
+    }
+  };
+
+  isTttWin = () => {
+    let keys = Object.keys(this.state.squares);
+    let key = keys.slice(-1)[0];
+    let winningSymbol = this.state.squares[key];
+    let test = String(key);
+    let parsedArray = test.split("a");
+    let xCoord = parseInt(parsedArray[0], 10);
+    let yCoord = parseInt(parsedArray[1], 10);
+    let answer = false;
+    if (this.state.gameOver === false) {
+      //Looking for horizontal victories
+      if (
+        keys.includes(`${xCoord}a${((yCoord + 1) % 3) + 1}`) &&
+        keys.includes(`${xCoord}a${((yCoord + 2) % 3) + 1}`)
+      ) {
+        if (
+          this.state.squares[`${xCoord}a${((yCoord + 1) % 3) + 1}`] ===
+            this.state.squares[`${xCoord}a${((yCoord + 2) % 3) + 1}`] &&
+          this.state.squares[`${xCoord}a${(yCoord % 3) + 1}`] === winningSymbol
+        ) {
+          let element1 = document.getElementById(
+            `${xCoord}a${((yCoord + 1) % 3) + 1}`
+          );
+          let element2 = document.getElementById(
+            `${xCoord}a${((yCoord + 2) % 3) + 1}`
+          );
+          let element3 = document.getElementById(
+            `${xCoord}a${(yCoord % 3) + 1}`
+          );
+          element1.classList.add(win);
+          element2.classList.add(win);
+          element3.classList.add(win);
+          this.setState({ gameOver: true });
+          answer = true;
+        }
+      }
+      // Checks vertical victories
+      if (
+        keys.includes(`${((xCoord + 1) % 3) + 1}a${yCoord}`) &&
+        keys.includes(`${((xCoord + 2) % 3) + 1}a${yCoord}`)
+      ) {
+        if (
+          this.state.squares[`${((xCoord + 1) % 3) + 1}a${yCoord}`] ===
+            this.state.squares[`${((xCoord + 2) % 3) + 1}a${yCoord}`] &&
+          this.state.squares[`${(xCoord % 3) + 1}a${yCoord}`] === winningSymbol
+        ) {
+          let element1 = document.getElementById(
+            `${((xCoord + 1) % 3) + 1}a${yCoord}`
+          );
+          let element2 = document.getElementById(
+            `${((xCoord + 2) % 3) + 1}a${yCoord}`
+          );
+          let element3 = document.getElementById(
+            `${(xCoord % 3) + 1}a${yCoord}`
+          );
+          element1.classList.add(win);
+          element2.classList.add(win);
+          element3.classList.add(win);
+          this.setState({ gameOver: true });
+          answer = true;
+        }
+      }
+      // Checks diagonal victories from top left to bottom right
+      if (xCoord === yCoord) {
+        if (
+          this.state.squares[
+            `${((xCoord + 1) % 3) + 1}a${((yCoord + 1) % 3) + 1}`
+          ] === this.state.squares[`${(xCoord % 3) + 1}a${(yCoord % 3) + 1}`] &&
+          this.state.squares[`${(xCoord % 3) + 1}a${(yCoord % 3) + 1}`] ===
+            winningSymbol
+        ) {
+          let element1 = document.getElementById(
+            `${((xCoord + 1) % 3) + 1}a${((yCoord + 1) % 3) + 1}`
+          );
+          let element2 = document.getElementById(
+            `${(xCoord % 3) + 1}a${(yCoord % 3) + 1}`
+          );
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add(win);
+          element2.classList.add(win);
+          element3.classList.add(win);
+          this.setState({ gameOver: true });
+          answer = true;
+        }
+      }
+      // checks diagonal victories from bottom left to top right
+      if (xCoord + yCoord === 4) {
+        if (
+          this.state.squares[
+            `${(xCoord % 3) + 1}a${((yCoord + 1) % 3) + 1}`
+          ] ===
+            this.state.squares[
+              `${((xCoord + 1) % 3) + 1}a${(yCoord % 3) + 1}`
+            ] &&
+          this.state.squares[
+            `${((xCoord + 1) % 3) + 1}a${(yCoord % 3) + 1}`
+          ] === winningSymbol
+        ) {
+          let element1 = document.getElementById(
+            `${(xCoord % 3) + 1}a${((yCoord + 1) % 3) + 1}`
+          );
+          let element2 = document.getElementById(
+            `${((xCoord + 1) % 3) + 1}a${(yCoord % 3) + 1}`
+          );
+          let element3 = document.getElementById(`${xCoord}a${yCoord}`);
+          element1.classList.add(win);
+          element2.classList.add(win);
+          element3.classList.add(win);
+          this.setState({ gameOver: true });
+          answer = true;
+        }
+      }
+    }
+    // true means someone won
+    if (answer === true) {
+      return true;
     }
   };
 
@@ -2732,11 +2483,12 @@ class App extends Component {
           </div>
           <div className="content">
             {declaration}
-            {this.buildNim(nimArray)}
-            {this.renderSq(gameNumber)}
+            {/* {this.buildNim(nimArray)}
+            {this.renderSq(gameNumber)} */}
+            <TicTacToeGame />
             {buttonArray}
           </div>
-          <div className="rules">{gameControlButton}</div>
+          {/* <div className="rules">{gameControlButton}</div> */}
         </div>
       </div>
     );
