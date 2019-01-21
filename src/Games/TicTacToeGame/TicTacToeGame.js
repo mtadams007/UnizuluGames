@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import Square from "../Square/Square";
+import React from "react";
+import Square from "../GamePieces/Square/Square";
 import XOGame from "../XOGame/XOGame";
 import {
   win,
@@ -8,7 +8,7 @@ import {
   chooseNim,
   english,
   zulu
-} from "../Utils/Constants";
+} from "../../Utils/Constants";
 
 class TicTacToeGame extends XOGame {
   state = {
@@ -19,7 +19,8 @@ class TicTacToeGame extends XOGame {
     isComputerTurn: false
   };
 
-  componentDidMount = (prevProps, prevState, snapshot) => {
+  componentDidUpdate = () => {
+    this.isTttWin();
     if (!this.state.gameOver) {
       if (Object.keys(this.state.squares).length < 9) {
         window.setTimeout(this.ticTacToeAi, 300);
@@ -144,6 +145,7 @@ class TicTacToeGame extends XOGame {
     if (answer === true) {
       return true;
     }
+    return answer;
   };
 
   ticTacToeFilterMe = (
@@ -397,15 +399,18 @@ class TicTacToeGame extends XOGame {
   };
 
   render() {
-    let symbol = null;
-    let winSymbol = null;
-    let declaration = null;
-    let rules = null;
-    let languageButton = null;
+    const symbol = this.state.isX ? "X" : "O";
+    const winSymbol = this.state.isX ? "O" : "X";
     let gameControlButton = null;
     let computer;
     let keys = Object.keys(this.state.squares);
     let buttonArray;
+    const declaration = this.renderDeclaration(
+      keys.length === 9,
+      this.state.gameOver,
+      symbol,
+      winSymbol
+    );
     if (!this.state.isComputerPlayer) {
       computer = (
         <button className="symbolButton" onClick={this.playComputer}>
@@ -415,75 +420,9 @@ class TicTacToeGame extends XOGame {
     }
     buttonArray = null;
 
-    rules = (
-      <div>
-        <h3>Tic Tac Toe:</h3>
-        <p className="rulesParagraph">
-          {" "}
-          The players take turns putting either an "X" or "O" where they like.
-          The winner is the first to get three of their symbol in a row either
-          horizontally, vertically or diagonally.{" "}
-        </p>
-      </div>
-    );
-    // const gameControlButton = this.createGameButtons();
-    if (this.state.language === zulu) {
-      rules = (
-        <div>
-          <h3>Tic Tac Toe:</h3>
-          <p className="rulesParagraph">
-            {" "}
-            Umdlalo uTic Tac Toe udlalwa ebhodini njengoba kuveziwe esthombeni
-            ngezansi. Abadlali bathatha amathuba ngokulandelana, babhala u X
-            noma u O noma ikephi ebhodini elingezansi. Umdlali owinayo okwaze
-            ukubhala o X noma o O abathathu abalandelanayo ebhodini ngezansi,
-            kungaba ukuthi balandelana kusukela phansi kuyaphezulu (okuqondile),
-            kusukela esandleni sokunxele kuya kwesokudla (okuqondile) noma
-            kucezeke.{" "}
-          </p>
-        </div>
-      );
-      languageButton = (
-        <div>
-          <button className="languageButton" onClick={this.toggleLanguage}>
-            English
-          </button>
-        </div>
-      );
-    } else {
-      rules = (
-        <div>
-          <h3>Tic Tac Toe:</h3>
-          <p className="rulesParagraph">
-            {" "}
-            The players take turns putting either an "X" or "O" where they like.
-            The winner is the first to get three of their symbol in a row either
-            horizontally, vertically or diagonally.{" "}
-          </p>
-        </div>
-      );
-      languageButton = (
-        <div>
-          <button className="languageButton" onClick={this.toggleLanguage}>
-            IsiZulu
-          </button>
-        </div>
-      );
-    }
-    if (!this.isTttWin()) {
-      declaration = <h1>{symbol}'s Turn</h1>;
-      if (keys.length === 9) {
-        declaration = <h1>Tie game</h1>;
-      }
-    }
-    if (this.state.gameOver) {
-      if (this.isTttWin) {
-        declaration = <h1>{winSymbol} Wins!</h1>;
-      }
-    }
-
     return (
       <div>
+        {declaration}
         {this.renderSq(3)}
         {this.createGameButtons()}
       </div>

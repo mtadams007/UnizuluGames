@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { win } from "../Utils/Constants";
+import { win } from "../../Utils/Constants";
 
 class Game extends Component {
   state = {
@@ -31,6 +31,27 @@ class Game extends Component {
     return true;
   };
 
+  // Resets game as well so computer isn't confused as to when to play
+
+  playComputer = () => {
+    const elements = document.getElementsByClassName(win);
+    const length = elements.length;
+    let i = 0;
+    while (i < length) {
+      elements[0].classList.remove(win);
+      i++;
+    }
+    this.setState({
+      squares: "",
+      isX: true,
+      gameOver: false,
+      orderTurn: true,
+      pebbles: "",
+      isComputerPlayer: true,
+      isComputerTurn: false
+    });
+  };
+
   createGameButtons = () => {
     let gameControlButton;
     if (
@@ -38,7 +59,7 @@ class Game extends Component {
       this.state.gameOver ||
       Object.keys(this.state.squares).length === 9
     ) {
-      gameControlButton = (
+      return (
         <div className="gameControlArray">
           <button className="gameControlButton" onClick={this.resetGame}>
             Play a Friend
@@ -49,11 +70,22 @@ class Game extends Component {
         </div>
       );
     } else if (this.state.isComputerPlayer) {
-      gameControlButton = <h1>Playing against Computer</h1>;
+      return <h1>Playing against Computer</h1>;
     } else {
-      gameControlButton = <h1>Playing against a Friend</h1>;
+      return <h1>Playing against a Friend</h1>;
     }
-    return gameControlButton;
+  };
+
+  renderDeclaration = (isTie, gameOver, symbol, winSymbol) => {
+    let declaration = <h1>{symbol}'s Turn</h1>;
+    if (isTie) {
+      declaration = <h1>Tie game</h1>;
+    }
+
+    if (gameOver) {
+      declaration = <h1>{winSymbol} Wins!</h1>;
+    }
+    return declaration;
   };
 
   render() {

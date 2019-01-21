@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import Game from "../Game/Game";
-import Square from "../Square/Square";
-import { win } from "../Utils/Constants";
+import Square from "../GamePieces/Square/Square";
+import { win } from "../../Utils/Constants";
 
 class XOGame extends Game {
   state = {
