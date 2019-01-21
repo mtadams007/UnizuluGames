@@ -424,7 +424,7 @@ class TicTacToeGame extends XOGame {
       <div>
         {declaration}
         {this.renderSq(3)}
-        {this.createGameButtons()}
+        {this.createGameButtons(9)}
       </div>
     );
   }

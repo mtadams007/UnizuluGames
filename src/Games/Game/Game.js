@@ -52,12 +52,12 @@ class Game extends Component {
     });
   };
 
-  createGameButtons = () => {
+  createGameButtons = tieNumber => {
     let gameControlButton;
     if (
       Object.keys(this.state.squares).length === 0 ||
       this.state.gameOver ||
-      Object.keys(this.state.squares).length === 9
+      Object.keys(this.state.squares).length === tieNumber
     ) {
       return (
         <div className="gameControlArray">

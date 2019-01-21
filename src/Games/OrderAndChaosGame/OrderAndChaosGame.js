@@ -21,6 +21,7 @@ class OrderAndChaosGame extends XOGame {
   };
 
   componentDidUpdate = () => {
+    this.isOrderChaosWin();
     if (!this.state.gameOver) {
       if (Object.keys(this.state.squares).length < 36) {
         window.setTimeout(this.orderChaosAi, 300);
@@ -913,9 +914,7 @@ class OrderAndChaosGame extends XOGame {
           }
         }
         let length = keys.length;
-
         //k is the array number for options
-
         for (let k = 0; k < length; k++) {
           //m is the array number for keys length
           for (let m = 0; m < 36; m++) {
@@ -988,12 +987,9 @@ class OrderAndChaosGame extends XOGame {
   verticalWinChecker = () => {
     let keys = Object.keys(this.state.squares);
     let key = keys.slice(-1)[0];
-    let winningSymbol;
-    if (key !== null) {
+    let winningSymbol = "M";
+    if (key) {
       winningSymbol = this.state.squares[key];
-    } else {
-      winningSymbol =
-        "Empty spot, need something here so that there is no error";
     }
     let test = String(key);
     let parsedArray = test.split("a");
@@ -1243,26 +1239,13 @@ class OrderAndChaosGame extends XOGame {
     let computer;
     let keys = Object.keys(this.state.squares);
     let buttonArray;
-    let declaration;
-    this.horizontalWinChecker();
-    // if (this.isOrderChaosWin()) {
-    //   declaration = <h1> Order Wins! </h1>;
-    // } else if (keys.length === 36) {
-    //   declaration = <h1> Chaos Wins! </h1>;
-    // } else {
-    //   declaration = (
-    //     <h1>
-    //       {player}'s Turn. Symbol: {symbol}
-    //     </h1>
-    //   );
-    // }
 
-    // const declaration = this.renderDeclaration(
-    //   false,
-    //   this.state.gameOver,
-    //   player,
-    //   winningPlayer
-    // );
+    const declaration = this.renderDeclaration(
+      false,
+      this.state.gameOver,
+      player,
+      winningPlayer
+    );
     if (!this.state.isComputerPlayer) {
       computer = (
         <button className="symbolButton" onClick={this.playComputer}>
@@ -1276,7 +1259,7 @@ class OrderAndChaosGame extends XOGame {
       <div>
         {declaration}
         {this.renderSq(6)}
-        {this.createGameButtons()}
+        {this.createGameButtons(36)}
       </div>
     );
   }
