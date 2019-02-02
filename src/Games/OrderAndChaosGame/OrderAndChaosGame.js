@@ -1,14 +1,9 @@
 import React from "react";
-import Square from "../GamePieces/Square/Square";
+
 import XOGame from "../XOGame/XOGame";
-import {
-  win,
-  chooseTicTacToe,
-  chooseOrderChaos,
-  chooseNim,
-  english,
-  zulu
-} from "../../Utils/Constants";
+import { stop, victory, win } from "../../Utils/Constants";
+
+import "./OrderAndChaosGame.css";
 
 class OrderAndChaosGame extends XOGame {
   state = {
@@ -24,7 +19,7 @@ class OrderAndChaosGame extends XOGame {
     this.isOrderChaosWin();
     if (!this.state.gameOver) {
       if (Object.keys(this.state.squares).length < 36) {
-        window.setTimeout(this.orderChaosAi, 300);
+        window.setTimeout(this.ai, 300);
       }
     }
   };
@@ -38,13 +33,23 @@ class OrderAndChaosGame extends XOGame {
     });
   };
 
+  makeOBlockingMove = blockingMove => {
+    return {
+      ...this.state.squares,
+      [blockingMove]: "O"
+    };
+  };
+
+  makeXBlockingMove = blockingMove => {
+    return {
+      ...this.state.squares,
+      [blockingMove]: "X"
+    };
+  };
+
   // Order and Chaos Checkers
 
-  orderChaosHorizontalVerticalChecker = (
-    directionNumber,
-    numberOfRow,
-    arrayToFilter
-  ) => {
+  horizontalVerticalChecker = (directionNumber, numberOfRow, arrayToFilter) => {
     if (this.state.isComputerTurn) {
       // the valueArray is checking how many keys are in a row
       const valueArray = arrayToFilter.filter(
@@ -70,55 +75,37 @@ class OrderAndChaosGame extends XOGame {
           }
           // if there's five symbols in a row then we must block. we return STOP so that we don't make two moves
           if (str.includes("XXXXX")) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "O"
-            };
+            const squares = this.makeOBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           } else if (str.includes("OOOOO")) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "X"
-            };
+            const squares = this.makeXBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
             // If there's four in a row and another one blocking we check whether its a potential victory and then we block
           } else if (str === "XXXXO") {
             if (blockingMove !== `${numberOfRow}a6`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "O"
-              };
+              const squares = this.makeOBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "OOOOX") {
             if (blockingMove !== `${numberOfRow}a6`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "X"
-              };
+              const squares = this.makeXBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "OXXXX") {
             if (blockingMove !== `${numberOfRow}a1`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "O"
-              };
+              const squares = this.makeOBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "XOOOO") {
             if (blockingMove !== `${numberOfRow}a1`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "X"
-              };
+              const squares = this.makeXBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           }
 
@@ -133,54 +120,36 @@ class OrderAndChaosGame extends XOGame {
             i++;
           }
           if (str.includes("XXXXX")) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "O"
-            };
+            const squares = this.makeOBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           } else if (str.includes("OOOOO")) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "X"
-            };
+            const squares = this.makeXBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           } else if (str === "XXXXO") {
             if (blockingMove !== `6a${numberOfRow}`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "O"
-              };
+              const squares = this.makeOBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "OOOOX") {
             if (blockingMove !== `6a${numberOfRow}`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "X"
-              };
+              const squares = this.makeXBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "OXXXX") {
             if (blockingMove !== `1a${numberOfRow}`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "O"
-              };
+              const squares = this.makeOBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "XOOOO") {
             if (blockingMove !== `1a${numberOfRow}`) {
-              const squares = {
-                ...this.state.squares,
-                [blockingMove]: "X"
-              };
+              const squares = this.makeXBlockingMove(blockingMove);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           }
         }
@@ -202,36 +171,24 @@ class OrderAndChaosGame extends XOGame {
             const moves = blockingMove.split(".");
             // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
             if (moves[0] === `${numberOfRow}a1`) {
-              const squares = {
-                ...this.state.squares,
-                [moves[1]]: "O"
-              };
+              const squares = this.makeOBlockingMove(moves[1]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             } else {
-              const squares = {
-                ...this.state.squares,
-                [moves[0]]: "O"
-              };
+              const squares = this.makeOBlockingMove(moves[0]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "OOOO") {
             const moves = blockingMove.split(".");
             if (moves[0] === `${numberOfRow}a1`) {
-              const squares = {
-                ...this.state.squares,
-                [moves[1]]: "X"
-              };
+              const squares = this.makeXBlockingMove(moves[1]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             } else {
-              const squares = {
-                ...this.state.squares,
-                [moves[0]]: "X"
-              };
+              const squares = this.makeXBlockingMove(moves[0]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "XXXO") {
             const moves = blockingMove.split(".");
@@ -268,36 +225,24 @@ class OrderAndChaosGame extends XOGame {
             const moves = blockingMove.split(".");
             // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
             if (moves[0] === `1a${numberOfRow}`) {
-              const squares = {
-                ...this.state.squares,
-                [moves[1]]: "O"
-              };
+              const squares = this.makeOBlockingMove(moves[1]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             } else {
-              const squares = {
-                ...this.state.squares,
-                [moves[0]]: "O"
-              };
+              const squares = this.makeOBlockingMove(moves[0]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "OOOO") {
             const moves = blockingMove.split(".");
             if (moves[0] === `1a${numberOfRow}`) {
-              const squares = {
-                ...this.state.squares,
-                [moves[1]]: "X"
-              };
+              const squares = this.makeXBlockingMove(moves[1]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             } else {
-              const squares = {
-                ...this.state.squares,
-                [moves[0]]: "X"
-              };
+              const squares = this.makeXBlockingMove(moves[0]);
               this.switchMoves(squares);
-              return "STOP";
+              return stop;
             }
           } else if (str === "XXXO") {
             const moves = blockingMove.split(".");
@@ -363,7 +308,7 @@ class OrderAndChaosGame extends XOGame {
     }
   };
 
-  orderChaosEasyDiagonalAiChecker = arrayToFilter => {
+  easyDiagonalAiChecker = arrayToFilter => {
     // are the x coordinate and y coordinate the same
     const valueArray = arrayToFilter.filter(key => key[0] === key[2]);
     let arrayLength = valueArray.length;
@@ -382,54 +327,36 @@ class OrderAndChaosGame extends XOGame {
         i++;
       }
       if (str.includes("XXXXX")) {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "O"
-        };
+        const squares = this.makeOBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       } else if (str.includes("OOOOO")) {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "X"
-        };
+        const squares = this.makeXBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       } else if (str === "XXXXO") {
         if (blockingMove !== `6a6`) {
-          const squares = {
-            ...this.state.squares,
-            [blockingMove]: "O"
-          };
+          const squares = this.makeOBlockingMove(blockingMove);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         }
       } else if (str === "OOOOX") {
         if (blockingMove !== `6a6`) {
-          const squares = {
-            ...this.state.squares,
-            [blockingMove]: "X"
-          };
+          const squares = this.makeXBlockingMove(blockingMove);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         }
       } else if (str === "OXXXX") {
         if (blockingMove !== `1a1`) {
-          const squares = {
-            ...this.state.squares,
-            [blockingMove]: "O"
-          };
+          const squares = this.makeOBlockingMove(blockingMove);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         }
       } else if (str === "XOOOO") {
         if (blockingMove !== `1a1`) {
-          const squares = {
-            ...this.state.squares,
-            [blockingMove]: "X"
-          };
+          const squares = this.makeXBlockingMove(blockingMove);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         }
       }
     } else if (arrayLength === 4) {
@@ -448,36 +375,24 @@ class OrderAndChaosGame extends XOGame {
         const moves = blockingMove.split(".");
         // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
         if (moves[0] === `1a1`) {
-          const squares = {
-            ...this.state.squares,
-            [moves[1]]: "O"
-          };
+          const squares = this.makeOBlockingMove(moves[1]);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         } else {
-          const squares = {
-            ...this.state.squares,
-            [moves[0]]: "O"
-          };
+          const squares = this.makeOBlockingMove(moves[0]);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         }
       } else if (str === "OOOO") {
         const moves = blockingMove.split(".");
         if (moves[0] === `1a1`) {
-          const squares = {
-            ...this.state.squares,
-            [moves[1]]: "X"
-          };
+          const squares = this.makeXBlockingMove(moves[1]);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         } else {
-          const squares = {
-            ...this.state.squares,
-            [moves[0]]: "X"
-          };
+          const squares = this.makeXBlockingMove(moves[0]);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         }
       } else if (str === "XXXO") {
         const moves = blockingMove.split(".");
@@ -524,7 +439,7 @@ class OrderAndChaosGame extends XOGame {
     }
   };
 
-  orderChaosMediumDiagonalAiChecker = (arrayToFilter, sum) => {
+  mediumDiagonalAiChecker = (arrayToFilter, sum) => {
     // are the x coordinate and y coordinate the same
     const valueArray = arrayToFilter.filter(
       key => parseInt(key[0], 10) + parseInt(key[2], 10) === sum
@@ -543,19 +458,13 @@ class OrderAndChaosGame extends XOGame {
         i++;
       }
       if (str === "XXXX") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "O"
-        };
+        const squares = this.makeOBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       } else if (str === "OOOO") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "X"
-        };
+        const squares = this.makeXBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       }
     } else if (sum === 8 && arrayLength === 4) {
       let str = "";
@@ -570,19 +479,13 @@ class OrderAndChaosGame extends XOGame {
         i++;
       }
       if (str === "XXXX") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "O"
-        };
+        const squares = this.makeOBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       } else if (str === "OOOO") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "X"
-        };
+        const squares = this.makeXBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       }
     } else if (sum === 7) {
       if (arrayLength === 5) {
@@ -598,54 +501,36 @@ class OrderAndChaosGame extends XOGame {
           i++;
         }
         if (str.includes("XXXXX")) {
-          const squares = {
-            ...this.state.squares,
-            [blockingMove]: "O"
-          };
+          const squares = this.makeOBlockingMove(blockingMove);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         } else if (str.includes("OOOOO")) {
-          const squares = {
-            ...this.state.squares,
-            [blockingMove]: "X"
-          };
+          const squares = this.makeXBlockingMove(blockingMove);
           this.switchMoves(squares);
-          return "STOP";
+          return stop;
         } else if (str === "XXXXO") {
           if (blockingMove !== `1a6`) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "O"
-            };
+            const squares = this.makeOBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           }
         } else if (str === "OOOOX") {
           if (blockingMove !== `1a6`) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "X"
-            };
+            const squares = this.makeXBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           }
         } else if (str === "OXXXX") {
           if (blockingMove !== `6a1`) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "O"
-            };
+            const squares = this.makeOBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           }
         } else if (str === "XOOOO") {
           if (blockingMove !== `6a1`) {
-            const squares = {
-              ...this.state.squares,
-              [blockingMove]: "X"
-            };
+            const squares = this.makeXBlockingMove(blockingMove);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           }
         }
       } else if (arrayLength === 4) {
@@ -664,36 +549,24 @@ class OrderAndChaosGame extends XOGame {
           const moves = blockingMove.split(".");
           // if the first empty space is at the beginning we have the possibility of not blocking it there, so we must block the next option
           if (moves[0] === `6a1`) {
-            const squares = {
-              ...this.state.squares,
-              [moves[1]]: "O"
-            };
+            const squares = this.makeOBlockingMove(moves[1]);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           } else {
-            const squares = {
-              ...this.state.squares,
-              [moves[0]]: "O"
-            };
+            const squares = this.makeOBlockingMove(moves[0]);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           }
         } else if (str === "OOOO") {
           const moves = blockingMove.split(".");
           if (moves[0] === `6a1`) {
-            const squares = {
-              ...this.state.squares,
-              [moves[1]]: "X"
-            };
+            const squares = this.makeXBlockingMove(moves[1]);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           } else {
-            const squares = {
-              ...this.state.squares,
-              [moves[0]]: "X"
-            };
+            const squares = this.makeXBlockingMove(moves[0]);
             this.switchMoves(squares);
-            return "STOP";
+            return stop;
           }
         } else if (str === "XXXO") {
           const moves = blockingMove.split(".");
@@ -741,7 +614,7 @@ class OrderAndChaosGame extends XOGame {
     }
   };
 
-  orderChaosHardDiagonalAiChecker = arrayToFilter => {
+  hardDiagonalAiChecker = arrayToFilter => {
     // checking if its the first diagonal
     const valueArray = arrayToFilter.filter(
       key => parseInt(key[0], 10) - parseInt(key[2], 10) === 1
@@ -765,19 +638,13 @@ class OrderAndChaosGame extends XOGame {
         i++;
       }
       if (str === "XXXX") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "O"
-        };
+        const squares = this.makeOBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       } else if (str === "OOOO") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "X"
-        };
+        const squares = this.makeXBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       }
     } else if (arrayLength2 === 4) {
       let str = "";
@@ -792,47 +659,41 @@ class OrderAndChaosGame extends XOGame {
         i++;
       }
       if (str === "XXXX") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "O"
-        };
+        const squares = this.makeOBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       } else if (str === "OOOO") {
-        const squares = {
-          ...this.state.squares,
-          [blockingMove]: "X"
-        };
+        const squares = this.makeXBlockingMove(blockingMove);
         this.switchMoves(squares);
-        return "STOP";
+        return stop;
       }
     }
   };
 
   // Compiles all our order and chaos checks
 
-  orderChaosAiMoveChecker = () => {
+  aiMoveChecker = () => {
     let keys = Object.keys(this.state.squares);
     let arrayToCheck = [];
     // let length = keys.length;
     let i = 1;
     while (i < 7) {
-      const row = this.orderChaosHorizontalVerticalChecker(0, i, keys);
+      const row = this.horizontalVerticalChecker(0, i, keys);
       window.setTimeout(200);
-      const column = this.orderChaosHorizontalVerticalChecker(2, i, keys);
+      const column = this.horizontalVerticalChecker(2, i, keys);
       if (row) {
-        if (row === "STOP") {
+        if (row === stop) {
           arrayToCheck.push(row);
           //As in tic tac toe, we must break when we find a victory
-          return ["STOP"];
+          return [stop];
         } else {
           arrayToCheck.push(row);
         }
       }
       if (column) {
-        if (column === "STOP") {
+        if (column === stop) {
           arrayToCheck.push(column);
-          return ["STOP"];
+          return [stop];
         } else {
           arrayToCheck.push(column);
         }
@@ -845,26 +706,26 @@ class OrderAndChaosGame extends XOGame {
     let option3;
     let option4;
     let option5;
-    let stopCheck = arrayToCheck.filter(win => win === "STOP");
+    let stopCheck = arrayToCheck.filter(win => win === stop);
     if (stopCheck.length !== 0) {
-      return ["STOP"];
+      return [stop];
     } else {
-      option = this.orderChaosEasyDiagonalAiChecker(keys);
+      option = this.easyDiagonalAiChecker(keys);
       window.setTimeout(50);
       if (this.state.isComputerTurn) {
-        option2 = this.orderChaosMediumDiagonalAiChecker(keys, 6);
+        option2 = this.mediumDiagonalAiChecker(keys, 6);
       }
       window.setTimeout(50);
       if (this.state.isComputerTurn) {
-        option3 = this.orderChaosMediumDiagonalAiChecker(keys, 7);
+        option3 = this.mediumDiagonalAiChecker(keys, 7);
       }
       window.setTimeout(50);
       if (this.state.isComputerTurn) {
-        option4 = this.orderChaosMediumDiagonalAiChecker(keys, 8);
+        option4 = this.mediumDiagonalAiChecker(keys, 8);
       }
       window.setTimeout(50);
       if (this.state.isComputerTurn) {
-        option5 = this.orderChaosHardDiagonalAiChecker(keys);
+        option5 = this.hardDiagonalAiChecker(keys);
       }
     }
     if (option) {
@@ -885,14 +746,14 @@ class OrderAndChaosGame extends XOGame {
     return arrayToCheck;
   };
 
-  orderChaosAi = () => {
+  ai = () => {
     let keys = Object.keys(this.state.squares);
     if (this.state.isComputerTurn && !this.state.gameOver) {
       let options = [];
       //returns danger array from places we might need to block
-      const dangerArray = this.orderChaosAiMoveChecker();
+      const dangerArray = this.aiMoveChecker();
       // if we already moved, then don't worry about moving again
-      let stopCheck = dangerArray.filter(win => win === "STOP");
+      let stopCheck = dangerArray.filter(win => win === stop);
       if (stopCheck.length !== 0) {
         return;
       }
@@ -1230,15 +1091,22 @@ class OrderAndChaosGame extends XOGame {
     }
   };
 
+  // Toggling symbols in order and chaos
+
+  toggleSymbolX = () => {
+    this.setState({ isX: true });
+  };
+
+  toggleSymbolO = () => {
+    this.setState({ isX: false });
+  };
+
   render() {
-    const symbol = this.state.isX ? "X" : "O";
-    const winSymbol = this.state.isX ? "O" : "X";
     const player = this.state.orderTurn ? "Order" : "Chaos";
     const winningPlayer = this.state.orderTurn ? "Chaos" : "Order";
     let gameControlButton = null;
     let computer;
     let keys = Object.keys(this.state.squares);
-    let buttonArray;
 
     const declaration = this.renderDeclaration(
       false,
@@ -1253,13 +1121,25 @@ class OrderAndChaosGame extends XOGame {
         </button>
       );
     }
-    buttonArray = null;
+    const buttonArray = (
+      <div className="buttonArray">
+        <button className="symbolButton" onClick={this.toggleSymbolX}>
+          X
+        </button>
+        <button className="symbolButton" onClick={this.toggleSymbolO}>
+          O
+        </button>
+      </div>
+    );
 
     return (
-      <div>
-        {declaration}
-        {this.renderSq(6)}
-        {this.createGameButtons(36)}
+      <div className="gameGrid">
+        <div>
+          {declaration}
+          {this.renderSq(6)}
+          {buttonArray}
+        </div>
+        <div>{this.createGameButtons(36)}</div>
       </div>
     );
   }

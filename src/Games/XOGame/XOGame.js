@@ -1,7 +1,6 @@
 import React from "react";
 import Game from "../Game/Game";
 import Square from "../GamePieces/Square/Square";
-import { win } from "../../Utils/Constants";
 
 class XOGame extends Game {
   state = {
@@ -26,6 +25,7 @@ class XOGame extends Game {
           // puts in our square with the id of its coordinates and a click handler that allows us to play
           <Square
             id={`${j}a${i}`}
+            key={`${j}a${i}`}
             value={value}
             click={e => this.makeMoveHandler(e, `${j}a${i}`)}
           />

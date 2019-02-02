@@ -1,14 +1,9 @@
 import React from "react";
-import Square from "../GamePieces/Square/Square";
+
 import XOGame from "../XOGame/XOGame";
-import {
-  win,
-  chooseTicTacToe,
-  chooseOrderChaos,
-  chooseNim,
-  english,
-  zulu
-} from "../../Utils/Constants";
+import { win } from "../../Utils/Constants";
+
+import "./TicTacToe.css";
 
 class TicTacToeGame extends XOGame {
   state = {
@@ -20,15 +15,15 @@ class TicTacToeGame extends XOGame {
   };
 
   componentDidUpdate = () => {
-    this.isTttWin();
+    this.isWin();
     if (!this.state.gameOver) {
       if (Object.keys(this.state.squares).length < 9) {
-        window.setTimeout(this.ticTacToeAi, 300);
+        window.setTimeout(this.ai, 300);
       }
     }
   };
 
-  isTttWin = () => {
+  isWin = () => {
     let keys = Object.keys(this.state.squares);
     let key = keys.slice(-1)[0];
     let winningSymbol = this.state.squares[key];
@@ -148,12 +143,7 @@ class TicTacToeGame extends XOGame {
     return answer;
   };
 
-  ticTacToeFilterMe = (
-    directionNumber,
-    numberOfRow,
-    arrayToFilter,
-    gameNumber
-  ) => {
+  filterMe = (directionNumber, numberOfRow, arrayToFilter, gameNumber) => {
     // filtering either the row or column, directionNumber is 0 for horizontal, so the key calls the xCoordinate, otherwise 2 for vertical
     const valueArray = arrayToFilter.filter(
       key => key[directionNumber] === `${numberOfRow}`
@@ -212,7 +202,7 @@ class TicTacToeGame extends XOGame {
     }
   };
 
-  ticTacToeDiagonalCheckerOne = arrayToFilter => {
+  diagonalCheckerOne = arrayToFilter => {
     const valueArray = arrayToFilter.filter(key => key[0] === key[2]);
     if (
       valueArray.length === 2 &&
@@ -246,15 +236,15 @@ class TicTacToeGame extends XOGame {
 
   // Checks all the moves for the AI
 
-  ticTacToeBlockChecker = () => {
+  blockChecker = () => {
     let keys = Object.keys(this.state.squares);
     let arrayToCheck = [];
     // let length = keys.length;
     let i = 1;
     while (i < 4) {
       // we push in all the squares that had a symbol and filter them by row and column. these we push into our filter check function
-      const row = this.ticTacToeFilterMe(0, i, keys, 2);
-      const column = this.ticTacToeFilterMe(2, i, keys, 2);
+      const row = this.filterMe(0, i, keys, 2);
+      const column = this.filterMe(2, i, keys, 2);
       if (row) {
         if (row === "VICTORY") {
           arrayToCheck.push(row);
@@ -282,14 +272,14 @@ class TicTacToeGame extends XOGame {
     if (victoryCheck.length !== 0) {
       return ["VICTORY"];
     } else {
-      option = this.ticTacToeDiagonalCheckerOne(keys);
+      option = this.diagonalCheckerOne(keys);
     }
     victoryCheck = arrayToCheck.filter(win => win === "VICTORY");
     let option2;
     if (victoryCheck.length !== 0) {
       return ["VICTORY"];
     } else {
-      option2 = this.ticTacToeDiagonalCheckerTwo(keys);
+      option2 = this.diagonalCheckerTwo(keys);
     }
     if (option) {
       arrayToCheck.push(option);
@@ -300,7 +290,7 @@ class TicTacToeGame extends XOGame {
     return arrayToCheck;
   };
 
-  ticTacToeDiagonalCheckerTwo = arrayToFilter => {
+  diagonalCheckerTwo = arrayToFilter => {
     const valueArray = arrayToFilter.filter(
       key => parseInt(key[0], 10) + parseInt(key[2], 10) === 4
     );
@@ -341,7 +331,7 @@ class TicTacToeGame extends XOGame {
 
   // AI is purposefully not supposed to be unbeatable, but challenging. It trys to win first, then prevent the other player from winning, and finally goes randomly if neither of the first two
 
-  ticTacToeAi = () => {
+  ai = () => {
     // First we make sure that it is the computers turn and that the game is not over
     if (this.state.isComputerTurn && !this.state.gameOver) {
       // we make sure the computer knows what his symbol is so he doesn't put the wrong one down. currently he's always O but I'd like to change that in the future
@@ -350,7 +340,7 @@ class TicTacToeGame extends XOGame {
       let options = [];
       let isX = this.state.isX;
       //returns danger array from places we might need to block
-      const dangerArray = this.ticTacToeBlockChecker();
+      const dangerArray = this.blockChecker();
       // if we already won, then don't worry about moving again
       let victoryCheck = dangerArray.filter(win => win === "VICTORY");
       if (victoryCheck.length !== 0) {
@@ -421,10 +411,12 @@ class TicTacToeGame extends XOGame {
     buttonArray = null;
 
     return (
-      <div>
-        {declaration}
-        {this.renderSq(3)}
-        {this.createGameButtons(9)}
+      <div className="gameGrid">
+        <div>
+          {declaration}
+          {this.renderSq(3)}
+        </div>
+        <div>{this.createGameButtons(9)}</div>
       </div>
     );
   }
