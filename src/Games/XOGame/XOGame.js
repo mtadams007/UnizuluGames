@@ -1,4 +1,5 @@
 import React from "react";
+
 import Game from "../Game/Game";
 import Square from "../GamePieces/Square/Square";
 
@@ -35,6 +36,30 @@ class XOGame extends Game {
       rows.push(<div>{sqrs}</div>);
     }
     return rows;
+  };
+
+  createGameButtons = tieNumber => {
+    let gameControlButton;
+    if (
+      Object.keys(this.state.squares).length === 0 ||
+      this.state.gameOver ||
+      Object.keys(this.state.squares).length === tieNumber
+    ) {
+      return (
+        <div className="gameControlArray">
+          <button className="gameControlButton" onClick={this.resetGame}>
+            Play a Friend
+          </button>
+          <button className="gameControlButton" onClick={this.playComputer}>
+            Play the Computer
+          </button>
+        </div>
+      );
+    } else if (this.state.isComputerPlayer) {
+      return <h1>Playing against Computer</h1>;
+    } else {
+      return <h1>Playing against a Friend</h1>;
+    }
   };
 
   makeMoveHandler = (event, id) => {

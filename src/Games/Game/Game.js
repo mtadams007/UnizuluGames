@@ -34,13 +34,7 @@ class Game extends Component {
   // Resets game as well so computer isn't confused as to when to play
 
   playComputer = () => {
-    const elements = document.getElementsByClassName(win);
-    const length = elements.length;
-    let i = 0;
-    while (i < length) {
-      elements[0].classList.remove(win);
-      i++;
-    }
+    this.resetGame();
     this.setState({
       squares: "",
       isX: true,
@@ -50,30 +44,6 @@ class Game extends Component {
       isComputerPlayer: true,
       isComputerTurn: false
     });
-  };
-
-  createGameButtons = tieNumber => {
-    let gameControlButton;
-    if (
-      Object.keys(this.state.squares).length === 0 ||
-      this.state.gameOver ||
-      Object.keys(this.state.squares).length === tieNumber
-    ) {
-      return (
-        <div className="gameControlArray">
-          <button className="gameControlButton" onClick={this.resetGame}>
-            Play a Friend
-          </button>
-          <button className="gameControlButton" onClick={this.playComputer}>
-            Play the Computer
-          </button>
-        </div>
-      );
-    } else if (this.state.isComputerPlayer) {
-      return <h1>Playing against Computer</h1>;
-    } else {
-      return <h1>Playing against a Friend</h1>;
-    }
   };
 
   renderDeclaration = (isTie, gameOver, symbol, winSymbol) => {

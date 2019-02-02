@@ -394,7 +394,6 @@ class TicTacToeGame extends XOGame {
     let gameControlButton = null;
     let computer;
     let keys = Object.keys(this.state.squares);
-    let buttonArray;
     const declaration = this.renderDeclaration(
       keys.length === 9,
       this.state.gameOver,
@@ -408,7 +407,6 @@ class TicTacToeGame extends XOGame {
         </button>
       );
     }
-    buttonArray = null;
 
     return (
       <div className="gameGrid">
