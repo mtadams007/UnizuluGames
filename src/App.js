@@ -5,7 +5,6 @@ import OrderAndChaosGame from "./Games/OrderAndChaosGame/OrderAndChaosGame";
 import NimGame from "./Games/NimGame/NimGame";
 import "./App.css";
 import {
-  win,
   chooseTicTacToe,
   chooseOrderChaos,
   chooseNim,
