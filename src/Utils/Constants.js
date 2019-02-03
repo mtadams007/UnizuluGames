@@ -4,5 +4,16 @@ const chooseOrderChaos = "OrderChaos";
 const chooseNim = "Nim";
 const english = "eng";
 const zulu = "zulu";
+const stop = "STOP";
+const victory = "VICTORY";
 
-export { win, chooseTicTacToe, chooseOrderChaos, chooseNim, english, zulu };
+export {
+  win,
+  chooseNim,
+  chooseOrderChaos,
+  chooseTicTacToe,
+  english,
+  stop,
+  victory,
+  zulu
+};

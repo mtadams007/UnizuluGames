@@ -2,6 +2,10 @@ body {
   background-image: url("./images/sciencecentrebackground.jpg");
 }
 
+.chooseGame {
+  display: grid;
+  grid-template-columns: 8fr 2fr;
+}
 .gameImage {
   width: 200px;
   display: block;
@@ -39,9 +43,8 @@ body {
 
 .grid {
   display: grid;
-  grid-template-columns: 2fr 6fr 2fr;
+  grid-template-columns: 2fr 8fr;
   grid-template-rows: 1fr 5fr 1fr;
-
 }
 
 .symbolButton {
@@ -78,7 +81,7 @@ body {
 }
 .rules {
   margin: 25px;
-  float: left
+  float: left;
 }
 
 .board-row {
