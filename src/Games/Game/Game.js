@@ -36,13 +36,7 @@ class Game extends Component {
   playComputer = () => {
     this.resetGame();
     this.setState({
-      squares: "",
-      isX: true,
-      gameOver: false,
-      orderTurn: true,
-      pebbles: "",
-      isComputerPlayer: true,
-      isComputerTurn: false
+      isComputerPlayer: true
     });
   };
 

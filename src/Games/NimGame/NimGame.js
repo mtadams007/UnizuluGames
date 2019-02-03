@@ -12,7 +12,7 @@ class NimGame extends PebbleGame {
     gameOver: false,
     isComputerPlayer: false,
     isComputerTurn: false,
-    orderTurn: true
+    firstPlayerTurn: true
   };
 
   componentDidUpdate = () => {
@@ -76,7 +76,7 @@ class NimGame extends PebbleGame {
     }
     this.setState({
       pebbles: pebbles,
-      orderTurn: this.state.orderTurn,
+      firstPlayerTurn: this.state.firstPlayerTurn,
       isComputerTurn: false
     });
   };
@@ -126,7 +126,7 @@ class NimGame extends PebbleGame {
     }
     this.setState({
       pebbles: pebbles,
-      orderTurn: this.state.orderTurn,
+      firstPlayerTurn: this.state.firstPlayerTurn,
       isComputerTurn: false
     });
   };
@@ -302,6 +302,13 @@ class NimGame extends PebbleGame {
     }
     const nimArray = [3, 4, 5];
     let player;
+    if (this.state.isComputerTurn) {
+      player = "Computer";
+    } else if (this.state.firstPlayerTurn || this.state.isComputerPlayer) {
+      player = "Player 1";
+    } else {
+      player = "Player 2";
+    }
 
     if (
       Object.keys(this.state.pebbles).length === 0 ||
@@ -323,15 +330,10 @@ class NimGame extends PebbleGame {
       gameControlButton = <h1>Playing against a Friend</h1>;
     }
 
-    if (this.state.orderTurn) {
-      player = "Player 1";
+    if (this.state.gameOver) {
+      declaration = <h1>{player} wins!</h1>;
     } else {
-      player = "Player 2";
-    }
-    if (this.isWin()) {
-      declaration = <h1>wins!</h1>;
-    } else {
-      declaration = <h1>'s Turn</h1>;
+      declaration = <h1>{player}'s Turn</h1>;
     }
 
     return (

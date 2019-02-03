@@ -16,7 +16,7 @@ class OrderAndChaosGame extends XOGame {
   };
 
   componentDidUpdate = () => {
-    this.isOrderChaosWin();
+    this.isWin();
     if (!this.state.gameOver) {
       if (Object.keys(this.state.squares).length < 36) {
         window.setTimeout(this.ai, 300);
@@ -1071,7 +1071,12 @@ class OrderAndChaosGame extends XOGame {
     }
   };
 
-  isOrderChaosWin = () => {
+  isChaosWin = () => {
+    const keys = Object.keys(this.state.squares);
+    return keys.length === 36;
+  };
+
+  isWin = () => {
     if (this.state.gameOver === false) {
       if (this.easyDiagonalWinChecker()) {
         this.setState({ gameOver: true });
@@ -1082,6 +1087,8 @@ class OrderAndChaosGame extends XOGame {
       } else if (this.horizontalWinChecker()) {
         this.setState({ gameOver: true });
       } else if (this.verticalWinChecker()) {
+        this.setState({ gameOver: true });
+      } else if (this.isChaosWin()) {
         this.setState({ gameOver: true });
       }
     }
@@ -1103,10 +1110,11 @@ class OrderAndChaosGame extends XOGame {
 
   render() {
     const player = this.state.orderTurn ? "Order" : "Chaos";
-    const winningPlayer = this.state.orderTurn ? "Chaos" : "Order";
     let gameControlButton = null;
     let computer;
     let keys = Object.keys(this.state.squares);
+    const elements = document.getElementsByClassName(win);
+    const winningPlayer = keys.length !== 36 && elements ? "Order" : "Chaos";
 
     const declaration = this.renderDeclaration(
       false,

@@ -56,13 +56,8 @@ class App extends Component {
   };
 
   render() {
-    let symbol = null;
-    let winSymbol = null;
-    let declaration = null;
     let rules = null;
     let languageButton = null;
-    let nimArray = [0];
-    let gameControlButton = null;
 
     let content = (
       <div className="chooseGame">
@@ -100,15 +95,6 @@ class App extends Component {
         </div>
       </div>
     );
-    let computer;
-    // Decides if X or O is moving
-    if (this.state.isX) {
-      symbol = "X";
-      winSymbol = "O";
-    } else {
-      symbol = "O";
-      winSymbol = "X";
-    }
 
     // Checks whether we're playing Tic Tac Toe
     if (this.state.whichGame === chooseTicTacToe) {

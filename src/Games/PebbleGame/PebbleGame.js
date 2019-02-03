@@ -6,7 +6,7 @@ import Pebble from "../GamePieces/Pebble/Pebble";
 class PebbleGame extends Component {
   state = {
     squares: {},
-    orderTurn: true,
+    firstPlayerTurn: true,
     gameOver: false,
     isComputerPlayer: false,
     isComputerTurn: false
@@ -16,7 +16,7 @@ class PebbleGame extends Component {
     // this removes the class win from tictactoe and orderChaos which makes the squares white again
     this.setState({
       gameOver: false,
-      orderTurn: true,
+      firstPlayerTurn: true,
       pebbles: {},
       isComputerTurn: false,
       isComputerPlayer: false
@@ -44,11 +44,14 @@ class PebbleGame extends Component {
       if (this.state.isComputerPlayer) {
         this.setState({
           pebbles: pebbles,
-          orderTurn: !this.state.orderTurn,
+          firstPlayerTurn: !this.state.firstPlayerTurn,
           isComputerTurn: true
         });
       } else {
-        this.setState({ pebbles: pebbles, orderTurn: !this.state.orderTurn });
+        this.setState({
+          pebbles: pebbles,
+          firstPlayerTurn: !this.state.firstPlayerTurn
+        });
       }
     }
   };
